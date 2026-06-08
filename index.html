@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIMPACT · ROI Kalkulator</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --black: #0a0a0a; --white: #f5f4f0; --gold: #c9a84c; --grey: #888; --light: #e8e6e0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--white); color: var(--black); font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh; overflow-x: hidden; }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 20px 32px; background: var(--white); border-bottom: 1px solid var(--light); }
+  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 3px; color: var(--black); }
+  .logo span { color: var(--gold); }
+  .nav-cta { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--black); text-decoration: none; border-bottom: 1px solid var(--black); padding-bottom: 2px; }
+  .hero { padding: 140px 32px 80px; max-width: 680px; margin: 0 auto; }
+  .hero-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; }
+  .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(52px, 12vw, 88px); line-height: 0.92; letter-spacing: 1px; margin-bottom: 28px; }
+  .hero h1 em { font-style: italic; font-family: 'DM Sans', sans-serif; font-weight: 300; font-size: clamp(44px, 10vw, 72px); display: block; color: var(--grey); }
+  .hero p { font-size: 15px; line-height: 1.7; color: #555; max-width: 480px; margin-bottom: 40px; }
+  .btn-primary { display: inline-block; background: var(--black); color: var(--white); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 18px 36px; text-decoration: none; cursor: pointer; border: none; font-family: 'DM Sans', sans-serif; transition: background 0.2s, color 0.2s; }
+  .btn-primary:hover { background: var(--gold); color: var(--black); }
+  .btn-secondary { display: inline-block; background: transparent; color: var(--black); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 18px 36px; text-decoration: none; cursor: pointer; border: 1px solid var(--black); font-family: 'DM Sans', sans-serif; margin-left: 12px; transition: background 0.2s, color 0.2s; }
+  .btn-secondary:hover { background: var(--black); color: var(--white); }
+  .services { background: var(--black); color: var(--white); padding: 80px 32px; }
+  .services-inner { max-width: 680px; margin: 0 auto; }
+  .section-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 48px; }
+  .service-list { list-style: none; }
+  .service-item { display: flex; align-items: flex-start; gap: 24px; padding: 28px 0; border-bottom: 1px solid #222; }
+  .service-num { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 2px; color: var(--gold); min-width: 32px; padding-top: 4px; }
+  .service-text h3 { font-family: 'DM Sans', sans-serif; font-weight: 400; font-size: 18px; margin-bottom: 6px; letter-spacing: 0.5px; }
+  .service-text p { font-size: 13px; color: #888; line-height: 1.6; }
+  .calculator { padding: 80px 32px; max-width: 680px; margin: 0 auto; }
+  .calc-header { margin-bottom: 56px; }
+  .calc-header h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(40px, 9vw, 64px); line-height: 0.95; letter-spacing: 1px; margin-top: 16px; }
+  .slider-group { margin-bottom: 40px; }
+  .slider-label { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
+  .slider-label span:first-child { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--grey); }
+  .slider-value { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 1px; color: var(--black); }
+  input[type="range"] { width: 100%; height: 1px; background: var(--light); outline: none; border: none; -webkit-appearance: none; cursor: pointer; }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: var(--black); border-radius: 50%; cursor: pointer; transition: background 0.2s, transform 0.2s; }
+  input[type="range"]::-webkit-slider-thumb:hover { background: var(--gold); transform: scale(1.2); }
+  .range-ends { display: flex; justify-content: space-between; margin-top: 8px; font-size: 10px; color: #bbb; letter-spacing: 1px; }
+  .select-group { margin-bottom: 40px; }
+  .select-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--grey); margin-bottom: 14px; display: block; }
+  select { width: 100%; padding: 16px 0; background: transparent; border: none; border-bottom: 1px solid var(--black); font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 300; color: var(--black); outline: none; cursor: pointer; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%230a0a0a' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0 center; }
+  .calc-btn { width: 100%; background: var(--black); color: var(--white); border: none; padding: 20px; font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; margin-top: 8px; transition: background 0.2s; }
+  .calc-btn:hover { background: var(--gold); color: var(--black); }
+  .result { display: none; background: var(--black); color: var(--white); padding: 48px 32px; margin-top: 40px; position: relative; overflow: hidden; }
+  .result::before { content: ''; position: absolute; top: -40px; right: -40px; width: 160px; height: 160px; border-radius: 50%; background: var(--gold); opacity: 0.08; }
+  .result.visible { display: block; animation: fadeUp 0.5s ease; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .result-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+  .result-amount { font-family: 'Bebas Neue', sans-serif; font-size: clamp(56px, 14vw, 96px); letter-spacing: 2px; line-height: 1; margin-bottom: 8px; }
+  .result-amount span { font-family: 'DM Sans', sans-serif; font-size: 18px; font-weight: 300; color: var(--gold); vertical-align: super; margin-right: 4px; }
+  .result-subtitle { font-size: 13px; color: #888; margin-bottom: 32px; line-height: 1.6; }
+  .result-breakdown { border-top: 1px solid #222; padding-top: 28px; margin-bottom: 32px; }
+  .breakdown-row { display: flex; justify-content: space-between; align-items: baseline; padding: 10px 0; border-bottom: 1px solid #1a1a1a; font-size: 13px; }
+  .breakdown-row .label { color: #666; }
+  .breakdown-row .val { color: var(--white); font-weight: 400; }
+  .breakdown-row .val.highlight { color: var(--gold); font-weight: 500; }
+  .result-text { font-size: 14px; line-height: 1.7; color: #aaa; margin-bottom: 32px; }
+  .contact-section { background: var(--black); color: var(--white); padding: 80px 32px; }
+  .contact-inner { max-width: 680px; margin: 0 auto; }
+  .contact-inner h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(40px, 9vw, 64px); line-height: 0.95; letter-spacing: 1px; margin: 16px 0 12px; }
+  .contact-inner > p { font-size: 14px; color: #888; margin-bottom: 48px; line-height: 1.7; }
+  .form-group { margin-bottom: 32px; }
+  .form-group label { display: block; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #666; margin-bottom: 10px; }
+  .form-group input { width: 100%; background: transparent; border: none; border-bottom: 1px solid #333; padding: 12px 0; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 300; color: var(--white); outline: none; transition: border-color 0.2s; }
+  .form-group input:focus { border-bottom-color: var(--gold); }
+  .form-group input::placeholder { color: #444; }
+  .form-submit { width: 100%; background: var(--gold); color: var(--black); border: none; padding: 20px; font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; font-weight: 500; margin-top: 8px; transition: background 0.2s; }
+  .form-submit:hover { background: var(--white); }
+  .success-msg { display: none; background: #111; border: 1px solid var(--gold); padding: 24px; text-align: center; margin-top: 24px; }
+  .success-msg p { color: var(--gold); font-size: 14px; line-height: 1.6; }
+  footer { padding: 32px; border-top: 1px solid var(--light); display: flex; justify-content: space-between; align-items: center; }
+  footer .logo { font-size: 16px; }
+  footer p { font-size: 11px; color: var(--grey); letter-spacing: 1px; }
+  .divider { height: 1px; background: var(--light); margin: 0 32px; }
+  @media (max-width: 480px) { nav { padding: 16px 20px; } .hero, .calculator { padding-left: 20px; padding-right: 20px; } .services { padding: 60px 20px; } .contact-section { padding: 60px 20px; } footer { padding: 24px 20px; flex-direction: column; gap: 12px; text-align: center; } .btn-secondary { margin-left: 0; margin-top: 12px; display: block; text-align: center; } }
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">AIMPACT<span>.</span></div>
+  <a href="#kontakt" class="nav-cta">Analyse anfragen</a>
+</nav>
+<section class="hero">
+  <p class="hero-label">AI Performance Marketing · Zürich</p>
+  <h1>Wie viel Umsatz lässt Ihr Restaurant<em>monatlich liegen?</em></h1>
+  <p>Berechnen Sie in 30 Sekunden Ihr ungenutztes Umsatzpotenzial durch professionelles Google- und Social-Media-Marketing — speziell für Schweizer Gastronomiebetriebe.</p>
+  <a href="#rechner" class="btn-primary">ROI berechnen</a>
+  <a href="#kontakt" class="btn-secondary">Kostenlose Analyse</a>
+</section>
+<div class="divider"></div>
+<section class="services">
+  <div class="services-inner">
+    <p class="section-label">Was AIMPACT für Sie tut</p>
+    <ul class="service-list">
+      <li class="service-item"><span class="service-num">01</span><div class="service-text"><h3>Google Sichtbarkeit</h3><p>Profil-Optimierung, lokale SEO, Bewertungen-Management.</p></div></li>
+      <li class="service-item"><span class="service-num">02</span><div class="service-text"><h3>Paid Ads</h3><p>Meta, TikTok und Google Ads mit Performance-Tracking.</p></div></li>
+      <li class="service-item"><span class="service-num">03</span><div class="service-text"><h3>Reservierungs-Funnel</h3><p>Automatisierte Systeme, die Besucher zu Gästen machen.</p></div></li>
+      <li class="service-item"><span class="service-num">04</span><div class="service-text"><h3>AI-Insights</h3><p>Datenbasierte Empfehlungen für Menüpreise & Öffnungszeiten.</p></div></li>
+    </ul>
+  </div>
+</section>
+<section class="calculator" id="rechner">
+  <div class="calc-header">
+    <p class="section-label">01 · ROI Rechner</p>
+    <h2>Ihre Zahlen.<br>Ihr Potenzial.</h2>
+  </div>
+  <div class="slider-group">
+    <div class="slider-label"><span>Anzahl Sitzplätze</span><span class="slider-value" id="val-sitze">60</span></div>
+    <input type="range" min="20" max="200" value="60" id="sitze" oninput="updateSlider('sitze','val-sitze','',20,200)">
+    <div class="range-ends"><span>20</span><span>200</span></div>
+  </div>
+  <div class="slider-group">
+    <div class="slider-label"><span>Durchschnittlicher Bon pro Gast</span><span class="slider-value" id="val-bon">CHF 55</span></div>
+    <input type="range" min="20" max="150" value="55" id="bon" oninput="updateSlider('bon','val-bon','CHF ',20,150)">
+    <div class="range-ends"><span>CHF 20</span><span>CHF 150</span></div>
+  </div>
+  <div class="slider-group">
+    <div class="slider-label"><span>Neukunden pro Monat</span><span class="slider-value" id="val-neu">80</span></div>
+    <input type="range" min="0" max="300" value="80" id="neu" oninput="updateSlider('neu','val-neu','',0,300)">
+    <div class="range-ends"><span>0</span><span>300</span></div>
+  </div>
+  <div class="select-group">
+    <label class="select-label">Aktuelle Google-Bewertung</label>
+    <select id="rating">
+      <option value="low">Unter 3.5</option>
+      <option value="mid" selected>3.5 – 4.0</option>
+      <option value="good">4.0 – 4.5</option>
+      <option value="great">Über 4.5</option>
+    </select>
+  </div>
+  <button class="calc-btn" onclick="calculate()">ROI berechnen →</button>
+  <div class="result" id="result">
+    <p class="result-label">Ihr monatliches Umsatzpotenzial</p>
+    <div class="result-amount"><span>CHF</span><span id="result-amount">0</span></div>
+    <p class="result-subtitle" id="result-subtitle"></p>
+    <div class="result-breakdown">
+      <div class="breakdown-row"><span class="label">Zusätzliche Gäste/Monat</span><span class="val highlight" id="res-gaeste">—</span></div>
+      <div class="breakdown-row"><span class="label">Ø Bon pro Gast</span><span class="val" id="res-bon">—</span></div>
+      <div class="breakdown-row"><span class="label">Sichtbarkeits-Uplift</span><span class="val highlight" id="res-uplift">—</span></div>
+      <div class="breakdown-row"><span class="label">Geschätzter Monatsumsatz (aktuell)</span><span class="val" id="res-aktuell">—</span></div>
+    </div>
+    <p class="result-text" id="result-text"></p>
+    <a href="#kontakt" class="calc-btn" style="display:block; text-align:center; text-decoration:none; margin-top:0;">Kostenlose Analyse anfragen →</a>
+  </div>
+</section>
+<div class="divider"></div>
+<section class="contact-section" id="kontakt">
+  <div class="contact-inner">
+    <p class="section-label">Nächster Schritt</p>
+    <h2>Lassen Sie uns über Ihr Restaurant sprechen.</h2>
+    <p>Kostenlose 20-minütige Strategie-Analyse. Keine Verpflichtung, keine Vorlagen.</p>
+    <form id="kontakt-form" onsubmit="submitForm(event)" action="https://formspree.io/f/mqeoqqgo" method="POST">
+      <div class="form-group"><label>Ihr Name</label><input type="text" name="name" placeholder="Max Müller" required></div>
+      <div class="form-group"><label>Restaurant</label><input type="text" name="restaurant" placeholder="Restaurant Bellavista" required></div>
+      <div class="form-group"><label>E-Mail</label><input type="email" name="email" placeholder="info@restaurant.ch" required></div>
+      <div class="form-group"><label>Telefon</label><input type="tel" name="telefon" placeholder="+41 79 000 00 00"></div>
+      <button type="submit" class="form-submit">Kostenlose Analyse anfragen →</button>
+    </form>
+    <div class="success-msg" id="success-msg">
+      <p>Danke. Wir melden uns innerhalb von 24 Stunden bei Ihnen.<br>AIMPACT · Zürich</p>
+    </div>
+  </div>
+</section>
+<footer>
+  <div class="logo">AIMPACT<span style="color:var(--gold)">.</span></div>
+  <p>AI Performance Marketing · Zürich · aimpact.ch</p>
+</footer>
+<script>
+  function updateSlider(id, valId, prefix, min, max) {
+    const val = document.getElementById(id).value;
+    document.getElementById(valId).textContent = prefix + val;
+  }
+  function calculate() {
+    const sitze = parseInt(document.getElementById('sitze').value);
+    const bon = parseInt(document.getElementById('bon').value);
+    const neu = parseInt(document.getElementById('neu').value);
+    const rating = document.getElementById('rating').value;
+    const upliftMap = { low: 0.45, mid: 0.30, good: 0.15, great: 0.08 };
+    const upliftPct = upliftMap[rating];
+    const upliftLabel = { low: '+45%', mid: '+30%', good: '+15%', great: '+8%' }[rating];
+    const currentMonthlyGuests = sitze * 0.70 * 2 * 22;
+    const currentRevenue = currentMonthlyGuests * bon;
+    const additionalFromMarketing = Math.round(neu * upliftPct);
+    const additionalFromVisibility = Math.round(currentMonthlyGuests * upliftPct * 0.15);
+    const totalAdditional = additionalFromMarketing + additionalFromVisibility;
+    const potentialRevenue = Math.round(totalAdditional * bon);
+    const fmt = n => n.toLocaleString('de-CH');
+    document.getElementById('result-amount').textContent = fmt(potentialRevenue);
+    document.getElementById('res-gaeste').textContent = '+' + fmt(totalAdditional) + ' Gäste';
+    document.getElementById('res-bon').textContent = 'CHF ' + bon;
+    document.getElementById('res-uplift').textContent = upliftLabel + ' mehr Sichtbarkeit';
+    document.getElementById('res-aktuell').textContent = 'CHF ' + fmt(Math.round(currentRevenue));
+    const ratingText = { low: 'Ihre Google-Bewertung unter 3.5 kostet Sie täglich Gäste. Restaurants mit Bewertungen über 4.2 erhalten bis zu 45% mehr Klicks — dieser Unterschied schlägt sich direkt im Umsatz nieder.', mid: 'Mit einer Bewertung zwischen 3.5 und 4.0 verlieren Sie täglich Gäste an besser bewertete Konkurrenten. Eine gezielte Bewertungsstrategie kann Ihre Sichtbarkeit um 30% steigern.', good: 'Ihre Google-Bewertung ist solide. Mit professionellem Performance Marketing können Sie diesen Vorteil weiter ausbauen und gezielt mehr Neukunden gewinnen.', great: 'Ausgezeichnete Bewertung. Jetzt geht es darum, diese Stärke durch bezahlte Kanäle zu skalieren und das volle Potenzial auszuschöpfen.' }[rating];
+    document.getElementById('result-text').textContent = ratingText;
+    document.getElementById('result-subtitle').textContent = 'zusätzlich pro Monat durch professionelles Marketing möglich.';
+    const resultEl = document.getElementById('result');
+    resultEl.classList.add('visible');
+    resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  async function submitForm(e) {
+    e.preventDefault();
+    const form = document.getElementById('kontakt-form');
+    const btn = form.querySelector('.form-submit');
+    btn.textContent = 'Wird gesendet...';
+    btn.disabled = true;
+    const data = new FormData(form);
+    try {
+      const res = await fetch('https://formspree.io/f/mqeoqqgo', { method: 'POST', body: data, headers: { 'Accept': 'application/json' } });
+      if (res.ok) { form.style.display = 'none'; document.getElementById('success-msg').style.display = 'block'; }
+      else { btn.textContent = 'Fehler — bitte erneut versuchen'; btn.disabled = false; }
+    } catch { btn.textContent = 'Fehler — bitte erneut versuchen'; btn.disabled = false; }
+  }
+</script>
+</body>
+</html>

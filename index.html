@@ -90,6 +90,7 @@
   <p class="hero-label">AI Performance Marketing · Zürich</p>
   <h1>Wie viel Umsatz lässt Ihr Restaurant<em>monatlich liegen?</em></h1>
   <p>Berechnen Sie in 30 Sekunden Ihr ungenutztes Umsatzpotenzial durch professionelles Google- und Social-Media-Marketing — speziell für Schweizer Gastronomiebetriebe.</p>
+  <p style="font-size:12px; letter-spacing:1px; color:var(--grey); margin:-24px 0 40px; text-transform:uppercase;">AIMPACT · Zürich — spezialisiert auf Gastronomie in der Deutschschweiz</p>
   <a href="#rechner" class="btn-primary">ROI berechnen</a>
   <a href="#kontakt" class="btn-secondary">Kostenlose Analyse</a>
 </section>
@@ -146,7 +147,7 @@
       <div class="breakdown-row"><span class="label">Geschätzter Monatsumsatz (aktuell)</span><span class="val" id="res-aktuell">—</span></div>
     </div>
     <p class="result-text" id="result-text"></p>
-    <a href="#kontakt" class="calc-btn" style="display:block; text-align:center; text-decoration:none; margin-top:0;">Kostenlose Analyse anfragen →</a>
+    <a href="#kontakt" class="calc-btn" id="result-cta" style="display:block; text-align:center; text-decoration:none; margin-top:0;">Kostenlose Analyse anfragen →</a>
   </div>
 </section>
 <div class="divider"></div>
@@ -154,7 +155,7 @@
   <div class="contact-inner">
     <p class="section-label">Nächster Schritt</p>
     <h2>Lassen Sie uns über Ihr Restaurant sprechen.</h2>
-    <p>Kostenlose 20-minütige Strategie-Analyse. Keine Verpflichtung, keine Vorlagen.</p>
+    <p>Kostenlose 20-minütige Strategie-Analyse — diese Woche noch 3 freie Termine. Sie erhalten in jedem Fall einen schriftlichen Massnahmenplan, auch ohne Zusammenarbeit.</p>
     <form id="kontakt-form" onsubmit="submitForm(event)" action="https://formspree.io/f/mqeoqqgo" method="POST">
       <div class="form-group"><label>Ihr Name</label><input type="text" name="name" placeholder="Max Müller" required></div>
       <div class="form-group"><label>Restaurant</label><input type="text" name="restaurant" placeholder="Restaurant Bellavista" required></div>
@@ -199,6 +200,7 @@
     const ratingText = { low: 'Ihre Google-Bewertung unter 3.5 kostet Sie täglich Gäste. Restaurants mit Bewertungen über 4.2 erhalten bis zu 45% mehr Klicks — dieser Unterschied schlägt sich direkt im Umsatz nieder.', mid: 'Mit einer Bewertung zwischen 3.5 und 4.0 verlieren Sie täglich Gäste an besser bewertete Konkurrenten. Eine gezielte Bewertungsstrategie kann Ihre Sichtbarkeit um 30% steigern.', good: 'Ihre Google-Bewertung ist solide. Mit professionellem Performance Marketing können Sie diesen Vorteil weiter ausbauen und gezielt mehr Neukunden gewinnen.', great: 'Ausgezeichnete Bewertung. Jetzt geht es darum, diese Stärke durch bezahlte Kanäle zu skalieren und das volle Potenzial auszuschöpfen.' }[rating];
     document.getElementById('result-text').textContent = ratingText;
     document.getElementById('result-subtitle').textContent = 'zusätzlich pro Monat durch professionelles Marketing möglich.';
+    document.getElementById('result-cta').textContent = 'Holen Sie sich Ihre CHF ' + fmt(potentialRevenue) + ' →';
     const resultEl = document.getElementById('result');
     resultEl.classList.add('visible');
     resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });

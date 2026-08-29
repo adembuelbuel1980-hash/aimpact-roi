@@ -5,6 +5,13 @@ Schweizer Gastronomiebetriebe richtet (`index.html`: Hero-Frage, ROI-Rechner,
 Kontaktformular). Die folgenden fünf Analysen wenden die angefragten Frameworks
 direkt auf diese Landingpage und ihre Zielgruppe an — ohne generische Platzhalter.
 
+**Wiederkehrendes Muster über mehrere Analysen hinweg:** Drei Schwächen der
+Landingpage tauchen in den Frameworks 2, 3 und 5 auf. Sie werden hier einmal
+erklärt und dort nur noch benannt, um Wiederholung zu vermeiden:
+1. **Statischer CTA-Text** — "Kostenlose Analyse anfragen" wiederholt sich unverändert an drei Stellen der Seite, unabhängig davon, wie emotional aufgeladen die Besucherin an dieser Stelle bereits ist (z. B. direkt nach dem persönlichen ROI-Ergebnis).
+2. **Fehlende Dringlichkeit/Verknappung** — nichts auf der Seite widerspricht einem "das mache ich später".
+3. **Standort/Glaubwürdigkeit kaum sichtbar** — "Zürich" und ein Beweis-Anker (Referenzen, Fallzahlen) fehlen im sichtbaren Bereich.
+
 ---
 
 ## 1. Social-Media-Texter — 5 kontrastreiche Post-Ideen
@@ -18,8 +25,8 @@ bewusst auf eine andere Emotion, damit der Kontrast zwischen den Posts entsteht.
 - CTA: "Prüfen Sie in 30 Sekunden, wie viel Sie das kostet."
 
 **Idee 2 — Ehrgeiz**
-- Hook: "60 Plätze, volle Auslastung. Das ist kein Zufall — das ist ein System."
-- Kernaussage: Die Restaurants mit den vollsten Tischen kochen nicht zwingend besser, sie fahren einen besseren Reservierungs-Funnel.
+- Hook: "60 von 60 Plätzen — jeden Abend, nicht nur am Wochenende."
+- Kernaussage: Die Restaurants mit der höchsten Auslastung kochen nicht zwingend besser, sie haben einen Reservierungs-Funnel, der zuverlässig Gäste bringt.
 - CTA: "Sehen Sie, wo Ihr Restaurant heute steht."
 
 **Idee 3 — Klarheit**
@@ -53,7 +60,7 @@ Konversion.
 
 - **Value Equation:** Dream Outcome ist implizit (mehr Umsatz), wird im Angebotstext aber nicht erneut benannt. Likelihood of Achievement fehlt komplett — keine Fallzahlen, keine Referenzen. Time Delay ist gut adressiert ("Antwort innerhalb 24 Stunden"). Effort/Sacrifice ist niedrig (kurzes Formular) — der stärkste Punkt.
 - **Preis-Wert-Verhältnis:** Kein Preis sichtbar, üblich bei einem Free-Call-Modell. Risiko: Ohne jegliche Preisandeutung wirkt der Call für misstrauische Betriebsinhaber:innen schnell wie ein reiner Verkaufsanruf.
-- **Dringlichkeit/Knappheit:** Nicht vorhanden. Größte Schwäche des Angebots — nichts widerspricht dem "später machen wir das".
+- **Dringlichkeit/Knappheit:** Nicht vorhanden (siehe wiederkehrendes Muster oben) — im Angebotskontext besonders gravierend, weil das Gespräch ohnehin schon kostenlos ist und daher zusätzlich einen zeitlichen Trigger bräuchte.
 - **Risikoumkehr:** "Keine Verpflichtung, keine Vorlagen" ist vage. Es fehlt ein konkretes Versprechen, was die Person auch ohne Zusammenarbeit mitnimmt.
 
 **Konkrete Fixes:**
@@ -71,9 +78,9 @@ Framework: Claim → Standort → Produktversprechen → CTA → Link, angewende
 
 **Was ist kaputt (zuerst):**
 - Der Claim ("Wie viel Umsatz lässt Ihr Restaurant monatlich liegen?") ist stark, aber ohne Glaubwürdigkeitsanker (keine Datenquelle, kein "basierend auf X Restaurants").
-- Der Standort ("Zürich") steckt nur im 10px-Hero-Label — leicht zu übersehen, bis CHF/+41 im Formular auftauchen.
+- Standort und Beweis-Anker fehlen im sichtbaren Bereich (siehe wiederkehrendes Muster oben) — "Zürich" steckt nur im 10px-Hero-Label.
 - Das Produktversprechen ist auf vier gleichwertige Listenpunkte verteilt (Google, Ads, Funnel, AI-Insights) statt in einem klaren Satz gebündelt — wirkt wie eine Leistungsliste, nicht wie ein Versprechen.
-- Der CTA-Text ("Kostenlose Analyse anfragen") wiederholt sich identisch an drei Stellen, unabhängig vom emotionalen Zustand der Besucherin an dieser Stelle der Seite.
+- Statischer CTA-Text (siehe wiederkehrendes Muster oben) — nutzt den emotionalen Höhepunkt direkt nach dem Rechner-Ergebnis nicht aus.
 - Vor dem Formular fehlt ein Satz, der erklärt, was nach dem Absenden passiert (Anruf? E-Mail? Bis wann?).
 
 **Was funktioniert:**
@@ -95,7 +102,15 @@ Framework: Claim → Standort → Produktversprechen → CTA → Link, angewende
 
 Produkt/Dienstleistung: AI Performance Marketing für Schweizer Restaurants (AIMPACT).
 
-- **Demografie:** Inhaber:in oder Geschäftsführer:in eines unabhängigen Restaurants oder einer kleinen Gastro-Gruppe (1–3 Standorte), 35–55 Jahre, 20–200 Sitzplätze, Jahresumsatz ca. CHF 0.8–3 Mio., kein eigenes Marketing-Team, oft selbst operativ im Betrieb (Küche/Service/Reservierungen).
+**Einschränkung:** Die ursprüngliche Vorgabe verlangt "keine generischen
+Standardpersonas, nur belegbare Muster". Ohne Zugriff auf echte Kundendaten,
+Interviews oder Google-Review-Analysen von AIMPACT lässt sich das nicht
+einlösen — die folgenden Angaben sind plausible Annahmen aus der Landingpage
+und der Branchenlogik des Rechners (Sitzplätze, Bon, Bewertungs-Uplift), keine
+verifizierten Muster. Für belastbare Werte bräuchte es Kundengespräche,
+CRM-Daten oder eine Auswertung realer Google-Bewertungen der Zielgruppe.
+
+- **Demografie (Annahme):** Inhaber:in oder Geschäftsführer:in eines unabhängigen Restaurants oder einer kleinen Gastro-Gruppe (1–3 Standorte), vermutlich 35–55 Jahre, 20–200 Sitzplätze (Spanne aus dem ROI-Rechner übernommen), Jahresumsatz grob geschätzt CHF 0.8–3 Mio., kein eigenes Marketing-Team, oft selbst operativ im Betrieb (Küche/Service/Reservierungen).
 - **Kernproblem:** Weiss, dass Online-Sichtbarkeit (Google-Profil, Bewertungen, Social Media) über volle oder leere Tische mitentscheidet, hat aber weder Zeit noch Fachwissen dafür — Marketing läuft nebenbei und unsystematisch (Azubi postet gelegentlich, Google-Profil seit Monaten ungepflegt).
 - **Kaufauslöser:** Ein spürbarer Rückgang trotz guter Küche, eine neue Konkurrenz in der Nähe mit besseren Bewertungen, oder ein Hinweis von aussen auf die schwache Online-Präsenz. Der ROI-Rechner selbst ist ein Auslöser: Eine konkrete CHF-Zahl macht das abstrakte Problem plötzlich real und dringlich.
 - **Einwände:** "Ich habe schon Geld für Facebook-Werbung verbrannt, ohne Ergebnis." / "Ich habe keine Zeit für noch ein Meeting." / "Meine Stammgäste kommen sowieso." / "Das ist bestimmt zu teuer für einen Betrieb unserer Grösse." / grundsätzliches Misstrauen gegenüber Agenturen mit grossen Versprechen.
@@ -112,4 +127,4 @@ Werbemittel: die Hero-Sektion und der ROI-Rechner der Landingpage.
 | Attention | kognitiv | erfüllt | Die Frage "Wie viel Umsatz lässt Ihr Restaurant monatlich liegen?" ist ein direkter Pattern-Interrupt, der die Zielgruppe unmittelbar persönlich anspricht. |
 | Interest | kognitiv + affektiv | erfüllt | Der Folgesatz verspricht eine schnelle, konkrete Antwort ("30 Sekunden") und nennt die Methode — klare Erwartung plus Neugier auf die eigene Zahl. |
 | Desire | affektiv | teilweise erfüllt | Der ROI-Rechner erzeugt starkes Verlangen, sobald die persönliche CHF-Zahl erscheint — der stärkste Moment der Seite. Es fehlt aber eine zusätzliche emotionale Verstärkung (z. B. eine kurze Erfolgsgeschichte oder ein Vorher/Nachher-Bild), die das Verlangen weiter auflädt. |
-| Action | konativ | teilweise erfüllt | Das Formular ist niedrigschwellig, aber der CTA-Text bleibt über die ganze Seite identisch und wird nicht an den emotionalen Höhepunkt (die persönliche Zahl) angepasst. Fehlende Dringlichkeit schwächt zusätzlich die sofortige Handlungsbereitschaft. |
+| Action | konativ | teilweise erfüllt | Das Formular ist niedrigschwellig, aber statischer CTA-Text und fehlende Dringlichkeit (siehe wiederkehrendes Muster oben) übersetzen das Momentum aus dem Rechner-Ergebnis nicht in sofortige Handlung. |

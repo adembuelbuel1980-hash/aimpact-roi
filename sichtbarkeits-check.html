@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sichtbarkeits-Score · AIMPACT</title>
-<meta name="description" content="Drei Fragen. Ein Score in Echtzeit. Sehen Sie, wie sichtbar Ihr Betrieb bei Google und Social Media wirklich ist — für Gastronomie, Beauty, Fitness, Praxen und lokalen Handel.">
+<meta name="description" content="Vier kurze Fragen, eine erste Einschätzung in Echtzeit: wie sichtbar Ihr Betrieb bei Google und Social Media wirklich wirkt — für Gastronomie, Beauty, Fitness, Praxen und lokalen Handel.">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -134,7 +134,7 @@
 <section class="hero">
   <p class="eyebrow">AI Performance Marketing · Zürich</p>
   <h1>Wie sichtbar ist Ihr Betrieb<em>wirklich online?</em></h1>
-  <p>Drei kurze Fragen, ein Score in Echtzeit: sehen Sie, wo Sie bei Google und Social Media stehen — für Gastronomie, Beauty, Fitness, Praxen und lokalen Handel.</p>
+  <p>Vier kurze Fragen zu Ihrem Auftritt, ein Score in Echtzeit — Ihre erste Einschätzung, wie sichtbar Sie bei Google und Social Media wirklich sind. Für Gastronomie, Beauty, Fitness, Praxen und lokalen Handel.</p>
   <a href="#score" class="btn-primary">Score ansehen</a>
   <a href="#kontakt" class="btn-secondary">Kostenlose Analyse</a>
 </section>
@@ -199,6 +199,7 @@
     <p class="score-band" id="score-band"></p>
     <div class="gauge-track"><div class="gauge-fill" id="gauge-fill"></div></div>
     <p class="score-text" id="score-text"></p>
+    <p class="score-text">Basiert auf Ihren Angaben oben — für eine Analyse Ihrer echten Google- &amp; Social-Media-Daten:</p>
     <a href="#kontakt" class="btn-primary" style="display:block; text-align:center;">Kostenlose Analyse anfragen →</a>
   </div>
 </section>
@@ -297,7 +298,7 @@
   }
 
   function updateScore() {
-    const ratingMap = { low: 20, mid: 45, good: 70, great: 90 };
+    const ratingMap = { low: 20, mid: 45, good: 70, great: 100 };
     const posting = parseInt(postingEl.value, 10);
     const digital = parseInt(digitalEl.value, 10);
     document.getElementById('val-posting').textContent = posting;

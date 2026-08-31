@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agency Agents — 289 KI-Spezialisten in Claude · AIMPACT</title>
+<meta name="description" content="Das komplette Deutsch-Guide zu Agency Agents: Repo, drei Installationswege, Aktivierung, Top 5 Agenten und der eine Fehler, der dafür sorgt, dass gar nichts passiert.">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --black: #0a0a0a; --white: #f5f4f0; --gold: #c9a84c; --grey: #888; --light: #e8e6e0; --ease-out: cubic-bezier(0.23, 1, 0.32, 1); }
+  html { scroll-behavior: smooth; }
+  body { background: var(--white); color: var(--black); font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh; overflow-x: hidden; }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 20px 32px; background: var(--white); border-bottom: 1px solid var(--light); }
+  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 3px; color: var(--black); text-decoration: none; }
+  .logo span { color: var(--gold); }
+  .nav-cta { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--black); text-decoration: none; border-bottom: 1px solid var(--black); padding-bottom: 2px; }
+
+  .doc-hero { padding: 140px 32px 64px; max-width: 720px; margin: 0 auto; }
+  .doc-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; }
+  .doc-hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(38px, 8vw, 64px); line-height: 0.98; letter-spacing: 0.5px; margin-bottom: 24px; }
+  .doc-hero .lede { font-size: 16px; line-height: 1.75; color: #444; margin-bottom: 32px; max-width: 620px; }
+  .byline { display: flex; align-items: center; gap: 10px; font-size: 12px; letter-spacing: 0.5px; color: var(--grey); padding-top: 20px; border-top: 1px solid var(--light); }
+  .byline .dot { color: var(--gold); }
+
+  .intro-box { background: var(--black); color: var(--white); padding: 40px 32px; }
+  .intro-inner { max-width: 720px; margin: 0 auto; font-size: 14px; line-height: 1.9; color: #ccc; }
+  .intro-inner strong { color: var(--white); font-weight: 500; }
+
+  article { max-width: 720px; margin: 0 auto; padding: 0 32px; }
+  section.part { padding: 72px 0; border-bottom: 1px solid var(--light); }
+  section.part:last-of-type { border-bottom: none; }
+  .part-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; }
+  .part h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(30px, 6vw, 46px); line-height: 1.02; letter-spacing: 0.5px; margin-bottom: 28px; }
+  .part h3 { font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 16px; letter-spacing: 0.3px; margin: 36px 0 14px; color: var(--black); }
+  .part p { font-size: 15px; line-height: 1.8; color: #333; margin-bottom: 18px; }
+  .part p.lead { font-size: 17px; color: var(--black); font-weight: 400; }
+  .part a.inline-link { color: var(--black); border-bottom: 1px solid var(--gold); text-decoration: none; }
+
+  pre.code-block { background: #111; color: #ddd; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.7; padding: 24px; overflow-x: auto; margin: 20px 0 28px; border-left: 2px solid var(--gold); white-space: pre; }
+  pre.code-block .gold { color: var(--gold); }
+  pre.code-block .grey { color: #666; }
+
+  .callout { border-left: 2px solid var(--gold); background: #faf8f2; padding: 24px 28px; margin: 32px 0; }
+  .callout .callout-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; font-weight: 500; }
+  .callout p { font-size: 14px; line-height: 1.75; color: #333; margin-bottom: 0; }
+  .callout p + p { margin-top: 12px; }
+
+  .warn { border-left: 2px solid var(--black); background: #f0efe9; }
+  .warn .callout-label { color: var(--black); }
+
+  table.division-table { width: 100%; border-collapse: collapse; margin: 24px 0 32px; font-size: 13px; }
+  table.division-table th { text-align: left; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--grey); padding: 10px 12px; border-bottom: 1px solid var(--black); }
+  table.division-table td { padding: 10px 12px; border-bottom: 1px solid var(--light); color: #333; }
+  table.division-table td.num { color: var(--gold); font-weight: 500; text-align: right; }
+  .table-wrap { overflow-x: auto; }
+
+  ol.numbered-list, ul.plain-list { list-style: none; margin: 20px 0 28px; }
+  ol.numbered-list li, ul.plain-list li { padding: 20px 0; border-bottom: 1px solid var(--light); }
+  ol.numbered-list li:last-child, ul.plain-list li:last-child { border-bottom: none; }
+  .step-num { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--gold); margin-right: 10px; }
+  .step-title { font-weight: 500; color: var(--black); }
+  .step-path { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--grey); display: block; margin: 4px 0 8px; }
+  .step-desc { font-size: 14px; line-height: 1.75; color: #444; }
+
+  .way-block { margin: 28px 0 40px; }
+  .way-label { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--black); font-weight: 500; margin-bottom: 4px; }
+  .way-sub { font-size: 13px; color: var(--grey); margin-bottom: 14px; }
+
+  .toc { max-width: 720px; margin: 0 auto; padding: 0 32px 64px; }
+  .toc-inner { border-top: 1px solid var(--light); padding-top: 28px; }
+  .toc-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; }
+  .toc a { display: flex; justify-content: space-between; align-items: baseline; font-size: 14px; color: var(--black); text-decoration: none; padding: 10px 0; border-bottom: 1px solid var(--light); }
+  .toc a span.n { font-family: 'Bebas Neue', sans-serif; color: var(--gold); font-size: 15px; }
+
+  .cta-section { background: var(--black); color: var(--white); padding: 72px 32px; }
+  .cta-inner { max-width: 680px; margin: 0 auto; text-align: left; }
+  .cta-inner h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(32px, 7vw, 52px); line-height: 1; letter-spacing: 0.5px; margin: 14px 0 16px; }
+  .cta-inner p { font-size: 14px; color: #999; line-height: 1.7; margin-bottom: 32px; max-width: 500px; }
+  .btn-primary { display: inline-block; background: var(--gold); color: var(--black); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 18px 36px; text-decoration: none; cursor: pointer; border: none; font-family: 'DM Sans', sans-serif; font-weight: 500; transition: background 0.2s, color 0.2s, transform 130ms var(--ease-out); }
+  .btn-primary:hover { background: var(--white); }
+  .btn-primary:active { transform: scale(0.97); }
+  .btn-secondary { display: inline-block; background: transparent; color: var(--white); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 18px 36px; text-decoration: none; cursor: pointer; border: 1px solid #444; font-family: 'DM Sans', sans-serif; margin-left: 12px; transition: border-color 0.2s, color 0.2s, transform 130ms var(--ease-out); }
+  .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-secondary:active { transform: scale(0.97); }
+
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out); }
+  .reveal.in-view { opacity: 1; transform: translateY(0); }
+
+  footer { padding: 32px; border-top: 1px solid var(--light); display: flex; justify-content: space-between; align-items: center; }
+  footer .logo { font-size: 16px; }
+  footer p { font-size: 11px; color: var(--grey); letter-spacing: 1px; }
+
+  @media (max-width: 480px) {
+    nav { padding: 16px 20px; }
+    .doc-hero, article, .toc { padding-left: 20px; padding-right: 20px; }
+    .intro-inner { padding-left: 0; padding-right: 0; }
+    .intro-box { padding: 32px 20px; }
+    .cta-section { padding: 56px 20px; }
+    footer { padding: 24px 20px; flex-direction: column; gap: 12px; text-align: center; }
+    .btn-secondary { margin-left: 0; margin-top: 12px; display: block; text-align: center; }
+    section.part { padding: 52px 0; }
+    pre.code-block { font-size: 11px; padding: 18px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn-primary:active, .btn-secondary:active { transform: none; }
+    .reveal { transition: opacity 0.3s ease; transform: none; }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">AIMPACT<span>.</span></a>
+  <a href="index.html#kontakt" class="nav-cta">Analyse anfragen</a>
+</nav>
+
+<section class="doc-hero">
+  <p class="doc-label">Deliverable · Agency Agents · Deutsch</p>
+  <h1>Agency Agents — 289 fertige KI-Spezialisten in deinem Claude</h1>
+  <p class="lede">Das aus dem Video: das Repo mit dem kompletten Agenten-Roster, drei Wege es zu installieren (einer davon: du sagst es Claude einfach), wie du einen Agenten wirklich aktivierst — plus die Top 5, mit denen du anfängst, und der eine Fehler, der dafür sorgt, dass gar nichts passiert.</p>
+  <div class="byline">
+    <span>Alan Langhammer · @alan.buildz</span>
+    <span class="dot">·</span>
+    <span>Agency Agents · August 2026</span>
+  </div>
+</section>
+
+<div class="intro-box">
+  <div class="intro-inner">
+    Du bekommst fünf Dinge: <strong>die ehrliche Einordnung</strong>, was dieses Repo ist (und was nicht) · <strong>der Link plus drei Installationswege</strong>, vom Ein-Zeiler an Claude bis zum Terminal · <strong>die Aktivierung</strong>, also wie du einen Agenten tatsächlich benutzt · <strong>die Top 5 Agenten</strong>, mit denen ich anfangen würde, mit Begründung · und <strong>den einen Fehler</strong>, an dem die meisten hängenbleiben.
+  </div>
+</div>
+
+<div class="toc">
+  <div class="toc-inner">
+    <p class="toc-label">Inhalt</p>
+    <a href="#teil-1"><span><span class="n">01</span> Was das wirklich ist</span><span>→</span></a>
+    <a href="#teil-2"><span><span class="n">02</span> Der Link und die 18 Bereiche</span><span>→</span></a>
+    <a href="#teil-3"><span><span class="n">03</span> Installieren</span><span>→</span></a>
+    <a href="#teil-4"><span><span class="n">04</span> Aktivieren</span><span>→</span></a>
+    <a href="#teil-5"><span><span class="n">05</span> Die Top 5</span><span>→</span></a>
+    <a href="#teil-6"><span><span class="n">06</span> Wartung</span><span>→</span></a>
+  </div>
+</div>
+
+<article>
+
+  <!-- TEIL 1 -->
+  <section class="part reveal" id="teil-1">
+    <p class="part-label">Teil 1</p>
+    <h2>Was das wirklich ist</h2>
+    <p class="lead">289 Markdown-Dateien. Mehr nicht. Und genau das ist der Punkt.</p>
+    <p>Im Video sage ich 147 — das war der Stand, als ich es entdeckt habe. Als ich diesen Guide geschrieben habe, waren es 289 Agenten in 18 Divisions. Das Repo wächst wöchentlich, weil Leute per Pull Request neue Spezialisten beisteuern. Du bekommst also eher mehr als weniger.</p>
+    <p>Das Repo heißt <code>msitarzewski/agency-agents</code>, steht unter MIT-Lizenz und hat rund 148.000 Sterne auf GitHub. Die Selbstbeschreibung: <em>„A complete AI agency at your fingertips."</em></p>
+    <p>Und jetzt die Entzauberung, weil sie dich später vor Frust bewahrt: Ein „Agent" ist hier eine einzige Markdown-Datei. Kein Programm, kein Plugin im Sinne von Software, keine API. Oben in der Datei steht ein kurzer Block mit Name und Beschreibung, darunter steht in normalem Text, wer dieser Agent ist, wie er arbeitet und was er abliefern muss.</p>
+
+    <h3>So sieht ein Agent von innen aus</h3>
+    <pre class="code-block"><span class="grey">---</span>
+<span class="gold">name:</span> Rapid Prototyper
+<span class="gold">description:</span> Specialized in ultra-fast proof-of-concept development and MVP
+             creation using efficient tools and frameworks
+<span class="gold">color:</span> green
+<span class="gold">emoji:</span> ⚡
+<span class="gold">vibe:</span> Turns an idea into a working prototype before the meeting's over.
+<span class="grey">---</span>
+
+# Rapid Prototyper Agent Personality
+
+You are **Rapid Prototyper**, a specialist in ultra-fast proof-of-concept
+development and MVP creation. …
+
+## 🎯 Your Core Mission
+
+### Build Functional Prototypes at Speed
+- Create working prototypes in under 3 days using rapid development tools
+- Build MVPs that validate core hypotheses with minimal viable features
+- **Default requirement**: Include user feedback collection and analytics
+  from day one</pre>
+
+    <p>Das ist alles. Der Wert liegt nicht in der Technik — den Ordner könntest du in fünf Minuten selbst anlegen. Der Wert liegt darin, dass jemand anders 289 Mal darüber nachgedacht hat, wie ein guter Spezialist für genau diesen Bereich arbeitet. Auf die meisten davon wärst du nie gekommen. Genau deswegen lohnt es sich.</p>
+
+    <div class="callout">
+      <p class="callout-label">Gut zu wissen · Warum ein Agent besser ist als ein Prompt</p>
+      <p>Wenn du Claude einfach fragst „schau dir mal meine Kampagne an", bekommst du bei jedem Mal eine andere Antwortstruktur. Ein Agent ist eine gespeicherte Arbeitsanweisung mit Haltung: dieselbe Rolle, dieselben Schritte, dieselben Liefergegenstände — jedes Mal. Erst dadurch wird aus einer Meinung ein Prozess.</p>
+    </div>
+  </section>
+
+  <!-- TEIL 2 -->
+  <section class="part reveal" id="teil-2">
+    <p class="part-label">Teil 2</p>
+    <h2>Der Link und die 18 Bereiche</h2>
+    <p class="lead">Was drin ist</p>
+    <p>Das Repo: <a class="inline-link" href="https://github.com/msitarzewski/agency-agents" target="_blank" rel="noopener">github.com/msitarzewski/agency-agents</a></p>
+    <p>Die 18 Divisions und wie viele Agenten jeweils drinstecken (Stand August 2026):</p>
+
+    <div class="table-wrap">
+      <table class="division-table">
+        <thead><tr><th>Division</th><th>Agenten</th><th>Division</th><th>Agenten</th></tr></thead>
+        <tbody>
+          <tr><td>Engineering</td><td class="num">59</td><td>Project Management</td><td class="num">7</td></tr>
+          <tr><td>Specialized</td><td class="num">58</td><td>Paid Media</td><td class="num">7</td></tr>
+          <tr><td>Marketing</td><td class="num">36</td><td>Support</td><td class="num">6</td></tr>
+          <tr><td>Game Development</td><td class="num">21</td><td>Spatial Computing</td><td class="num">6</td></tr>
+          <tr><td>GIS</td><td class="num">13</td><td>Academic</td><td class="num">6</td></tr>
+          <tr><td>Security</td><td class="num">12</td><td>Product</td><td class="num">5</td></tr>
+          <tr><td>Design</td><td class="num">10</td><td>Finance</td><td class="num">5</td></tr>
+          <tr><td>Testing</td><td class="num">9</td><td>Healthcare</td><td class="num">3</td></tr>
+          <tr><td>Sales</td><td class="num">9</td><td>Research</td><td class="num">1</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Im Video nenne ich Finanzen, Marketing, Product und Operations. Kleine Ehrlichkeit dazu: „Operations" gibt es nicht als eigene Division. Was du dafür nimmst, verteilt sich auf <code>project-management/</code>, <code>support/</code> und den <code>operations-manager</code> in <code>specialized/</code>. Die anderen drei gibt es 1:1 als <code>finance/</code>, <code>marketing/</code> und <code>product/</code>.</p>
+
+    <p>Ein paar Namen, damit du ein Gefühl bekommst, wie weit das geht: <em>Reddit Community Builder</em> · <em>Whimsy Injector</em> · <em>Reality Checker</em> · <em>Tax Strategist</em> · <em>GIS Cartography Designer</em> · <em>Roblox Experience Designer</em> · <em>Legal Document Review</em> · <em>Medical Billing &amp; Coding Specialist</em> · <em>ESG Sustainability Officer</em> · <em>Grant Writer</em>. Du kannst es benennen — es ist ziemlich wahrscheinlich drin.</p>
+  </section>
+
+  <!-- TEIL 3 -->
+  <section class="part reveal" id="teil-3">
+    <p class="part-label">Teil 3</p>
+    <h2>Installieren</h2>
+    <p class="lead">Drei Wege. Nimm Weg 1.</p>
+    <p>Alle drei Wege enden am selben Ort: die Agenten-Dateien liegen danach in <code>~/.claude/agents/</code>. Das ist der Ordner, in dem Claude Code nach Subagenten sucht.</p>
+
+    <div class="way-block">
+      <p class="way-label">Weg 1 · Claude macht es selbst (empfohlen)</p>
+      <p class="way-sub">Der Weg aus dem Video. Du öffnest Claude Code in einem beliebigen Ordner und schickst diesen Prompt:</p>
+      <pre class="code-block">Hol dir bitte das Repo https://github.com/msitarzewski/agency-agents,
+klone es nach ~/dev/agency-agents und installiere die Agenten für Claude
+Code nach ~/.claude/agents/.
+
+Nimm dafür das mitgelieferte Skript:
+  <span class="gold">./scripts/install.sh --tool claude-code</span>
+
+Sag mir danach, wie viele Dateien in ~/.claude/agents/ gelandet sind und
+liste mir die Divisions auf, die installiert wurden.</pre>
+      <p>Claude klont, führt das Skript aus und meldet zurück. Warum das der beste Weg ist: Wenn irgendetwas hakt — Ordner fehlt, Rechte stimmen nicht, Skript will eine Bestätigung — löst Claude das direkt, statt dass du eine Fehlermeldung googelst.</p>
+    </div>
+
+    <div class="way-block">
+      <p class="way-label">Weg 2 · Selbst im Terminal</p>
+      <p class="way-sub">Wenn du es lieber mit eigenen Händen machst:</p>
+      <pre class="code-block">git clone https://github.com/msitarzewski/agency-agents.git
+cd agency-agents
+<span class="gold">./scripts/install.sh --tool claude-code</span></pre>
+      <p>Das kopiert alle Agenten. Willst du nur bestimmte Bereiche, hängst du <code>--division</code> an:</p>
+      <pre class="code-block"><span class="grey"># nur die Bereiche, die du wirklich brauchst</span>
+./scripts/install.sh --tool claude-code --division marketing,finance,product
+
+<span class="grey"># oder einzelne Agenten</span>
+./scripts/install.sh --tool claude-code --agent frontend-developer,ui-designer
+
+<span class="grey"># vorher anschauen, was es überhaupt gibt</span>
+./scripts/install.sh --list teams</pre>
+    </div>
+
+    <div class="way-block">
+      <p class="way-label">Weg 3 · Einzelne Dateien kopieren</p>
+      <p class="way-sub">Der stumpfeste und ehrlichste Weg — funktioniert immer, weil es nur Dateien sind:</p>
+      <pre class="code-block">cp marketing/*.md ~/.claude/agents/
+cp finance/*.md   ~/.claude/agents/</pre>
+      <p>Oder du gehst auf GitHub, öffnest eine einzelne Agenten-Datei, klickst auf <em>Raw</em>, kopierst den Text und legst ihn lokal als <code>~/.claude/agents/reality-checker.md</code> ab. Genauso gültig.</p>
+    </div>
+
+    <div class="callout">
+      <p class="callout-label">Pro-Tipp · Fang nicht mit allen 289 an</p>
+      <p>Es ist verführerisch, alles auf einmal zu installieren. Mach es nicht. Ein Ordner mit 289 Agenten, von denen du drei kennst, ist genauso unbrauchbar wie gar keiner. Installier eine Division, arbeite eine Woche damit, hol dir dann die nächste. Der Roster läuft dir nicht weg.</p>
+    </div>
+  </section>
+
+  <!-- TEIL 4 -->
+  <section class="part reveal" id="teil-4">
+    <p class="part-label">Teil 4</p>
+    <h2>Aktivieren</h2>
+    <p class="lead">Installiert heißt nicht benutzt</p>
+    <p>Das ist die Stelle, an der die meisten stehenbleiben: Die Dateien liegen im Ordner — und dann passiert nichts, weil niemand sie aufruft. Ein Agent startet nicht von selbst. Du musst ihn benennen.</p>
+    <p>In einer laufenden Claude-Code-Sitzung sagst du einfach:</p>
+    <pre class="code-block">Nimm den Reality-Checker-Agenten und prüf, ob dieses Feature wirklich
+produktionsreif ist. Sei streng.
+
+Aktiviere den Growth Hacker und bau mir aus diesem Produkt drei
+Wachstumsschleifen, die ohne Werbebudget funktionieren.</pre>
+    <p>Das Muster ist immer dasselbe: <strong>Rolle benennen → Aufgabe geben → Anspruch setzen.</strong> Der dritte Teil ist der, den alle weglassen und der den Unterschied macht.</p>
+
+    <h3>Was du mit /agents siehst</h3>
+    <p>Tipp in Claude Code <code>/agents</code> ein. Du bekommst die Liste dessen, was tatsächlich geladen ist. Steht dein Agent nicht drin, ist er auch nicht installiert — dann liegt die Datei woanders oder die Sitzung lief schon, bevor du kopiert hast. Sitzung neu starten löst das in neun von zehn Fällen.</p>
+
+    <h3>Mehrere Agenten auf einmal</h3>
+    <p>Der eigentliche Hebel, und der Grund, warum das Repo „Agency" heißt: Du kannst mehrere Spezialisten auf dieselbe Sache ansetzen und ihre Ergebnisse nebeneinanderlegen.</p>
+    <pre class="code-block">Setz drei Agenten auf diese Landingpage an und lass sie unabhängig
+voneinander arbeiten:
+
+1. UX Researcher — wo bricht der Nutzer ab und warum?
+2. Growth Hacker — welcher Hebel bringt am schnellsten Anmeldungen?
+3. Reality Checker — was von dem, was hier behauptet wird, hält keiner
+   Prüfung stand?
+
+Danach: leg die drei Ergebnisse nebeneinander und sag mir, wo sie sich
+widersprechen. Die Widersprüche interessieren mich am meisten.</pre>
+    <p>Der letzte Satz ist der wichtige. Drei zustimmende Gutachten sind wertlos. Die Stelle, an der sich zwei Spezialisten uneinig sind, ist die Stelle, an der eine echte Entscheidung ansteht.</p>
+  </section>
+
+  <!-- TEIL 5 -->
+  <section class="part reveal" id="teil-5">
+    <p class="part-label">Teil 5</p>
+    <h2>Die Top 5</h2>
+    <p class="lead">Mit diesen fünf würde ich anfangen</p>
+    <p>Nicht die beliebtesten — die, die auch dann etwas bringen, wenn du kein Entwickler bist.</p>
+
+    <ol class="numbered-list">
+      <li><span class="step-num">1</span><span class="step-title">Reality Checker</span><span class="step-path">testing/testing-reality-checker.md</span><span class="step-desc">Der Bullshit-Filter. Setz ihn auf alles an, was du für „fertig" hältst: eine Landingpage, ein Angebot, einen Plan. Seine Aufgabe ist es, das zu finden, was du dir schöngeredet hast. Der einzige Agent, den ich täglich benutze.</span></li>
+      <li><span class="step-num">2</span><span class="step-title">Growth Hacker</span><span class="step-path">marketing/marketing-growth-hacker.md</span><span class="step-desc">Denkt in Schleifen statt in Kampagnen. Gut für die Frage „wie kommen Leute hierher, ohne dass ich dafür zahle" — und ehrlich genug zu sagen, wenn die Antwort „gar nicht" lautet.</span></li>
+      <li><span class="step-num">3</span><span class="step-title">Content Creator</span><span class="step-path">marketing/marketing-content-creator.md</span><span class="step-desc">Nimmt eine Idee und dreht sie über Formate und Kanäle durch. Nützlich, wenn du ein Thema hast und nicht weißt, ob es ein Post, ein Video oder ein Newsletter ist.</span></li>
+      <li><span class="step-num">4</span><span class="step-title">Rapid Prototyper</span><span class="step-path">engineering/engineering-rapid-prototyper.md</span><span class="step-desc">Idee → lauffähiges Ding, unter drei Tagen, mit eingebauter Messung. Auch ohne Programmierkenntnisse wertvoll, weil er dich zwingt, die kleinste testbare Version zu definieren.</span></li>
+      <li><span class="step-num">5</span><span class="step-title">Financial Analyst</span><span class="step-path">finance/finance-financial-analyst.md</span><span class="step-desc">Rechnet nach. Deckungsbeitrag, Kostenstruktur, ab wann sich etwas trägt. Der Agent, der aus einer Idee eine Zahl macht — und meistens eine unangenehme.</span></li>
+    </ol>
+
+    <div class="callout warn">
+      <p class="callout-label">Achtung · Der eine Fehler</p>
+      <p>Der Fehler ist nicht die Installation. Der Fehler ist, dass die meisten den Agenten aufrufen und ihm dann eine Ein-Satz-Aufgabe ohne Material geben: „Reality Checker, ist meine Seite gut?" Der Agent hat keine Seite. Er hat keinen Kontext. Also erfindet er einen — und du bekommst allgemeines Geschwätz zurück und denkst, das Repo sei überbewertet.</p>
+      <p>Ein Agent ist eine Rolle, kein Wissen. Gib ihm Material: den Text, den Screenshot, die Zahlen, den Link, die Datei. Erst Rolle plus Material ergibt eine Antwort, die etwas wert ist.</p>
+    </div>
+
+    <h3>Der Prompt, mit dem ich anfange</h3>
+    <pre class="code-block">Aktiviere den Reality-Checker-Agenten.
+
+Material: [Text / Screenshot / Link / Datei hier einfügen]
+Kontext: Ich will damit [Ziel] erreichen, Zielgruppe ist [wer].
+Stand: Ich halte das für fertig.
+
+Deine Aufgabe:
+1. Nenn mir die drei Behauptungen, die einer Prüfung NICHT standhalten.
+2. Nenn mir die eine Stelle, an der ein Interessent abspringt.
+3. Sag mir, was du an meiner Stelle ZUERST ändern würdest — nur eine Sache.
+
+Kein Lob. Wenn etwas gut ist, überspring es.</pre>
+  </section>
+
+  <!-- TEIL 6 -->
+  <section class="part reveal" id="teil-6">
+    <p class="part-label">Teil 6</p>
+    <h2>Wartung</h2>
+    <p class="lead">Damit es in drei Monaten noch stimmt</p>
+    <p>Das Repo wächst. Deine Kopie nicht — die bleibt auf dem Stand vom Installationstag. Einmal im Monat reicht:</p>
+    <pre class="code-block">cd ~/dev/agency-agents
+git pull
+<span class="gold">./scripts/install.sh --tool claude-code</span></pre>
+    <p>Oder wieder als Ein-Zeiler an Claude: <em>„Zieh das agency-agents-Repo auf den neuesten Stand und installier die Agenten neu nach ~/.claude/agents/. Sag mir, welche NEU dazugekommen sind."</em> — der letzte Halbsatz ist der interessante.</p>
+
+    <h3>Was nicht funktioniert</h3>
+    <ul class="plain-list">
+      <li><span class="step-title">Alle 289 gleichzeitig arbeiten lassen.</span><br><span class="step-desc">Geht technisch, ergibt aber Brei. Zwei bis vier Spezialisten pro Frage sind das Maximum, bei dem du die Antworten noch gegeneinander lesen kannst.</span></li>
+      <li><span class="step-title">Den Agenten als Faktenquelle behandeln.</span><br><span class="step-desc">Der Financial Analyst rechnet mit den Zahlen, die du ihm gibst. Gibst du ihm keine, erfindet er plausible. Das gilt für alle 289.</span></li>
+      <li><span class="step-title">Erwarten, dass sich der Ordner selbst aktualisiert.</span><br><span class="step-desc">Tut er nicht. Es sind Dateien, die du kopiert hast.</span></li>
+    </ul>
+
+    <div class="callout">
+      <p class="callout-label">Gut zu wissen · Es ist nicht nur für Claude</p>
+      <p>Dasselbe Repo bringt Konvertierungs-Skripte für Cursor, Codex, Gemini CLI, GitHub Copilot, OpenCode, Windsurf, Aider, Kimi und ein paar mehr mit — <code>./scripts/install.sh --tool cursor</code> und so weiter. Wenn du das Werkzeug wechselst, wechselt dein Team mit.</p>
+    </div>
+  </section>
+
+</article>
+
+<section class="cta-section" id="kontakt-cta">
+  <div class="cta-inner reveal">
+    <p class="doc-label" style="margin-bottom:0;">Nächster Schritt</p>
+    <h2>289 Agenten sind ein Werkzeugkasten. Kein Ergebnis.</h2>
+    <p>Wenn du willst, dass jemand die richtigen davon auf dein Marketing, deine Zahlen und deine Sichtbarkeit ansetzt — statt dass du selbst 289 Dateien durchprobierst — reden wir.</p>
+    <a href="index.html#kontakt" class="btn-primary">Kostenlose Analyse anfragen →</a>
+    <a href="index.html" class="btn-secondary">Zurück zu AIMPACT</a>
+  </div>
+</section>
+
+<footer>
+  <a href="index.html" class="logo">AIMPACT<span style="color:var(--gold)">.</span></a>
+  <p>AI Performance Marketing · Zürich · aimpact.ch</p>
+</footer>
+
+<script>
+  (function initReveal() {
+    const els = document.querySelectorAll('.reveal');
+    if (!els.length) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      els.forEach(el => el.classList.add('in-view'));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) { entry.target.classList.add('in-view'); io.unobserve(entry.target); }
+      });
+    }, { threshold: 0.12 });
+    els.forEach(el => io.observe(el));
+  })();
+</script>
+</body>
+</html>

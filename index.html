@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root { --black: #0a0a0a; --white: #f5f4f0; --gold: #c9a84c; --grey: #888; --light: #e8e6e0; }
+  :root { --black: #0a0a0a; --white: #f5f4f0; --gold: #c9a84c; --grey: #888; --light: #e8e6e0; --ease-out: cubic-bezier(0.23, 1, 0.32, 1); }
   html { scroll-behavior: smooth; }
   body { background: var(--white); color: var(--black); font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh; overflow-x: hidden; }
   nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 20px 32px; background: var(--white); border-bottom: 1px solid var(--light); }
@@ -19,10 +19,12 @@
   .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(52px, 12vw, 88px); line-height: 0.92; letter-spacing: 1px; margin-bottom: 28px; }
   .hero h1 em { font-style: italic; font-family: 'DM Sans', sans-serif; font-weight: 300; font-size: clamp(44px, 10vw, 72px); display: block; color: var(--grey); }
   .hero p { font-size: 15px; line-height: 1.7; color: #555; max-width: 480px; margin-bottom: 40px; }
-  .btn-primary { display: inline-block; background: var(--black); color: var(--white); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 18px 36px; text-decoration: none; cursor: pointer; border: none; font-family: 'DM Sans', sans-serif; transition: background 0.2s, color 0.2s; }
+  .btn-primary { display: inline-block; background: var(--black); color: var(--white); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 18px 36px; text-decoration: none; cursor: pointer; border: none; font-family: 'DM Sans', sans-serif; transition: background 0.2s, color 0.2s, transform 130ms var(--ease-out); }
   .btn-primary:hover { background: var(--gold); color: var(--black); }
-  .btn-secondary { display: inline-block; background: transparent; color: var(--black); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 18px 36px; text-decoration: none; cursor: pointer; border: 1px solid var(--black); font-family: 'DM Sans', sans-serif; margin-left: 12px; transition: background 0.2s, color 0.2s; }
+  .btn-primary:active { transform: scale(0.97); }
+  .btn-secondary { display: inline-block; background: transparent; color: var(--black); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 18px 36px; text-decoration: none; cursor: pointer; border: 1px solid var(--black); font-family: 'DM Sans', sans-serif; margin-left: 12px; transition: background 0.2s, color 0.2s, transform 130ms var(--ease-out); }
   .btn-secondary:hover { background: var(--black); color: var(--white); }
+  .btn-secondary:active { transform: scale(0.97); }
   .services { background: var(--black); color: var(--white); padding: 80px 32px; }
   .services-inner { max-width: 680px; margin: 0 auto; }
   .section-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 48px; }
@@ -45,12 +47,19 @@
   .select-group { margin-bottom: 40px; }
   .select-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--grey); margin-bottom: 14px; display: block; }
   select { width: 100%; padding: 16px 0; background: transparent; border: none; border-bottom: 1px solid var(--black); font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 300; color: var(--black); outline: none; cursor: pointer; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%230a0a0a' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0 center; }
-  .calc-btn { width: 100%; background: var(--black); color: var(--white); border: none; padding: 20px; font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; margin-top: 8px; transition: background 0.2s; }
+  .calc-btn { width: 100%; background: var(--black); color: var(--white); border: none; padding: 20px; font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; margin-top: 8px; transition: background 0.2s, transform 130ms var(--ease-out); }
   .calc-btn:hover { background: var(--gold); color: var(--black); }
+  .calc-btn:active { transform: scale(0.98); }
   .result { display: none; background: var(--black); color: var(--white); padding: 48px 32px; margin-top: 40px; position: relative; overflow: hidden; }
   .result::before { content: ''; position: absolute; top: -40px; right: -40px; width: 160px; height: 160px; border-radius: 50%; background: var(--gold); opacity: 0.08; }
-  .result.visible { display: block; animation: fadeUp 0.5s ease; }
+  .result.visible { display: block; animation: fadeUp 0.5s var(--ease-out); }
+  .result.visible .breakdown-row { animation: fadeUp 0.4s var(--ease-out) backwards; }
+  .result.visible .breakdown-row:nth-child(1) { animation-delay: 80ms; }
+  .result.visible .breakdown-row:nth-child(2) { animation-delay: 130ms; }
+  .result.visible .breakdown-row:nth-child(3) { animation-delay: 180ms; }
+  .result.visible .breakdown-row:nth-child(4) { animation-delay: 230ms; }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeOpacity { from { opacity: 0; } to { opacity: 1; } }
   .result-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
   .result-amount { font-family: 'Bebas Neue', sans-serif; font-size: clamp(56px, 14vw, 96px); letter-spacing: 2px; line-height: 1; margin-bottom: 8px; }
   .result-amount span { font-family: 'DM Sans', sans-serif; font-size: 18px; font-weight: 300; color: var(--gold); vertical-align: super; margin-right: 4px; }
@@ -70,15 +79,29 @@
   .form-group input { width: 100%; background: transparent; border: none; border-bottom: 1px solid #333; padding: 12px 0; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 300; color: var(--white); outline: none; transition: border-color 0.2s; }
   .form-group input:focus { border-bottom-color: var(--gold); }
   .form-group input::placeholder { color: #444; }
-  .form-submit { width: 100%; background: var(--gold); color: var(--black); border: none; padding: 20px; font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; font-weight: 500; margin-top: 8px; transition: background 0.2s; }
+  .form-submit { width: 100%; background: var(--gold); color: var(--black); border: none; padding: 20px; font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; font-weight: 500; margin-top: 8px; transition: background 0.2s, transform 130ms var(--ease-out); }
   .form-submit:hover { background: var(--white); }
+  .form-submit:active { transform: scale(0.98); }
   .success-msg { display: none; background: #111; border: 1px solid var(--gold); padding: 24px; text-align: center; margin-top: 24px; }
+  .success-msg.visible { display: block; animation: fadeUp 0.5s var(--ease-out); }
   .success-msg p { color: var(--gold); font-size: 14px; line-height: 1.6; }
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out); }
+  .reveal.in-view { opacity: 1; transform: translateY(0); }
+  .service-item.reveal:nth-child(1) { transition-delay: 0ms; }
+  .service-item.reveal:nth-child(2) { transition-delay: 60ms; }
+  .service-item.reveal:nth-child(3) { transition-delay: 120ms; }
+  .service-item.reveal:nth-child(4) { transition-delay: 180ms; }
   footer { padding: 32px; border-top: 1px solid var(--light); display: flex; justify-content: space-between; align-items: center; }
   footer .logo { font-size: 16px; }
   footer p { font-size: 11px; color: var(--grey); letter-spacing: 1px; }
   .divider { height: 1px; background: var(--light); margin: 0 32px; }
   @media (max-width: 480px) { nav { padding: 16px 20px; } .hero, .calculator { padding-left: 20px; padding-right: 20px; } .services { padding: 60px 20px; } .contact-section { padding: 60px 20px; } footer { padding: 24px 20px; flex-direction: column; gap: 12px; text-align: center; } .btn-secondary { margin-left: 0; margin-top: 12px; display: block; text-align: center; } }
+  @media (prefers-reduced-motion: reduce) {
+    .btn-primary:active, .btn-secondary:active, .calc-btn:active, .form-submit:active { transform: none; }
+    .result.visible, .success-msg.visible { animation: fadeOpacity 0.2s ease; }
+    .result.visible .breakdown-row { animation: fadeOpacity 0.2s ease; animation-delay: 0ms; }
+    .reveal, .service-item.reveal { transition: opacity 0.3s ease; transform: none; transition-delay: 0ms; }
+  }
 </style>
 </head>
 <body>
@@ -98,15 +121,15 @@
   <div class="services-inner">
     <p class="section-label">Was AIMPACT für Sie tut</p>
     <ul class="service-list">
-      <li class="service-item"><span class="service-num">01</span><div class="service-text"><h3>Google Sichtbarkeit</h3><p>Profil-Optimierung, lokale SEO, Bewertungen-Management.</p></div></li>
-      <li class="service-item"><span class="service-num">02</span><div class="service-text"><h3>Paid Ads</h3><p>Meta, TikTok und Google Ads mit Performance-Tracking.</p></div></li>
-      <li class="service-item"><span class="service-num">03</span><div class="service-text"><h3>Reservierungs-Funnel</h3><p>Automatisierte Systeme, die Besucher zu Gästen machen.</p></div></li>
-      <li class="service-item"><span class="service-num">04</span><div class="service-text"><h3>AI-Insights</h3><p>Datenbasierte Empfehlungen für Menüpreise & Öffnungszeiten.</p></div></li>
+      <li class="service-item reveal"><span class="service-num">01</span><div class="service-text"><h3>Google Sichtbarkeit</h3><p>Profil-Optimierung, lokale SEO, Bewertungen-Management.</p></div></li>
+      <li class="service-item reveal"><span class="service-num">02</span><div class="service-text"><h3>Paid Ads</h3><p>Meta, TikTok und Google Ads mit Performance-Tracking.</p></div></li>
+      <li class="service-item reveal"><span class="service-num">03</span><div class="service-text"><h3>Reservierungs-Funnel</h3><p>Automatisierte Systeme, die Besucher zu Gästen machen.</p></div></li>
+      <li class="service-item reveal"><span class="service-num">04</span><div class="service-text"><h3>AI-Insights</h3><p>Datenbasierte Empfehlungen für Menüpreise & Öffnungszeiten.</p></div></li>
     </ul>
   </div>
 </section>
 <section class="calculator" id="rechner">
-  <div class="calc-header">
+  <div class="calc-header reveal">
     <p class="section-label">01 · ROI Rechner</p>
     <h2>Ihre Zahlen.<br>Ihr Potenzial.</h2>
   </div>
@@ -151,7 +174,7 @@
 </section>
 <div class="divider"></div>
 <section class="contact-section" id="kontakt">
-  <div class="contact-inner">
+  <div class="contact-inner reveal">
     <p class="section-label">Nächster Schritt</p>
     <h2>Lassen Sie uns über Ihr Restaurant sprechen.</h2>
     <p>Kostenlose 20-minütige Strategie-Analyse. Keine Verpflichtung, keine Vorlagen.</p>
@@ -212,10 +235,24 @@
     const data = new FormData(form);
     try {
       const res = await fetch('https://formspree.io/f/mqeoqqgo', { method: 'POST', body: data, headers: { 'Accept': 'application/json' } });
-      if (res.ok) { form.style.display = 'none'; document.getElementById('success-msg').style.display = 'block'; }
+      if (res.ok) { form.style.display = 'none'; document.getElementById('success-msg').classList.add('visible'); }
       else { btn.textContent = 'Fehler — bitte erneut versuchen'; btn.disabled = false; }
     } catch { btn.textContent = 'Fehler — bitte erneut versuchen'; btn.disabled = false; }
   }
+  (function initReveal() {
+    const els = document.querySelectorAll('.reveal');
+    if (!els.length) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      els.forEach(el => el.classList.add('in-view'));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) { entry.target.classList.add('in-view'); io.unobserve(entry.target); }
+      });
+    }, { threshold: 0.15 });
+    els.forEach(el => io.observe(el));
+  })();
 </script>
 </body>
 </html>

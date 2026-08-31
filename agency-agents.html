@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root { --black: #0a0a0a; --white: #f5f4f0; --gold: #c9a84c; --grey: #888; --light: #e8e6e0; }
+  :root { --black: #0a0a0a; --white: #f5f4f0; --gold: #c9a84c; --grey: #888; --light: #e8e6e0; --ease-out: cubic-bezier(0.23, 1, 0.32, 1); }
   html { scroll-behavior: smooth; }
   body { background: var(--white); color: var(--black); font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh; overflow-x: hidden; }
   nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 20px 32px; background: var(--white); border-bottom: 1px solid var(--light); }
@@ -77,10 +77,15 @@
   .cta-inner { max-width: 680px; margin: 0 auto; text-align: left; }
   .cta-inner h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(32px, 7vw, 52px); line-height: 1; letter-spacing: 0.5px; margin: 14px 0 16px; }
   .cta-inner p { font-size: 14px; color: #999; line-height: 1.7; margin-bottom: 32px; max-width: 500px; }
-  .btn-primary { display: inline-block; background: var(--gold); color: var(--black); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 18px 36px; text-decoration: none; cursor: pointer; border: none; font-family: 'DM Sans', sans-serif; font-weight: 500; transition: background 0.2s, color 0.2s; }
+  .btn-primary { display: inline-block; background: var(--gold); color: var(--black); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 18px 36px; text-decoration: none; cursor: pointer; border: none; font-family: 'DM Sans', sans-serif; font-weight: 500; transition: background 0.2s, color 0.2s, transform 130ms var(--ease-out); }
   .btn-primary:hover { background: var(--white); }
-  .btn-secondary { display: inline-block; background: transparent; color: var(--white); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 18px 36px; text-decoration: none; cursor: pointer; border: 1px solid #444; font-family: 'DM Sans', sans-serif; margin-left: 12px; transition: border-color 0.2s, color 0.2s; }
+  .btn-primary:active { transform: scale(0.97); }
+  .btn-secondary { display: inline-block; background: transparent; color: var(--white); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 18px 36px; text-decoration: none; cursor: pointer; border: 1px solid #444; font-family: 'DM Sans', sans-serif; margin-left: 12px; transition: border-color 0.2s, color 0.2s, transform 130ms var(--ease-out); }
   .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-secondary:active { transform: scale(0.97); }
+
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out); }
+  .reveal.in-view { opacity: 1; transform: translateY(0); }
 
   footer { padding: 32px; border-top: 1px solid var(--light); display: flex; justify-content: space-between; align-items: center; }
   footer .logo { font-size: 16px; }
@@ -96,6 +101,10 @@
     .btn-secondary { margin-left: 0; margin-top: 12px; display: block; text-align: center; }
     section.part { padding: 52px 0; }
     pre.code-block { font-size: 11px; padding: 18px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn-primary:active, .btn-secondary:active { transform: none; }
+    .reveal { transition: opacity 0.3s ease; transform: none; }
   }
 </style>
 </head>
@@ -137,7 +146,7 @@
 <article>
 
   <!-- TEIL 1 -->
-  <section class="part" id="teil-1">
+  <section class="part reveal" id="teil-1">
     <p class="part-label">Teil 1</p>
     <h2>Was das wirklich ist</h2>
     <p class="lead">289 Markdown-Dateien. Mehr nicht. Und genau das ist der Punkt.</p>
@@ -177,7 +186,7 @@ development and MVP creation. …
   </section>
 
   <!-- TEIL 2 -->
-  <section class="part" id="teil-2">
+  <section class="part reveal" id="teil-2">
     <p class="part-label">Teil 2</p>
     <h2>Der Link und die 18 Bereiche</h2>
     <p class="lead">Was drin ist</p>
@@ -207,7 +216,7 @@ development and MVP creation. …
   </section>
 
   <!-- TEIL 3 -->
-  <section class="part" id="teil-3">
+  <section class="part reveal" id="teil-3">
     <p class="part-label">Teil 3</p>
     <h2>Installieren</h2>
     <p class="lead">Drei Wege. Nimm Weg 1.</p>
@@ -260,7 +269,7 @@ cp finance/*.md   ~/.claude/agents/</pre>
   </section>
 
   <!-- TEIL 4 -->
-  <section class="part" id="teil-4">
+  <section class="part reveal" id="teil-4">
     <p class="part-label">Teil 4</p>
     <h2>Aktivieren</h2>
     <p class="lead">Installiert heißt nicht benutzt</p>
@@ -292,7 +301,7 @@ widersprechen. Die Widersprüche interessieren mich am meisten.</pre>
   </section>
 
   <!-- TEIL 5 -->
-  <section class="part" id="teil-5">
+  <section class="part reveal" id="teil-5">
     <p class="part-label">Teil 5</p>
     <h2>Die Top 5</h2>
     <p class="lead">Mit diesen fünf würde ich anfangen</p>
@@ -328,7 +337,7 @@ Kein Lob. Wenn etwas gut ist, überspring es.</pre>
   </section>
 
   <!-- TEIL 6 -->
-  <section class="part" id="teil-6">
+  <section class="part reveal" id="teil-6">
     <p class="part-label">Teil 6</p>
     <h2>Wartung</h2>
     <p class="lead">Damit es in drei Monaten noch stimmt</p>
@@ -354,7 +363,7 @@ git pull
 </article>
 
 <section class="cta-section" id="kontakt-cta">
-  <div class="cta-inner">
+  <div class="cta-inner reveal">
     <p class="doc-label" style="margin-bottom:0;">Nächster Schritt</p>
     <h2>289 Agenten sind ein Werkzeugkasten. Kein Ergebnis.</h2>
     <p>Wenn du willst, dass jemand die richtigen davon auf dein Marketing, deine Zahlen und deine Sichtbarkeit ansetzt — statt dass du selbst 289 Dateien durchprobierst — reden wir.</p>
@@ -368,5 +377,21 @@ git pull
   <p>AI Performance Marketing · Zürich · aimpact.ch</p>
 </footer>
 
+<script>
+  (function initReveal() {
+    const els = document.querySelectorAll('.reveal');
+    if (!els.length) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      els.forEach(el => el.classList.add('in-view'));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) { entry.target.classList.add('in-view'); io.unobserve(entry.target); }
+      });
+    }, { threshold: 0.12 });
+    els.forEach(el => io.observe(el));
+  })();
+</script>
 </body>
 </html>

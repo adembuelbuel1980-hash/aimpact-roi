@@ -80,11 +80,14 @@
   .hero-composition { position: relative; z-index: 2; max-width: 90rem; margin: 0 auto; }
   .hero-grid-desktop { display: block; }
 
-  /* Layer 2 — visual: blurred depth panel + sharp signal graphic, may overlap the wordmark */
+  /* Layer 2 — visual: blurred depth panel + abstract organic/geometric form, may overlap the wordmark */
   .hero-blur-panel { position: absolute; width: 15rem; height: 15rem; top: 0.5rem; left: 50%; transform: translateX(-50%); border-radius: 62% 38% 55% 45% / 50% 60% 40% 50%; background: rgba(245,244,240,0.55); backdrop-filter: blur(26px); -webkit-backdrop-filter: blur(26px); pointer-events: none; z-index: 1; opacity: 0; animation: fadeUpIn 0.6s var(--ease-out) both; animation-delay: var(--d, 0s); }
-  .hero-visual-layer { position: relative; width: 12rem; height: 12rem; margin: 0 auto 1.5rem; z-index: 2; }
+  .hero-visual-layer { position: relative; width: 14rem; height: 14rem; margin: 0 auto 1.5rem; z-index: 2; }
   .hero-visual-inner { position: relative; width: 100%; height: 100%; z-index: 2; opacity: 0; animation: fadeUpIn 0.6s var(--ease-out) both; animation-delay: var(--d, 0s); }
   .hero-visual-inner svg { width: 100%; height: 100%; display: block; }
+
+  /* Small fragment of the same visual language, layered in front of the headline for genuine interlock */
+  .hero-visual-front { display: none; pointer-events: none; }
 
   /* Meta typography — small counterweight to the display headline */
   .hero-meta { position: relative; z-index: 3; margin-bottom: 1.25rem; }
@@ -121,18 +124,21 @@
     .hero-tech-labels { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 2.5rem; }
     .hero-tech-labels span { font-size: 0.625rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(10,10,10,0.32); }
 
-    .hero-blur-panel { width: 26rem; height: 26rem; top: -5rem; left: auto; right: 4%; transform: none; }
-    .hero-visual-layer { grid-column: 5 / 13; grid-row: 1 / 4; width: 100%; height: 32rem; margin: 0 0 0 -3.5rem; }
+    .hero-blur-panel { width: 30rem; height: 30rem; top: -6rem; left: auto; right: 2%; transform: none; }
+    .hero-visual-layer { grid-column: 4 / 13; grid-row: 1 / 4; width: 100%; height: 38rem; margin: 0 0 0 -5.5rem; }
 
     .hero-content { grid-column: 2 / 9; grid-row: 2 / 4; align-self: end; padding-bottom: 0.5rem; }
     .hero-title { font-size: clamp(3.5rem, 6vw, 6.5rem); line-height: 0.9; margin-bottom: 1.5rem; }
     .hero .btn-primary { width: auto; }
+
+    .hero-visual-front { display: block; position: absolute; z-index: 4; width: 7.5rem; height: 7.5rem; top: 14.5rem; left: 26.5rem; opacity: 0; animation: fadeUpIn 0.7s var(--ease-out) both; animation-delay: var(--d, 0s); }
+    .hero-visual-front svg { width: 100%; height: 100%; display: block; }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .hero-title .line-inner { animation: none; transform: none; }
     .reveal-fade { animation: none; opacity: 1; transform: none; }
-    .hero-wordmark, .hero-visual-inner, .hero-blur-panel { animation: none; opacity: 1; }
+    .hero-wordmark, .hero-visual-inner, .hero-blur-panel, .hero-visual-front { animation: none; opacity: 1; }
   }
 
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
@@ -280,25 +286,37 @@
         <span class="hero-blur-panel" aria-hidden="true" style="--d:.08s"></span>
         <div class="hero-visual-inner" aria-hidden="true" style="--d:.16s">
           <svg viewBox="0 0 600 600">
-            <circle cx="330" cy="300" r="200" fill="none" stroke="#c9a84c" stroke-width="2.5" stroke-dasharray="942 315" transform="rotate(-40 330 300)"/>
-            <circle cx="330" cy="300" r="130" fill="none" stroke="#0a0a0a" stroke-opacity="0.12" stroke-width="1.2"/>
-            <circle cx="330" cy="300" r="80" fill="none" stroke="#0a0a0a" stroke-opacity="0.18" stroke-width="1.2"/>
-            <line x1="330" y1="300" x2="520" y2="140" stroke="#0a0a0a" stroke-opacity="0.15" stroke-width="1"/>
-            <line x1="330" y1="300" x2="140" y2="420" stroke="#0a0a0a" stroke-opacity="0.18" stroke-width="1" stroke-dasharray="3 5"/>
-            <line x1="330" y1="300" x2="470" y2="470" stroke="#0a0a0a" stroke-opacity="0.1" stroke-width="1"/>
-            <line x1="330" y1="300" x2="200" y2="120" stroke="#0a0a0a" stroke-opacity="0.12" stroke-width="1"/>
-            <circle cx="90" cy="80" r="3" fill="#0a0a0a" fill-opacity="0.3"/>
-            <circle cx="540" cy="90" r="2.5" fill="#c9a84c"/>
-            <circle cx="60" cy="520" r="2" fill="#0a0a0a" fill-opacity="0.25"/>
-            <circle cx="500" cy="530" r="3" fill="#0a0a0a" fill-opacity="0.3"/>
-            <circle cx="250" cy="60" r="2" fill="#0a0a0a" fill-opacity="0.2"/>
-            <circle cx="560" cy="320" r="2.5" fill="#0a0a0a" fill-opacity="0.25"/>
-            <circle cx="150" cy="540" r="2" fill="#c9a84c"/>
-            <circle cx="420" cy="60" r="2" fill="#0a0a0a" fill-opacity="0.2"/>
-            <circle cx="330" cy="300" r="16" fill="#c9a84c" fill-opacity="0.15"/>
-            <circle cx="330" cy="300" r="5" fill="#c9a84c"/>
+            <defs>
+              <filter id="heroSoftBlur" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="11"/>
+              </filter>
+            </defs>
+            <!-- organic base, blurred — softest depth layer -->
+            <path d="M190,170 C260,90 400,95 460,180 C520,265 495,380 420,440 C345,500 220,485 165,405 C110,325 130,240 190,170 Z" fill="#0a0a0a" fill-opacity="0.05" filter="url(#heroSoftBlur)"/>
+            <!-- organic outline, sharper, offset — mid depth -->
+            <path d="M235,135 C305,75 425,105 460,185 C495,265 465,360 392,412 C320,464 218,442 182,368 C146,294 165,195 235,135 Z" fill="none" stroke="#0a0a0a" stroke-opacity="0.14" stroke-width="1.2"/>
+            <!-- rotated geometric shard — sharp, translucent gold -->
+            <polygon points="365,105 512,202 452,412 318,338" fill="#c9a84c" fill-opacity="0.055" stroke="#c9a84c" stroke-opacity="0.32" stroke-width="1.25"/>
+            <!-- fine, asymmetric signal lines -->
+            <line x1="115" y1="470" x2="435" y2="115" stroke="#0a0a0a" stroke-opacity="0.1" stroke-width="1"/>
+            <line x1="485" y1="450" x2="300" y2="70" stroke="#0a0a0a" stroke-opacity="0.07" stroke-width="1" stroke-dasharray="2 6"/>
+            <path d="M240,335 A95,95 0 0 1 400,265" fill="none" stroke="#c9a84c" stroke-width="1.5" stroke-opacity="0.5"/>
+            <!-- small accents -->
+            <circle cx="500" cy="145" r="2.5" fill="#c9a84c"/>
+            <circle cx="140" cy="440" r="2" fill="#0a0a0a" fill-opacity="0.3"/>
+            <circle cx="425" cy="435" r="3" fill="#0a0a0a" fill-opacity="0.2"/>
+            <circle cx="205" cy="115" r="2" fill="#0a0a0a" fill-opacity="0.2"/>
+            <circle cx="368" cy="298" r="4.5" fill="#c9a84c"/>
+            <circle cx="368" cy="298" r="14" fill="#c9a84c" fill-opacity="0.12"/>
           </svg>
         </div>
+      </div>
+
+      <div class="hero-visual-front" aria-hidden="true" style="--d:.58s">
+        <svg viewBox="0 0 200 200">
+          <polygon points="35,25 175,55 135,180 15,135" fill="#c9a84c" fill-opacity="0.09" stroke="#c9a84c" stroke-opacity="0.4" stroke-width="1.5"/>
+          <circle cx="98" cy="98" r="3" fill="#c9a84c"/>
+        </svg>
       </div>
 
       <div class="hero-content">

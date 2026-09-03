@@ -111,12 +111,22 @@
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
   /* ---- Problem / Value Proposition ---- */
-  .service-num { font-family: 'Bebas Neue', sans-serif; font-size: 0.8125rem; letter-spacing: 0.1em; color: var(--gold); display: block; margin-bottom: 1.25rem; }
-  .problem { background: var(--black); color: var(--white); padding: 4.5rem 1.25rem; }
-  .problem-inner { max-width: 48rem; margin: 0 auto; }
-  .problem-grid { display: grid; gap: 2rem; margin-bottom: 3rem; }
-  .problem-item p { font-family: 'DM Sans', sans-serif; font-size: 1.25rem; font-weight: 400; line-height: 1.4; color: var(--white); letter-spacing: -0.005em; }
-  .problem-synthesis { font-size: 1.0625rem; line-height: 1.6; color: #ccc; max-width: 38rem; padding-top: 2rem; border-top: 1px solid #222; }
+  .problem { background: var(--black); color: var(--white); padding: 5rem 1.25rem; position: relative; overflow: hidden; }
+  .problem-inner { position: relative; max-width: 72rem; margin: 0 auto; }
+  .problem-layout { display: block; }
+  .problem-list { margin-bottom: 3rem; }
+  .problem-item { display: flex; align-items: baseline; gap: 1.5rem; padding: 1.5rem 0; border-bottom: 1px solid #1c1c1c; }
+  .problem-item:first-child { border-top: 1px solid #1c1c1c; }
+  .problem-num { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.25rem, 6vw, 3rem); line-height: 1; letter-spacing: -0.01em; color: rgba(245,244,240,0.1); min-width: 3.5rem; }
+  .problem-item p { font-family: 'DM Sans', sans-serif; font-size: 1.1875rem; font-weight: 400; line-height: 1.4; color: var(--white); letter-spacing: -0.005em; }
+  .problem-synthesis-col .mark-rule { margin-bottom: 1.5rem; }
+  .problem-synthesis { font-size: 1.1875rem; line-height: 1.55; color: #d4d4d4; max-width: 30rem; }
+
+  @media (min-width: 64rem) {
+    .problem { padding: 7rem 3rem; }
+    .problem-layout { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 4.5rem; align-items: start; }
+    .problem-list { margin-bottom: 0; }
+  }
 
   /* ---- Leistungen ---- */
   .leistungen { padding: 4.5rem 1.25rem; max-width: 56rem; margin: 0 auto; }
@@ -136,26 +146,43 @@
   }
 
   /* ---- Über AIMPACT ---- */
-  .ueber { padding: 4.5rem 1.25rem; border-top: 1px solid var(--light); border-bottom: 1px solid var(--light); }
-  .ueber-inner { max-width: 38rem; margin: 0 auto; }
-  .ueber-lede { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.75rem, 5.5vw, 2.5rem); line-height: 1.15; letter-spacing: -0.01em; text-wrap: balance; margin-bottom: 1.25rem; }
-  .ueber-text { font-size: 1rem; line-height: 1.7; color: #444; max-width: 34rem; margin-bottom: 1.5rem; }
+  .ueber { padding: 5rem 1.25rem; border-top: 1px solid var(--light); border-bottom: 1px solid var(--light); position: relative; overflow: hidden; }
+  .ueber-inner { position: relative; max-width: 56rem; margin: 0 auto; }
+  .ueber-layout { display: block; }
+  .ueber-label-col { margin-bottom: 2rem; }
+  .ueber-accent { width: 3.5rem; height: 3.5rem; margin-top: 1.5rem; opacity: 0.9; }
+  .ueber-accent svg { width: 100%; height: 100%; display: block; }
+  .ueber-lede { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.75rem, 5.5vw, 2.375rem); line-height: 1.18; letter-spacing: -0.01em; text-wrap: balance; margin-bottom: 1.25rem; }
+  .ueber-text { font-size: 1rem; line-height: 1.7; color: #444; max-width: 30rem; margin-bottom: 1.5rem; }
   .ueber-tags { font-size: 0.8125rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); font-weight: 500; }
 
+  @media (min-width: 64rem) {
+    .ueber { padding: 7rem 3rem; }
+    .ueber-layout { display: grid; grid-template-columns: 0.65fr 1.35fr; gap: 3.5rem; align-items: start; }
+    .ueber-label-col { margin-bottom: 0; }
+  }
+
   /* ---- Sichtbarkeits-Check teaser ---- */
-  .check-teaser { background: var(--black); color: var(--white); padding: 5.5rem 1.25rem; position: relative; overflow: hidden; }
+  .check-teaser { background: var(--black); color: var(--white); padding: 6rem 1.25rem; position: relative; overflow: hidden; }
   .check-teaser::before { content: ''; position: absolute; top: -3rem; right: -3rem; width: 12rem; height: 12rem; border-radius: 50%; background: var(--gold); opacity: 0.07; }
-  .check-teaser-ghost { position: absolute; top: 52%; left: 50%; transform: translate(-50%, -55%); font-family: 'Bebas Neue', sans-serif; font-size: min(55vw, 24rem); line-height: 1; color: rgba(245,244,240,0.04); pointer-events: none; user-select: none; }
+  .check-teaser-ghost { position: absolute; top: 52%; left: 50%; transform: translate(-50%, -55%); font-family: 'Bebas Neue', sans-serif; font-size: min(55vw, 24rem); line-height: 1; color: rgba(245,244,240,0.045); pointer-events: none; user-select: none; }
+  .check-teaser-dots { position: absolute; inset: 0; pointer-events: none; }
+  .check-teaser-dots span { position: absolute; width: 4px; height: 4px; border-radius: 50%; background: var(--gold); opacity: 0.6; }
+  .check-teaser-dots span:nth-child(1) { top: 22%; left: 12%; }
+  .check-teaser-dots span:nth-child(2) { top: 68%; left: 18%; background: rgba(245,244,240,0.3); }
+  .check-teaser-dots span:nth-child(3) { top: 30%; right: 14%; background: rgba(245,244,240,0.25); }
+  .check-teaser-dots span:nth-child(4) { top: 75%; right: 10%; }
   .check-teaser-inner { max-width: 40rem; margin: 0 auto; text-align: center; position: relative; }
-  .check-teaser h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.125rem, 8vw, 3.75rem); line-height: 1.03; letter-spacing: -0.015em; text-wrap: balance; margin-bottom: 1.25rem; }
+  .check-teaser h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.25rem, 8.5vw, 4rem); line-height: 1; letter-spacing: -0.02em; text-wrap: balance; margin-bottom: 1.25rem; }
   .check-teaser p { font-size: 0.9375rem; color: #bbb; line-height: 1.7; max-width: 30rem; margin: 0 auto 2rem; }
   .check-teaser .micro-copy { color: #777; }
   .check-teaser .btn-primary { background: var(--gold); color: var(--black); padding: 1.375rem 2.75rem; font-size: 0.8125rem; }
   .check-teaser .btn-primary:hover { background: var(--white); }
 
   /* ---- Abschluss / CTA ---- */
-  .closing { background: var(--black); color: var(--white); padding: 7.5rem 1.25rem; }
-  .closing-inner { max-width: 42rem; margin: 0 auto; }
+  .closing { background: var(--black); color: var(--white); padding: 7.5rem 1.25rem; position: relative; overflow: hidden; }
+  .closing-glow { position: absolute; bottom: -10rem; left: -8rem; width: 26rem; height: 26rem; border-radius: 50%; background: radial-gradient(circle, rgba(201,168,76,0.1), rgba(201,168,76,0) 70%); pointer-events: none; }
+  .closing-inner { position: relative; max-width: 42rem; margin: 0 auto; }
   .closing h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.75rem, 10vw, 5.5rem); line-height: 0.96; letter-spacing: -0.02em; text-wrap: balance; margin-bottom: 1.5rem; }
   .closing p { font-size: 0.9375rem; color: #999; line-height: 1.7; margin-bottom: 2.5rem; max-width: 28rem; }
   .closing .btn-primary { background: var(--gold); color: var(--black); }
@@ -254,21 +281,26 @@
 <section class="problem">
   <div class="problem-inner reveal">
     <h2 class="sr-only">Warum gute Unternehmen online unsichtbar bleiben</h2>
-    <div class="problem-grid">
-      <div class="problem-item">
-        <span class="service-num">01</span>
-        <p>Bei Google kaum sichtbar</p>
+    <div class="problem-layout">
+      <div class="problem-list">
+        <div class="problem-item">
+          <span class="problem-num">01</span>
+          <p>Bei Google kaum sichtbar</p>
+        </div>
+        <div class="problem-item">
+          <span class="problem-num">02</span>
+          <p>Social Media ohne messbaren Effekt</p>
+        </div>
+        <div class="problem-item">
+          <span class="problem-num">03</span>
+          <p>Website ohne genügend Anfragen</p>
+        </div>
       </div>
-      <div class="problem-item">
-        <span class="service-num">02</span>
-        <p>Social Media ohne messbaren Effekt</p>
-      </div>
-      <div class="problem-item">
-        <span class="service-num">03</span>
-        <p>Website ohne genügend Anfragen</p>
+      <div class="problem-synthesis-col">
+        <div class="mark-rule"></div>
+        <p class="problem-synthesis">AIMPACT verbindet Strategie, Content, Performance und AI zu einem digitalen System, das Sichtbarkeit in Kunden verwandelt.</p>
       </div>
     </div>
-    <p class="problem-synthesis">AIMPACT verbindet Strategie, Content, Performance und AI zu einem digitalen System, das Sichtbarkeit in Kunden verwandelt.</p>
   </div>
 </section>
 
@@ -313,17 +345,32 @@
 <!-- Über AIMPACT -->
 <section class="ueber" id="ueber-aimpact">
   <div class="ueber-inner reveal">
-    <div class="mark-rule"></div>
-    <p class="section-label">Über AIMPACT</p>
-    <p class="ueber-lede">AIMPACT ist eine Digital-Marketing-Boutique aus Zürich.</p>
-    <p class="ueber-text">Wir verbinden Strategie, Social Media, Performance Marketing und AI, um lokale Unternehmen digital sichtbarer und erfolgreicher zu machen.</p>
-    <p class="ueber-tags">Persönlich. Messbar. Ohne Agentur-Ballast.</p>
+    <div class="ueber-layout">
+      <div class="ueber-label-col">
+        <div class="mark-rule"></div>
+        <p class="section-label">Über AIMPACT</p>
+        <div class="ueber-accent" aria-hidden="true">
+          <svg viewBox="0 0 100 100">
+            <circle cx="42" cy="42" r="12" fill="none" stroke="#c9a84c" stroke-width="1.4"/>
+            <circle cx="42" cy="42" r="26" fill="none" stroke="#0a0a0a" stroke-opacity="0.12" stroke-width="1.2"/>
+            <circle cx="80" cy="78" r="2" fill="#0a0a0a" fill-opacity="0.25"/>
+            <circle cx="72" cy="18" r="2" fill="#c9a84c"/>
+          </svg>
+        </div>
+      </div>
+      <div class="ueber-content-col">
+        <p class="ueber-lede">AIMPACT ist eine Digital-Marketing-Boutique aus Zürich.</p>
+        <p class="ueber-text">Wir verbinden Strategie, Social Media, Performance Marketing und AI, um lokale Unternehmen digital sichtbarer und erfolgreicher zu machen.</p>
+        <p class="ueber-tags">Persönlich. Messbar. Ohne Agentur-Ballast.</p>
+      </div>
+    </div>
   </div>
 </section>
 
 <!-- Sichtbarkeits-Check (Teaser -> verlinkt auf sichtbarkeits-check.html, keine Neu-Implementierung) -->
 <section class="check-teaser" id="sichtbarkeits-check">
   <span class="check-teaser-ghost" aria-hidden="true">4</span>
+  <div class="check-teaser-dots" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
   <div class="check-teaser-inner reveal">
     <h2>WIE SICHTBAR IST DEIN UNTERNEHMEN WIRKLICH?</h2>
     <p>Beantworte vier kurze Fragen und erhalte eine erste Einschätzung deiner digitalen Sichtbarkeit — basierend auf deinen Angaben, keine Live-Analyse deiner Google- oder Social-Media-Kanäle.</p>
@@ -334,6 +381,7 @@
 
 <!-- Abschluss / CTA -->
 <section class="closing" id="kontakt">
+  <span class="closing-glow" aria-hidden="true"></span>
   <div class="closing-inner reveal">
     <h2>DEIN NÄCHSTER KUNDE SUCHT BEREITS.</h2>
     <p class="closing-subline">Die Frage ist nur, ob er dich findet.</p>

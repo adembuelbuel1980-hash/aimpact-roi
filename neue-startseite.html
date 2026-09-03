@@ -71,24 +71,41 @@
   .reveal.in-view { opacity: 1; transform: translateY(0); }
 
   /* ---- Hero ---- */
-  .hero { position: relative; padding: 6.5rem 1.25rem 4.5rem; max-width: 48rem; margin: 0 auto; overflow: hidden; }
-  .hero-glow { position: absolute; top: -8rem; right: -10rem; width: 28rem; height: 28rem; border-radius: 50%; background: radial-gradient(circle, rgba(201,168,76,0.18), rgba(201,168,76,0) 70%); pointer-events: none; }
+  .hero { position: relative; padding: 7rem 1.25rem 4rem; overflow: hidden; }
+  .hero-wordmark { position: absolute; top: -0.5rem; left: 50%; transform: translateX(-50%); font-family: 'Bebas Neue', sans-serif; font-size: 34vw; line-height: 1; letter-spacing: -0.01em; color: rgba(10,10,10,0.045); white-space: nowrap; pointer-events: none; user-select: none; z-index: 0; opacity: 0; animation: wordmarkIn 1.1s var(--ease-out) both; animation-delay: var(--d, 0s); }
+  @keyframes wordmarkIn { to { opacity: 1; } }
+  .hero-grid { position: relative; z-index: 1; max-width: 78rem; margin: 0 auto; }
+  .hero-visual { width: 6.5rem; height: 6.5rem; margin-bottom: 2rem; opacity: 0; animation: fadeUpIn 0.8s var(--ease-out) both; animation-delay: var(--d, 0s); }
+  .hero-visual svg { width: 100%; height: 100%; display: block; }
   .eyebrow { font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; position: relative; }
-  .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.75rem, 8vw, 7rem); line-height: 0.92; letter-spacing: -0.025em; margin-bottom: 1.75rem; position: relative; }
+  .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.75rem, 8vw, 6rem); line-height: 0.94; letter-spacing: -0.025em; margin-bottom: 1.75rem; position: relative; }
+  .hero-title .lines-desktop { display: none; }
   .hero-title .line { display: block; overflow: hidden; }
   .hero-title .line-inner { display: inline-block; transform: translateY(110%); animation: lineUp 0.85s var(--ease-out) both; animation-delay: var(--d, 0s); }
   .hero-title em { font-style: normal; color: var(--gold); }
   @keyframes lineUp { to { transform: translateY(0); } }
   .reveal-fade { opacity: 0; transform: translateY(0.6rem); animation: fadeUpIn 0.7s var(--ease-out) both; animation-delay: var(--d, 0s); }
   @keyframes fadeUpIn { to { opacity: 1; transform: translateY(0); } }
-  .hero .lede { font-size: 1.0625rem; color: #444; line-height: 1.6; max-width: 32rem; margin-bottom: 2.25rem; }
+  .hero .lede { font-size: 0.9375rem; color: #666; line-height: 1.65; max-width: 28rem; margin-bottom: 2.25rem; }
   .hero-ctas { display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem; }
   .btn-text { position: relative; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--black); text-decoration: none; padding-bottom: 2px; border-bottom: 1px solid var(--black); transition: color 0.2s, border-color 0.2s; }
   .btn-text:hover { color: var(--gold); border-color: var(--gold); }
 
+  @media (min-width: 64rem) {
+    .hero { padding: 9rem 3rem 7rem; }
+    .hero-wordmark { top: 1rem; left: auto; right: -2vw; transform: none; font-size: 15vw; }
+    .hero-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; align-items: center; gap: 3rem; }
+    .hero-content { position: relative; z-index: 2; order: 1; }
+    .hero-title .lines-mobile { display: none; }
+    .hero-title .lines-desktop { display: block; }
+    .hero-title { font-size: clamp(3.5rem, 6.4vw, 6.5rem); }
+    .hero-visual { position: relative; width: 100%; max-width: 22rem; height: 22rem; margin: 0 auto; z-index: 1; order: 2; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .hero-title .line-inner { animation: none; transform: none; }
     .reveal-fade { animation: none; opacity: 1; transform: none; }
+    .hero-wordmark, .hero-visual { animation: none; opacity: 1; }
   }
 
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
@@ -192,20 +209,45 @@
 
 <!-- 01 Hero -->
 <section class="hero">
-  <span class="hero-glow" aria-hidden="true"></span>
-  <p class="eyebrow reveal-fade" style="--d:0s">Digital. Social. AI. · Zürich</p>
-  <h1 class="hero-title">
-    <span class="line"><span class="line-inner" style="--d:.08s">Dein Unternehmen ist gut.</span></span>
-    <span class="line"><span class="line-inner" style="--d:.2s">Aber sieht</span></span>
-    <span class="line"><span class="line-inner" style="--d:.32s"><em>Google</em></span></span>
-    <span class="line"><span class="line-inner" style="--d:.44s">das auch?</span></span>
-  </h1>
-  <p class="lede reveal-fade" style="--d:.62s">AIMPACT hilft lokalen Unternehmen und Gastronomiebetrieben, online sichtbarer zu werden und aus digitaler Sichtbarkeit konkrete Anfragen und Kunden zu gewinnen.</p>
-  <div class="hero-ctas reveal-fade" style="--d:.74s">
-    <a href="sichtbarkeits-check.html" class="btn-primary"><span>Kostenlosen Sichtbarkeits-Check starten</span><span class="btn-arrow" aria-hidden="true">→</span></a>
-    <a href="#leistungen" class="btn-text">Leistungen ansehen</a>
+  <span class="hero-wordmark" aria-hidden="true" style="--d:0s">AIMPACT</span>
+  <div class="hero-grid">
+    <div class="hero-visual" aria-hidden="true" style="--d:.12s">
+      <svg viewBox="0 0 200 200">
+        <circle cx="120" cy="80" r="18" fill="none" stroke="#c9a84c" stroke-width="1.4"/>
+        <circle cx="120" cy="80" r="38" fill="none" stroke="#0a0a0a" stroke-opacity="0.16" stroke-width="1.2"/>
+        <circle cx="120" cy="80" r="60" fill="none" stroke="#0a0a0a" stroke-opacity="0.08" stroke-width="1.2"/>
+        <line x1="120" y1="80" x2="52" y2="172" stroke="#0a0a0a" stroke-opacity="0.14" stroke-width="1" stroke-dasharray="2 4"/>
+        <circle cx="52" cy="172" r="3" fill="#0a0a0a" fill-opacity="0.45"/>
+        <circle cx="168" cy="150" r="2.5" fill="#0a0a0a" fill-opacity="0.35"/>
+        <circle cx="24" cy="58" r="2" fill="#0a0a0a" fill-opacity="0.3"/>
+        <circle cx="182" cy="34" r="2.5" fill="#c9a84c"/>
+        <circle cx="148" cy="176" r="2" fill="#0a0a0a" fill-opacity="0.3"/>
+      </svg>
+    </div>
+    <div class="hero-content">
+      <p class="eyebrow reveal-fade" style="--d:.3s">Digital. Social. AI. · Zürich</p>
+      <h1 class="hero-title">
+        <span class="lines-mobile">
+          <span class="line"><span class="line-inner" style="--d:.38s">Dein Unternehmen ist gut.</span></span>
+          <span class="line"><span class="line-inner" style="--d:.5s">Aber sieht</span></span>
+          <span class="line"><span class="line-inner" style="--d:.62s"><em>Google</em></span></span>
+          <span class="line"><span class="line-inner" style="--d:.74s">das auch?</span></span>
+        </span>
+        <span class="lines-desktop">
+          <span class="line"><span class="line-inner" style="--d:.38s">Dein Unternehmen</span></span>
+          <span class="line"><span class="line-inner" style="--d:.5s">ist gut.</span></span>
+          <span class="line"><span class="line-inner" style="--d:.62s">Aber sieht</span></span>
+          <span class="line"><span class="line-inner" style="--d:.74s"><em>Google</em> das auch?</span></span>
+        </span>
+      </h1>
+      <p class="lede reveal-fade" style="--d:.92s">AIMPACT hilft lokalen Unternehmen und Gastronomiebetrieben, online sichtbarer zu werden und aus digitaler Sichtbarkeit konkrete Anfragen und Kunden zu gewinnen.</p>
+      <div class="hero-ctas reveal-fade" style="--d:1.04s">
+        <a href="sichtbarkeits-check.html" class="btn-primary"><span>Kostenlosen Sichtbarkeits-Check starten</span><span class="btn-arrow" aria-hidden="true">→</span></a>
+        <a href="#leistungen" class="btn-text">Leistungen ansehen</a>
+      </div>
+      <p class="micro-copy reveal-fade" style="--d:1.16s">Kostenlos · 4 kurze Fragen · direktes Ergebnis</p>
+    </div>
   </div>
-  <p class="micro-copy reveal-fade" style="--d:.86s">Kostenlos · 4 kurze Fragen · direktes Ergebnis</p>
 </section>
 
 <!-- 02 Problem / Value Proposition -->

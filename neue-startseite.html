@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AIMPACT — Digital. Social. AI.</title>
-<meta name="description" content="AIMPACT hilft lokalen Unternehmen, digital sichtbarer zu werden, mehr qualifizierte Anfragen zu gewinnen und digitale Arbeit durch moderne Websites, Social Media und KI zu vereinfachen. Kostenloser Sichtbarkeits-Check in 60 Sekunden.">
+<meta name="description" content="AIMPACT ist eine Digital-Marketing-Boutique aus Zürich: Google-Sichtbarkeit, Social Media, Performance Marketing und AI für lokale Unternehmen. Kostenloser Sichtbarkeits-Check in 60 Sekunden.">
 <link rel="canonical" href="https://www.aimpact.ch/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="de_CH">
 <meta property="og:title" content="AIMPACT — Digital. Social. AI.">
-<meta property="og:description" content="Mehr Kunden. Weniger digitaler Aufwand. Webdesign, Social Media und KI für lokale Unternehmen.">
+<meta property="og:description" content="Dein Unternehmen ist gut. Aber sieht Google das auch? AIMPACT macht lokale Unternehmen in Zürich digital sichtbar.">
 <meta property="og:url" content="https://www.aimpact.ch/">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
@@ -65,32 +65,41 @@
   .hero { padding: 6.5rem 1.25rem 4.5rem; max-width: 48rem; margin: 0 auto; }
   .eyebrow { font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; }
   .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.75rem, 11vw, 5.75rem); line-height: 0.94; letter-spacing: -0.02em; text-wrap: balance; margin-bottom: 1.5rem; }
-  .hero .lede { font-size: 1.0625rem; color: #333; line-height: 1.5; max-width: 32rem; margin-bottom: 1rem; }
-  .hero p.support { font-size: 0.9375rem; color: #666; line-height: 1.7; max-width: 30rem; margin-bottom: 2.25rem; }
+  .hero .lede { font-size: 1.0625rem; color: #444; line-height: 1.6; max-width: 32rem; margin-bottom: 2.25rem; }
+  .hero-ctas { display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem; }
+  .btn-text { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--black); text-decoration: none; border-bottom: 1px solid var(--black); padding-bottom: 2px; }
+  .btn-text:hover { color: var(--gold); border-color: var(--gold); }
 
-  /* ---- Problem / Über Aimpact ---- */
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+  /* ---- Problem / Value Proposition ---- */
+  .service-num { font-family: 'Bebas Neue', sans-serif; font-size: 0.8125rem; letter-spacing: 0.1em; color: var(--gold); display: block; margin-bottom: 1.25rem; }
   .problem { background: var(--black); color: var(--white); padding: 4.5rem 1.25rem; }
   .problem-inner { max-width: 48rem; margin: 0 auto; }
-  .problem h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 7.5vw, 3.5rem); line-height: 1.03; letter-spacing: -0.015em; text-wrap: balance; margin-bottom: 3rem; }
-  .problem-grid { display: grid; gap: 2.25rem; }
-  .problem-item h3 { font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.9375rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.625rem; }
-  .problem-item p { font-size: 0.9375rem; line-height: 1.7; color: #ccc; }
+  .problem-grid { display: grid; gap: 2rem; margin-bottom: 3rem; }
+  .problem-item p { font-family: 'DM Sans', sans-serif; font-size: 1.25rem; font-weight: 400; line-height: 1.4; color: var(--white); letter-spacing: -0.005em; }
+  .problem-synthesis { font-size: 1.0625rem; line-height: 1.6; color: #ccc; max-width: 38rem; padding-top: 2rem; border-top: 1px solid #222; }
 
   /* ---- Leistungen ---- */
   .leistungen { padding: 4.5rem 1.25rem; max-width: 64rem; margin: 0 auto; }
   .section-head { max-width: 34rem; margin-bottom: 3rem; }
   .section-label { font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
   .section-head h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 7.5vw, 3.5rem); line-height: 1.03; letter-spacing: -0.015em; text-wrap: balance; margin-bottom: 0.75rem; }
-  .section-head p { font-size: 0.9375rem; color: #555; }
   .leistungen-grid { display: grid; gap: 1px; background: var(--light); border: 1px solid var(--light); }
   .leistung-card { background: var(--white); padding: 2.25rem 1.75rem; }
-  .leistung-card .service-num { font-family: 'Bebas Neue', sans-serif; font-size: 0.8125rem; letter-spacing: 0.1em; color: var(--gold); display: block; margin-bottom: 1.25rem; }
   .leistung-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: -0.005em; margin-bottom: 0.75rem; }
   .leistung-card p { font-size: 0.875rem; color: #555; line-height: 1.65; }
 
   @media (min-width: 48rem) {
     .leistungen-grid { grid-template-columns: repeat(3, 1fr); }
   }
+
+  /* ---- Über AIMPACT ---- */
+  .ueber { padding: 4.5rem 1.25rem; border-top: 1px solid var(--light); border-bottom: 1px solid var(--light); }
+  .ueber-inner { max-width: 38rem; margin: 0 auto; }
+  .ueber-lede { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.75rem, 5.5vw, 2.5rem); line-height: 1.15; letter-spacing: -0.01em; text-wrap: balance; margin-bottom: 1.25rem; }
+  .ueber-text { font-size: 1rem; line-height: 1.7; color: #444; max-width: 34rem; margin-bottom: 1.5rem; }
+  .ueber-tags { font-size: 0.8125rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); font-weight: 500; }
 
   /* ---- Sichtbarkeits-Check teaser ---- */
   .check-teaser { background: var(--black); color: var(--white); padding: 5rem 1.25rem; position: relative; overflow: hidden; }
@@ -101,20 +110,6 @@
   .check-teaser .micro-copy { color: #777; }
   .check-teaser .btn-primary { background: var(--gold); color: var(--black); }
   .check-teaser .btn-primary:hover { background: var(--white); }
-
-  /* ---- Projekte ---- */
-  .projekte { padding: 4.5rem 1.25rem; max-width: 64rem; margin: 0 auto; }
-  .projekte-grid { display: grid; gap: 2rem; }
-  .projekt-card a { text-decoration: none; color: inherit; display: block; }
-  .projekt-visual { aspect-ratio: 4 / 3; background: var(--black); display: flex; align-items: center; justify-content: center; }
-  .projekt-visual span { font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem; letter-spacing: -0.01em; color: var(--gold); }
-  .projekt-card h3 { font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 1.0625rem; margin-top: 1.25rem; }
-  .projekt-card .kategorie { font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--grey); margin-top: 0.25rem; }
-  .projekt-card .beschreibung { font-size: 0.875rem; color: #777; margin-top: 0.375rem; font-style: italic; }
-
-  @media (min-width: 48rem) {
-    .projekte-grid { grid-template-columns: repeat(3, 1fr); }
-  }
 
   /* ---- Abschluss / CTA ---- */
   .closing { background: var(--black); color: var(--white); padding: 6rem 1.25rem; }
@@ -154,10 +149,10 @@
   <a href="#" class="logo">AIMPACT<span>.</span></a>
   <div class="nav-links">
     <a href="#leistungen">Leistungen</a>
-    <a href="#projekte">Projekte</a>
-    <a href="#ueber-aimpact">Über Aimpact</a>
+    <a href="#ueber-aimpact">Über AIMPACT</a>
+    <a href="#kontakt">Kontakt</a>
   </div>
-  <a href="sichtbarkeits-check.html" class="nav-cta-desktop">Sichtbarkeits-Check</a>
+  <a href="sichtbarkeits-check.html" class="nav-cta-desktop">Kostenloser Check</a>
   <button class="nav-toggle" id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-menu">
     <span></span><span></span><span></span>
   </button>
@@ -165,69 +160,81 @@
 
 <div class="nav-menu" id="nav-menu">
   <a href="#leistungen">Leistungen</a>
-  <a href="#projekte">Projekte</a>
-  <a href="#ueber-aimpact">Über Aimpact</a>
-  <a href="sichtbarkeits-check.html" class="nav-menu-cta">Sichtbarkeits-Check</a>
+  <a href="#ueber-aimpact">Über AIMPACT</a>
+  <a href="#kontakt">Kontakt</a>
+  <a href="sichtbarkeits-check.html" class="nav-menu-cta">Kostenloser Check</a>
 </div>
 
 <!-- 01 Hero -->
 <section class="hero">
-  <p class="eyebrow">Digital. Social. AI.</p>
-  <h1>MEHR KUNDEN.<br>WENIGER DIGITALER AUFWAND.</h1>
-  <p class="lede">Webdesign, Social Media und KI für lokale Unternehmen.</p>
-  <p class="support">AIMPACT hilft dir, online besser gefunden zu werden, professioneller aufzutreten und aus digitaler Sichtbarkeit echte Anfragen zu machen.</p>
-  <a href="sichtbarkeits-check.html" class="btn-primary">Sichtbarkeits-Check starten</a>
+  <p class="eyebrow">Digital. Social. AI. · Zürich</p>
+  <h1>DEIN UNTERNEHMEN IST GUT.<br>ABER SIEHT GOOGLE DAS AUCH?</h1>
+  <p class="lede">AIMPACT hilft lokalen Unternehmen und Gastronomiebetrieben, online sichtbarer zu werden und aus digitaler Sichtbarkeit konkrete Anfragen und Kunden zu gewinnen.</p>
+  <div class="hero-ctas">
+    <a href="sichtbarkeits-check.html" class="btn-primary">Kostenlosen Sichtbarkeits-Check starten</a>
+    <a href="#leistungen" class="btn-text">Leistungen ansehen</a>
+  </div>
   <p class="micro-copy">Kostenlos · 4 kurze Fragen · direktes Ergebnis</p>
 </section>
 
-<!-- 02 Problem / dient zugleich als "Über Aimpact"-Anker -->
-<section class="problem" id="ueber-aimpact">
+<!-- 02 Problem / Value Proposition -->
+<section class="problem">
   <div class="problem-inner reveal">
-    <h2>DEIN UNTERNEHMEN IST GUT.<br>ABER SIEHT MAN DAS AUCH ONLINE?</h2>
+    <h2 class="sr-only">Warum gute Unternehmen online unsichtbar bleiben</h2>
     <div class="problem-grid">
       <div class="problem-item">
-        <h3>Nicht gefunden.</h3>
-        <p>Potenzielle Kunden suchen online – finden aber zuerst die Konkurrenz.</p>
+        <span class="service-num">01</span>
+        <p>Bei Google kaum sichtbar</p>
       </div>
       <div class="problem-item">
-        <h3>Nicht überzeugend.</h3>
-        <p>Website und Social Media zeigen nicht die Qualität, die dein Unternehmen tatsächlich bietet.</p>
+        <span class="service-num">02</span>
+        <p>Social Media ohne messbaren Effekt</p>
       </div>
       <div class="problem-item">
-        <h3>Zu viel Handarbeit.</h3>
-        <p>Anfragen, Inhalte und digitale Abläufe kosten unnötig Zeit.</p>
+        <span class="service-num">03</span>
+        <p>Website ohne genügend Anfragen</p>
       </div>
     </div>
+    <p class="problem-synthesis">AIMPACT verbindet Strategie, Content, Performance und AI zu einem digitalen System, das Sichtbarkeit in Kunden verwandelt.</p>
   </div>
 </section>
 
-<!-- 03 Leistungen -->
+<!-- 03 Was AIMPACT macht -->
 <section class="leistungen" id="leistungen">
   <div class="section-head reveal">
     <p class="section-label">Leistungen</p>
-    <h2>DREI BEREICHE.<br>EIN ZIEL.</h2>
-    <p>Mehr digitale Wirkung für dein Unternehmen.</p>
+    <h2>WAS AIMPACT MACHT</h2>
   </div>
   <div class="leistungen-grid">
     <div class="leistung-card reveal">
       <span class="service-num">01</span>
-      <h3>Web</h3>
-      <p>Websites, die nicht nur gut aussehen, sondern aus Besuchern Anfragen machen.</p>
+      <h3>Sichtbarkeit</h3>
+      <p>Google, lokale SEO und digitale Präsenz.</p>
     </div>
     <div class="leistung-card reveal">
       <span class="service-num">02</span>
-      <h3>Social</h3>
-      <p>Content und Social Media, die dein Unternehmen sichtbar und relevant machen.</p>
+      <h3>Social &amp; Performance</h3>
+      <p>Content, Social Media und bezahlte Kampagnen.</p>
     </div>
     <div class="leistung-card reveal">
       <span class="service-num">03</span>
-      <h3>AI</h3>
-      <p>Smarte KI-Lösungen und Automationen, die dir repetitive Arbeit abnehmen.</p>
+      <h3>Websites &amp; AI</h3>
+      <p>Conversion-orientierte Websites, Automatisierung und AI-Lösungen.</p>
     </div>
   </div>
 </section>
 
-<!-- 04 Sichtbarkeits-Check (Teaser -> verlinkt auf sichtbarkeits-check.html, keine Neu-Implementierung) -->
+<!-- Über AIMPACT -->
+<section class="ueber" id="ueber-aimpact">
+  <div class="ueber-inner reveal">
+    <p class="section-label">Über AIMPACT</p>
+    <p class="ueber-lede">AIMPACT ist eine Digital-Marketing-Boutique aus Zürich.</p>
+    <p class="ueber-text">Wir verbinden Strategie, Social Media, Performance Marketing und AI, um lokale Unternehmen digital sichtbarer und erfolgreicher zu machen.</p>
+    <p class="ueber-tags">Persönlich. Messbar. Ohne Agentur-Ballast.</p>
+  </div>
+</section>
+
+<!-- Sichtbarkeits-Check (Teaser -> verlinkt auf sichtbarkeits-check.html, keine Neu-Implementierung) -->
 <section class="check-teaser" id="sichtbarkeits-check">
   <div class="check-teaser-inner reveal">
     <h2>WIE SICHTBAR IST DEIN UNTERNEHMEN WIRKLICH?</h2>
@@ -237,40 +244,12 @@
   </div>
 </section>
 
-<!-- 05 Projekte -->
-<section class="projekte" id="projekte">
-  <div class="section-head reveal">
-    <p class="section-label">Projekte</p>
-    <h2>AUS IDEEN<br>WIRD WIRKUNG.</h2>
-  </div>
-  <div class="projekte-grid">
-    <div class="projekt-card reveal">
-      <div class="projekt-visual"><span>G</span></div>
-      <h3>Garhwal</h3>
-      <p class="kategorie">[Kategorie]</p>
-      <p class="beschreibung">[Kurzbeschreibung folgt]</p>
-    </div>
-    <div class="projekt-card reveal">
-      <div class="projekt-visual"><span>PS</span></div>
-      <h3>Pavillon S</h3>
-      <p class="kategorie">[Kategorie]</p>
-      <p class="beschreibung">[Kurzbeschreibung folgt]</p>
-    </div>
-    <div class="projekt-card reveal">
-      <div class="projekt-visual"><span>AI</span></div>
-      <h3>AIMPACT AI / Lead-System</h3>
-      <p class="kategorie">[Kategorie]</p>
-      <p class="beschreibung">[Kurzbeschreibung folgt]</p>
-    </div>
-  </div>
-</section>
-
-<!-- 06 Abschluss / CTA -->
-<section class="closing">
+<!-- Abschluss / CTA -->
+<section class="closing" id="kontakt">
   <div class="closing-inner reveal">
-    <h2>FINDE HERAUS, WO DEIN DIGITALES POTENZIAL LIEGT.</h2>
-    <p>Vier Fragen. Rund 60 Sekunden. Eine erste Einschätzung deiner digitalen Sichtbarkeit.</p>
-    <a href="sichtbarkeits-check.html" class="btn-primary">Sichtbarkeits-Check starten</a>
+    <h2>DEIN NÄCHSTER KUNDE SUCHT BEREITS.</h2>
+    <p class="closing-subline">Die Frage ist nur, ob er dich findet.</p>
+    <a href="sichtbarkeits-check.html" class="btn-primary">Kostenlosen Check starten</a>
   </div>
 </section>
 
@@ -278,12 +257,12 @@
   <div class="footer-inner">
     <div class="footer-brand">
       <span class="logo">AIMPACT<span style="color:var(--gold)">.</span></span>
-      <p>Digital. Social. AI.</p>
+      <p>Digital. Social. AI.<br>Zürich, Schweiz</p>
     </div>
     <div class="footer-links">
-      <span class="placeholder-link" title="Link folgt">Instagram</span>
-      <span class="placeholder-link" title="Link folgt">LinkedIn</span>
-      <a href="sichtbarkeits-check.html#kontakt">Kontakt</a>
+      <a href="https://www.instagram.com/aimpact.ch" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://www.linkedin.com/in/adembuelbuel/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="#kontakt">Kontakt</a>
     </div>
     <div class="footer-legal">
       <span class="placeholder-link" title="Seite folgt">Impressum</span>

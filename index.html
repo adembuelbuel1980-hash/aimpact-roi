@@ -3,242 +3,460 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AIMPACT · ROI Kalkulator</title>
+<title>AIMPACT — Digital. Social. AI.</title>
+<meta name="description" content="AIMPACT ist eine Digital-Marketing-Boutique aus Zürich: Google-Sichtbarkeit, Social Media, Performance Marketing und AI für lokale Unternehmen. Kostenloser Sichtbarkeits-Check in 60 Sekunden.">
+<link rel="canonical" href="https://www.aimpact.ch/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="de_CH">
+<meta property="og:title" content="AIMPACT — Digital. Social. AI.">
+<meta property="og:description" content="Dein Unternehmen ist gut. Aber sieht Google das auch? AIMPACT macht lokale Unternehmen in Zürich digital sichtbar.">
+<meta property="og:url" content="https://www.aimpact.ch/">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root { --black: #0a0a0a; --white: #f5f4f0; --gold: #c9a84c; --grey: #888; --light: #e8e6e0; --ease-out: cubic-bezier(0.23, 1, 0.32, 1); }
-  html { scroll-behavior: smooth; }
-  body { background: var(--white); color: var(--black); font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh; overflow-x: hidden; }
-  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 20px 32px; background: var(--white); border-bottom: 1px solid var(--light); }
-  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 3px; color: var(--black); }
+  html { font-size: 100%; scroll-behavior: smooth; }
+  :root {
+    --black: #0a0a0a; --white: #f5f4f0; --gold: #c9a84c; --grey: #888; --light: #e8e6e0;
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  body { background: var(--white); color: var(--black); font-family: 'DM Sans', sans-serif; font-weight: 300; overflow-x: hidden; }
+  section[id] { scroll-margin-top: 5rem; }
+  h1, h2, .ueber-lede { overflow-wrap: break-word; }
+  img, svg { max-width: 100%; display: block; }
+  .mark-rule { width: 2.25rem; height: 2px; background: var(--gold); margin-bottom: 1.25rem; }
+
+  /* ---- Nav ---- */
+  nav { position: sticky; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.125rem 1.25rem; background: rgba(245, 244, 240, 0.8); backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%); box-shadow: 0 1px 0 rgba(10,10,10,0.06); }
+  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.375rem; letter-spacing: 0.14em; color: var(--black); text-decoration: none; }
   .logo span { color: var(--gold); }
-  .nav-cta { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--black); text-decoration: none; border-bottom: 1px solid var(--black); padding-bottom: 2px; }
-  .hero { padding: 140px 32px 80px; max-width: 680px; margin: 0 auto; }
-  .hero-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; }
-  .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(52px, 12vw, 88px); line-height: 0.92; letter-spacing: 1px; margin-bottom: 28px; }
-  .hero h1 em { font-style: italic; font-family: 'DM Sans', sans-serif; font-weight: 300; font-size: clamp(44px, 10vw, 72px); display: block; color: var(--grey); }
-  .hero p { font-size: 15px; line-height: 1.7; color: #555; max-width: 480px; margin-bottom: 40px; }
-  .btn-primary { display: inline-block; background: var(--black); color: var(--white); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 18px 36px; text-decoration: none; cursor: pointer; border: none; font-family: 'DM Sans', sans-serif; transition: background 0.2s, color 0.2s, transform 130ms var(--ease-out); }
+  .nav-links { display: none; }
+  .nav-cta-desktop { display: none; }
+  .nav-toggle { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 0.3125rem; width: 2.75rem; height: 2.75rem; background: none; border: none; cursor: pointer; padding: 0; }
+  .nav-toggle span { display: block; width: 1.375rem; height: 1.5px; background: var(--black); transition: transform 220ms var(--ease-out), opacity 220ms var(--ease-out); }
+  .nav-toggle.is-active span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .nav-toggle.is-active span:nth-child(2) { opacity: 0; }
+  .nav-toggle.is-active span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  .nav-menu { position: fixed; inset: 0; z-index: 200; background: var(--white); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem; opacity: 0; visibility: hidden; transform: translateY(-0.5rem); transition: opacity 260ms var(--ease-out), transform 260ms var(--ease-out), visibility 0s linear 260ms; }
+  .nav-menu.open { opacity: 1; visibility: visible; transform: translateY(0); transition: opacity 260ms var(--ease-out), transform 260ms var(--ease-out), visibility 0s linear 0s; }
+  .nav-menu a { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.02em; color: var(--black); text-decoration: none; }
+  .nav-menu .nav-menu-cta { display: inline-block; margin-top: 0.5rem; background: var(--black); color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 1.125rem 2.25rem; }
+
+  @media (min-width: 48rem) {
+    nav { padding: 1.25rem 2.5rem; }
+    .nav-links { display: flex; gap: 2.5rem; }
+    .nav-links a { position: relative; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--black); text-decoration: none; padding: 0.5rem 0; }
+    .nav-links a::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0.3rem; height: 1px; background: var(--black); transform: scaleX(0); transform-origin: left; transition: transform 0.3s var(--ease-out); }
+    .nav-links a:hover::after { transform: scaleX(1); }
+    .nav-cta-desktop { display: inline-block; font-size: 0.6875rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--white); background: var(--black); text-decoration: none; padding: 0.75rem 1.5rem; transition: background 0.2s, transform 130ms var(--ease-out); }
+    .nav-cta-desktop:hover { background: var(--gold); color: var(--black); }
+    .nav-cta-desktop:active { transform: scale(0.97); }
+    .nav-toggle { display: none; }
+  }
+
+  /* ---- Buttons ---- */
+  .btn-primary { display: inline-flex; align-items: center; gap: 0.625rem; background: var(--black); color: var(--white); font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 1.125rem 2.25rem; text-decoration: none; cursor: pointer; border: none; font-family: 'DM Sans', sans-serif; font-weight: 500; transition: background 0.2s, color 0.2s, transform 130ms var(--ease-out), box-shadow 0.3s var(--ease-out); }
   .btn-primary:hover { background: var(--gold); color: var(--black); }
-  .btn-primary:active { transform: scale(0.97); }
-  .btn-secondary { display: inline-block; background: transparent; color: var(--black); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 18px 36px; text-decoration: none; cursor: pointer; border: 1px solid var(--black); font-family: 'DM Sans', sans-serif; margin-left: 12px; transition: background 0.2s, color 0.2s, transform 130ms var(--ease-out); }
-  .btn-secondary:hover { background: var(--black); color: var(--white); }
-  .btn-secondary:active { transform: scale(0.97); }
-  .services { background: var(--black); color: var(--white); padding: 80px 32px; }
-  .services-inner { max-width: 680px; margin: 0 auto; }
-  .section-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 48px; }
-  .service-list { list-style: none; }
-  .service-item { display: flex; align-items: flex-start; gap: 24px; padding: 28px 0; border-bottom: 1px solid #222; }
-  .service-num { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 2px; color: var(--gold); min-width: 32px; padding-top: 4px; }
-  .service-text h3 { font-family: 'DM Sans', sans-serif; font-weight: 400; font-size: 18px; margin-bottom: 6px; letter-spacing: 0.5px; }
-  .service-text p { font-size: 13px; color: #888; line-height: 1.6; }
-  .calculator { padding: 80px 32px; max-width: 680px; margin: 0 auto; }
-  .calc-header { margin-bottom: 56px; }
-  .calc-header h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(40px, 9vw, 64px); line-height: 0.95; letter-spacing: 1px; margin-top: 16px; }
-  .slider-group { margin-bottom: 40px; }
-  .slider-label { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
-  .slider-label span:first-child { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--grey); }
-  .slider-value { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 1px; color: var(--black); }
-  input[type="range"] { width: 100%; height: 1px; background: var(--light); outline: none; border: none; -webkit-appearance: none; cursor: pointer; }
-  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: var(--black); border-radius: 50%; cursor: pointer; transition: background 0.2s, transform 0.2s; }
-  input[type="range"]::-webkit-slider-thumb:hover { background: var(--gold); transform: scale(1.2); }
-  .range-ends { display: flex; justify-content: space-between; margin-top: 8px; font-size: 10px; color: #bbb; letter-spacing: 1px; }
-  .select-group { margin-bottom: 40px; }
-  .select-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--grey); margin-bottom: 14px; display: block; }
-  select { width: 100%; padding: 16px 0; background: transparent; border: none; border-bottom: 1px solid var(--black); font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 300; color: var(--black); outline: none; cursor: pointer; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%230a0a0a' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0 center; }
-  .calc-btn { width: 100%; background: var(--black); color: var(--white); border: none; padding: 20px; font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; margin-top: 8px; transition: background 0.2s, transform 130ms var(--ease-out); }
-  .calc-btn:hover { background: var(--gold); color: var(--black); }
-  .calc-btn:active { transform: scale(0.98); }
-  .result { display: none; background: var(--black); color: var(--white); padding: 48px 32px; margin-top: 40px; position: relative; overflow: hidden; }
-  .result::before { content: ''; position: absolute; top: -40px; right: -40px; width: 160px; height: 160px; border-radius: 50%; background: var(--gold); opacity: 0.08; }
-  .result.visible { display: block; animation: fadeUp 0.5s var(--ease-out); }
-  .result.visible .breakdown-row { animation: fadeUp 0.4s var(--ease-out) backwards; }
-  .result.visible .breakdown-row:nth-child(1) { animation-delay: 80ms; }
-  .result.visible .breakdown-row:nth-child(2) { animation-delay: 130ms; }
-  .result.visible .breakdown-row:nth-child(3) { animation-delay: 180ms; }
-  .result.visible .breakdown-row:nth-child(4) { animation-delay: 230ms; }
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes fadeOpacity { from { opacity: 0; } to { opacity: 1; } }
-  .result-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
-  .result-amount { font-family: 'Bebas Neue', sans-serif; font-size: clamp(56px, 14vw, 96px); letter-spacing: 2px; line-height: 1; margin-bottom: 8px; }
-  .result-amount span { font-family: 'DM Sans', sans-serif; font-size: 18px; font-weight: 300; color: var(--gold); vertical-align: super; margin-right: 4px; }
-  .result-subtitle { font-size: 13px; color: #888; margin-bottom: 32px; line-height: 1.6; }
-  .result-breakdown { border-top: 1px solid #222; padding-top: 28px; margin-bottom: 32px; }
-  .breakdown-row { display: flex; justify-content: space-between; align-items: baseline; padding: 10px 0; border-bottom: 1px solid #1a1a1a; font-size: 13px; }
-  .breakdown-row .label { color: #666; }
-  .breakdown-row .val { color: var(--white); font-weight: 400; }
-  .breakdown-row .val.highlight { color: var(--gold); font-weight: 500; }
-  .result-text { font-size: 14px; line-height: 1.7; color: #aaa; margin-bottom: 32px; }
-  .contact-section { background: var(--black); color: var(--white); padding: 80px 32px; }
-  .contact-inner { max-width: 680px; margin: 0 auto; }
-  .contact-inner h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(40px, 9vw, 64px); line-height: 0.95; letter-spacing: 1px; margin: 16px 0 12px; }
-  .contact-inner > p { font-size: 14px; color: #888; margin-bottom: 48px; line-height: 1.7; }
-  .form-group { margin-bottom: 32px; }
-  .form-group label { display: block; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #666; margin-bottom: 10px; }
-  .form-group input { width: 100%; background: transparent; border: none; border-bottom: 1px solid #333; padding: 12px 0; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 300; color: var(--white); outline: none; transition: border-color 0.2s; }
-  .form-group input:focus { border-bottom-color: var(--gold); }
-  .form-group input::placeholder { color: #444; }
-  .form-submit { width: 100%; background: var(--gold); color: var(--black); border: none; padding: 20px; font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; font-weight: 500; margin-top: 8px; transition: background 0.2s, transform 130ms var(--ease-out); }
-  .form-submit:hover { background: var(--white); }
-  .form-submit:active { transform: scale(0.98); }
-  .success-msg { display: none; background: #111; border: 1px solid var(--gold); padding: 24px; text-align: center; margin-top: 24px; }
-  .success-msg.visible { display: block; animation: fadeUp 0.5s var(--ease-out); }
-  .success-msg p { color: var(--gold); font-size: 14px; line-height: 1.6; }
-  .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out); }
+  .btn-primary:active { transform: scale(0.97); box-shadow: none; }
+  .btn-arrow { display: inline-block; transform: translateX(-0.35rem); opacity: 0; transition: transform 0.3s var(--ease-out), opacity 0.3s var(--ease-out); }
+  @media (hover: hover) and (pointer: fine) {
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(10,10,10,0.14); }
+    .btn-primary:hover .btn-arrow { transform: translateX(0); opacity: 1; }
+  }
+  .micro-copy { font-size: 0.75rem; color: var(--grey); letter-spacing: 0.02em; margin-top: 1rem; }
+
+  /* ---- Reveal ---- */
+  .reveal { opacity: 0; transform: translateY(1rem); transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out); }
   .reveal.in-view { opacity: 1; transform: translateY(0); }
-  .service-item.reveal:nth-child(1) { transition-delay: 0ms; }
-  .service-item.reveal:nth-child(2) { transition-delay: 60ms; }
-  .service-item.reveal:nth-child(3) { transition-delay: 120ms; }
-  .service-item.reveal:nth-child(4) { transition-delay: 180ms; }
-  footer { padding: 32px; border-top: 1px solid var(--light); display: flex; justify-content: space-between; align-items: center; }
-  footer .logo { font-size: 16px; }
-  footer p { font-size: 11px; color: var(--grey); letter-spacing: 1px; }
-  .divider { height: 1px; background: var(--light); margin: 0 32px; }
-  @media (max-width: 480px) { nav { padding: 16px 20px; } .hero, .calculator { padding-left: 20px; padding-right: 20px; } .services { padding: 60px 20px; } .contact-section { padding: 60px 20px; } footer { padding: 24px 20px; flex-direction: column; gap: 12px; text-align: center; } .btn-secondary { margin-left: 0; margin-top: 12px; display: block; text-align: center; } }
+
+  /* ---- Hero — editorial composition system ---- */
+  .hero { position: relative; overflow: hidden; padding: 6.5rem 1.25rem 3rem; background: var(--white); }
+
+  /* Layer 1 — background: oversized wordmark, architectural not headline */
+  .hero-wordmark { position: absolute; top: -1rem; left: 50%; transform: translateX(-50%); font-family: 'Bebas Neue', sans-serif; font-size: 30vw; line-height: 0.85; letter-spacing: -0.01em; color: rgba(10,10,10,0.05); white-space: nowrap; pointer-events: none; user-select: none; z-index: 1; opacity: 0; animation: wordmarkIn 0.9s var(--ease-out) both; animation-delay: var(--d, 0s); }
+  @keyframes wordmarkIn { to { opacity: 1; } }
+
+  .hero-composition { position: relative; z-index: 2; max-width: 90rem; margin: 0 auto; }
+  .hero-grid-desktop { display: block; }
+
+  /* Layer 2 — visual: hero photograph, may overlap the wordmark and sit behind the headline */
+  @keyframes photoFadeIn { to { opacity: 1; } }
+  .hero-visual-layer { position: absolute; z-index: 2; top: 7.25rem; left: 59%; width: 41%; height: 10.9rem; overflow: hidden; }
+  .hero-visual-photo { position: relative; width: 100%; height: 100%; z-index: 2; display: block; object-fit: cover; object-position: 60% 44%; transform: scale(1.18); transform-origin: 60% 44%; -webkit-mask-image: none; mask-image: none; opacity: 0; animation: photoFadeIn 0.7s var(--ease-out) both; animation-delay: var(--d, 0s); }
+
+  /* Meta typography — small counterweight to the display headline */
+  .hero-meta { position: relative; z-index: 3; margin-bottom: 1.25rem; }
+  .eyebrow { font-size: 0.6875rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); }
+  .hero-tech-labels { display: none; }
+
+  /* Layer 3 — text */
+  .hero-content { position: relative; z-index: 3; }
+  .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.8rem, 12vw, 4rem); line-height: 0.92; letter-spacing: -0.02em; margin-bottom: 1.5rem; }
+  .hero-title .lines-desktop { display: none; }
+  .hero-title .line { display: block; overflow: hidden; }
+  .hero-title .line-inner { display: inline-block; transform: translateY(110%); animation: lineUp 0.6s var(--ease-out) both; animation-delay: var(--d, 0s); }
+  .hero-title em { font-style: normal; color: var(--gold); }
+  @keyframes lineUp { to { transform: translateY(0); } }
+  .reveal-fade { opacity: 0; transform: translateY(0.6rem); animation: fadeUpIn 0.5s var(--ease-out) both; animation-delay: var(--d, 0s); }
+  @keyframes fadeUpIn { to { opacity: 1; transform: translateY(0); } }
+  .hero .lede { font-size: 1rem; color: #555; line-height: 1.6; max-width: 26rem; margin-bottom: 2rem; }
+  .hero-ctas { display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem; }
+  .hero .btn-primary { width: 100%; justify-content: center; }
+  .btn-text { position: relative; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--black); text-decoration: none; padding-bottom: 2px; border-bottom: 1px solid var(--black); transition: color 0.2s, border-color 0.2s; }
+  .btn-text:hover { color: var(--gold); border-color: var(--gold); }
+
+  @media (hover: hover) and (pointer: fine) {
+    .hero .btn-primary:hover { box-shadow: none; }
+  }
+
+  @media (min-width: 64rem) {
+    .hero { min-height: 90vh; display: flex; align-items: center; padding: 8rem 3rem 4rem; overflow: hidden; }
+    .hero-composition { width: 100%; }
+    .hero-wordmark { top: 0; left: auto; right: -3%; transform: none; font-size: 15vw; line-height: 0.8; }
+    .hero-grid-desktop { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: 1.5rem; align-items: start; }
+
+    .hero-meta { grid-column: 2 / 7; grid-row: 1; margin-bottom: 0; margin-top: 0.5rem; }
+    .hero-tech-labels { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 2.5rem; }
+    .hero-tech-labels span { font-size: 0.625rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(10,10,10,0.32); }
+
+    .hero-visual-layer { position: absolute; z-index: 2; top: 14%; left: 32%; width: 76%; height: 68%; margin: 0; overflow: hidden; }
+    .hero-visual-photo { object-position: 64% 50%; transform: scale(1.3); transform-origin: 64% 50%; animation: photoFadeIn 0.7s var(--ease-out) both; animation-delay: var(--d, 0s); -webkit-mask-image: none; mask-image: none; border-radius: 0; box-shadow: none; filter: none; }
+
+    .hero-content { grid-column: 2 / 9; grid-row: 2 / 4; align-self: end; padding-bottom: 0.5rem; }
+    .hero-title { font-size: clamp(3.5rem, 6vw, 6.5rem); line-height: 0.9; margin-bottom: 1.5rem; }
+    .hero .btn-primary { width: auto; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .btn-primary:active, .btn-secondary:active, .calc-btn:active, .form-submit:active { transform: none; }
-    .result.visible, .success-msg.visible { animation: fadeOpacity 0.2s ease; }
-    .result.visible .breakdown-row { animation: fadeOpacity 0.2s ease; animation-delay: 0ms; }
-    .reveal, .service-item.reveal { transition: opacity 0.3s ease; transform: none; transition-delay: 0ms; }
+    .hero-title .line-inner { animation: none; transform: none; }
+    .reveal-fade { animation: none; opacity: 1; transform: none; }
+    .hero-wordmark, .hero-visual-photo { animation: none; opacity: 1; }
+  }
+
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+  /* ---- Problem / Value Proposition ---- */
+  .problem { background: var(--black); color: var(--white); padding: 5rem 1.25rem; position: relative; overflow: hidden; }
+  .problem-inner { position: relative; max-width: 72rem; margin: 0 auto; }
+  .problem-layout { display: block; }
+  .problem-list { margin-bottom: 3rem; }
+  .problem-item { display: flex; align-items: baseline; gap: 1.5rem; padding: 1.5rem 0; border-bottom: 1px solid #1c1c1c; }
+  .problem-item:first-child { border-top: 1px solid #1c1c1c; }
+  .problem-num { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.25rem, 6vw, 3rem); line-height: 1; letter-spacing: -0.01em; color: rgba(245,244,240,0.1); min-width: 3.5rem; }
+  .problem-item p { font-family: 'DM Sans', sans-serif; font-size: 1.1875rem; font-weight: 400; line-height: 1.4; color: var(--white); letter-spacing: -0.005em; }
+  .problem-synthesis-col .mark-rule { margin-bottom: 1.5rem; }
+  .problem-synthesis { font-size: 1.1875rem; line-height: 1.55; color: #d4d4d4; max-width: 30rem; }
+
+  @media (min-width: 64rem) {
+    .problem { padding: 7rem 3rem; }
+    .problem-layout { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 4.5rem; align-items: start; }
+    .problem-list { margin-bottom: 0; }
+  }
+
+  /* ---- Leistungen ---- */
+  .leistungen { padding: 4.5rem 1.25rem; max-width: 56rem; margin: 0 auto; }
+  .section-head { max-width: 34rem; margin-bottom: 3rem; }
+  .section-label { font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+  .section-head h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 7.5vw, 3.5rem); line-height: 1.03; letter-spacing: -0.015em; text-wrap: balance; margin-bottom: 0.75rem; }
+  .leistungen-list { border-top: 1px solid var(--light); }
+  .leistung-row { padding: 2.25rem 0; border-bottom: 1px solid var(--light); }
+  .leistung-row-inner { display: flex; align-items: flex-start; gap: 1.5rem; transition: transform 0.35s var(--ease-out); }
+  .leistung-num { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 7vw, 4rem); line-height: 1; letter-spacing: -0.01em; color: rgba(10,10,10,0.08); min-width: 4rem; transition: color 0.35s var(--ease-out); }
+  .leistung-content h3 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.5rem, 4vw, 2rem); letter-spacing: -0.005em; margin-bottom: 0.5rem; }
+  .leistung-content p { font-size: 0.9375rem; color: #555; line-height: 1.65; max-width: 28rem; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .leistung-row:hover .leistung-row-inner { transform: translateX(0.75rem); }
+    .leistung-row:hover .leistung-num { color: var(--gold); }
+  }
+
+  /* ---- Über AIMPACT ---- */
+  .ueber { padding: 5rem 1.25rem; border-top: 1px solid var(--light); border-bottom: 1px solid var(--light); position: relative; overflow: hidden; }
+  .ueber-inner { position: relative; max-width: 56rem; margin: 0 auto; }
+  .ueber-layout { display: block; }
+  .ueber-label-col { margin-bottom: 2rem; }
+  .ueber-accent { width: 3.5rem; height: 3.5rem; margin-top: 1.5rem; opacity: 0.9; }
+  .ueber-accent svg { width: 100%; height: 100%; display: block; }
+  .ueber-lede { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.75rem, 5.5vw, 2.375rem); line-height: 1.18; letter-spacing: -0.01em; text-wrap: balance; margin-bottom: 1.25rem; }
+  .ueber-text { font-size: 1rem; line-height: 1.7; color: #444; max-width: 30rem; margin-bottom: 1.5rem; }
+  .ueber-tags { font-size: 0.8125rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); font-weight: 500; }
+
+  @media (min-width: 64rem) {
+    .ueber { padding: 7rem 3rem; }
+    .ueber-layout { display: grid; grid-template-columns: 0.65fr 1.35fr; gap: 3.5rem; align-items: start; }
+    .ueber-label-col { margin-bottom: 0; }
+  }
+
+  /* ---- Sichtbarkeits-Check teaser ---- */
+  .check-teaser { background: var(--black); color: var(--white); padding: 6rem 1.25rem; position: relative; overflow: hidden; }
+  .check-teaser::before { content: ''; position: absolute; top: -3rem; right: -3rem; width: 12rem; height: 12rem; border-radius: 50%; background: var(--gold); opacity: 0.07; }
+  .check-teaser-ghost { position: absolute; top: 52%; left: 50%; transform: translate(-50%, -55%); font-family: 'Bebas Neue', sans-serif; font-size: min(55vw, 24rem); line-height: 1; color: rgba(245,244,240,0.045); pointer-events: none; user-select: none; }
+  .check-teaser-dots { position: absolute; inset: 0; pointer-events: none; }
+  .check-teaser-dots span { position: absolute; width: 4px; height: 4px; border-radius: 50%; background: var(--gold); opacity: 0.6; }
+  .check-teaser-dots span:nth-child(1) { top: 22%; left: 12%; }
+  .check-teaser-dots span:nth-child(2) { top: 68%; left: 18%; background: rgba(245,244,240,0.3); }
+  .check-teaser-dots span:nth-child(3) { top: 30%; right: 14%; background: rgba(245,244,240,0.25); }
+  .check-teaser-dots span:nth-child(4) { top: 75%; right: 10%; }
+  .check-teaser-inner { max-width: 40rem; margin: 0 auto; text-align: center; position: relative; }
+  .check-teaser h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.25rem, 8.5vw, 4rem); line-height: 1; letter-spacing: -0.02em; text-wrap: balance; margin-bottom: 1.25rem; }
+  .check-teaser p { font-size: 0.9375rem; color: #bbb; line-height: 1.7; max-width: 30rem; margin: 0 auto 2rem; }
+  .check-teaser .micro-copy { color: #777; }
+  .check-teaser .btn-primary { background: var(--gold); color: var(--black); padding: 1.375rem 2.75rem; font-size: 0.8125rem; }
+  .check-teaser .btn-primary:hover { background: var(--white); }
+
+  /* ---- Abschluss / CTA ---- */
+  .closing { background: var(--black); color: var(--white); padding: 7.5rem 1.25rem; position: relative; overflow: hidden; }
+  .closing-glow { position: absolute; bottom: -10rem; left: -8rem; width: 26rem; height: 26rem; border-radius: 50%; background: radial-gradient(circle, rgba(201,168,76,0.1), rgba(201,168,76,0) 70%); pointer-events: none; }
+  .closing-inner { position: relative; max-width: 42rem; margin: 0 auto; }
+  .closing h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.75rem, 10vw, 5.5rem); line-height: 0.96; letter-spacing: -0.02em; text-wrap: balance; margin-bottom: 1.5rem; }
+  .closing p { font-size: 0.9375rem; color: #999; line-height: 1.7; margin-bottom: 2.5rem; max-width: 28rem; }
+  .closing .btn-primary { background: var(--gold); color: var(--black); }
+  .closing .btn-primary:hover { background: var(--white); }
+
+  /* ---- Footer ---- */
+  footer { padding: 3rem 1.25rem 2.5rem; border-top: 1px solid var(--light); }
+  .footer-inner { max-width: 64rem; margin: 0 auto; display: flex; flex-direction: column; gap: 2rem; }
+  .footer-brand .logo { display: block; margin-bottom: 0.375rem; }
+  .footer-brand p { font-size: 0.75rem; color: var(--grey); letter-spacing: 0.04em; }
+  .footer-links { display: flex; flex-wrap: wrap; gap: 1.5rem; }
+  .footer-links a, .footer-links .placeholder-link { font-size: 0.75rem; letter-spacing: 0.04em; color: var(--black); text-decoration: none; border-bottom: 1px solid var(--light); padding-bottom: 2px; }
+  .footer-legal { display: flex; flex-wrap: wrap; gap: 1.25rem; font-size: 0.6875rem; color: var(--grey); }
+  .footer-legal a, .footer-legal .placeholder-link { color: var(--grey); text-decoration: underline; text-underline-offset: 2px; }
+  .footer-links .placeholder-link { border-bottom-style: dashed; opacity: 0.55; cursor: default; }
+  .footer-legal .placeholder-link { text-decoration-style: dashed; opacity: 0.7; cursor: default; }
+  .footer-copy { font-size: 0.6875rem; color: #aaa; }
+
+  @media (min-width: 48rem) {
+    .footer-inner { flex-direction: row; justify-content: space-between; align-items: flex-start; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn-primary:active, .nav-cta-desktop:active { transform: none; }
+    .reveal { transition: opacity 0.3s ease; transform: none; }
+    .nav-toggle span { transition: opacity 0.2s ease; }
+    .nav-toggle.is-active span:nth-child(1), .nav-toggle.is-active span:nth-child(3) { transform: none; }
   }
 </style>
 </head>
 <body>
 <nav>
-  <div class="logo">AIMPACT<span>.</span></div>
-  <a href="#kontakt" class="nav-cta">Analyse anfragen</a>
+  <a href="#" class="logo">AIMPACT<span>.</span></a>
+  <div class="nav-links">
+    <a href="#leistungen">Leistungen</a>
+    <a href="#ueber-aimpact">Über AIMPACT</a>
+    <a href="#kontakt">Kontakt</a>
+  </div>
+  <a href="sichtbarkeits-check.html" class="nav-cta-desktop">Kostenloser Check</a>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<div class="nav-menu" id="nav-menu">
+  <a href="#leistungen">Leistungen</a>
+  <a href="#ueber-aimpact">Über AIMPACT</a>
+  <a href="#kontakt">Kontakt</a>
+  <a href="sichtbarkeits-check.html" class="nav-menu-cta">Kostenloser Check</a>
+</div>
+
+<!-- 01 Hero — editorial composition: background wordmark layer, signal-visual layer, text layer -->
 <section class="hero">
-  <p class="hero-label">AI Performance Marketing · Zürich</p>
-  <h1>Wie viel Umsatz lässt Ihr Restaurant<em>monatlich liegen?</em></h1>
-  <p>Berechnen Sie in 30 Sekunden Ihr ungenutztes Umsatzpotenzial durch professionelles Google- und Social-Media-Marketing — speziell für Schweizer Gastronomiebetriebe.</p>
-  <a href="#rechner" class="btn-primary">ROI berechnen</a>
-  <a href="#kontakt" class="btn-secondary">Kostenlose Analyse</a>
-</section>
-<div class="divider"></div>
-<section class="services">
-  <div class="services-inner">
-    <p class="section-label">Was AIMPACT für Sie tut</p>
-    <ul class="service-list">
-      <li class="service-item reveal"><span class="service-num">01</span><div class="service-text"><h3>Google Sichtbarkeit</h3><p>Profil-Optimierung, lokale SEO, Bewertungen-Management.</p></div></li>
-      <li class="service-item reveal"><span class="service-num">02</span><div class="service-text"><h3>Paid Ads</h3><p>Meta, TikTok und Google Ads mit Performance-Tracking.</p></div></li>
-      <li class="service-item reveal"><span class="service-num">03</span><div class="service-text"><h3>Reservierungs-Funnel</h3><p>Automatisierte Systeme, die Besucher zu Gästen machen.</p></div></li>
-      <li class="service-item reveal"><span class="service-num">04</span><div class="service-text"><h3>AI-Insights</h3><p>Datenbasierte Empfehlungen für Menüpreise & Öffnungszeiten.</p></div></li>
-    </ul>
-  </div>
-</section>
-<section class="calculator" id="rechner">
-  <div class="calc-header reveal">
-    <p class="section-label">01 · ROI Rechner</p>
-    <h2>Ihre Zahlen.<br>Ihr Potenzial.</h2>
-  </div>
-  <div class="slider-group">
-    <div class="slider-label"><span>Anzahl Sitzplätze</span><span class="slider-value" id="val-sitze">60</span></div>
-    <input type="range" min="20" max="200" value="60" id="sitze" oninput="updateSlider('sitze','val-sitze','',20,200)">
-    <div class="range-ends"><span>20</span><span>200</span></div>
-  </div>
-  <div class="slider-group">
-    <div class="slider-label"><span>Durchschnittlicher Bon pro Gast</span><span class="slider-value" id="val-bon">CHF 55</span></div>
-    <input type="range" min="20" max="150" value="55" id="bon" oninput="updateSlider('bon','val-bon','CHF ',20,150)">
-    <div class="range-ends"><span>CHF 20</span><span>CHF 150</span></div>
-  </div>
-  <div class="slider-group">
-    <div class="slider-label"><span>Neukunden pro Monat</span><span class="slider-value" id="val-neu">80</span></div>
-    <input type="range" min="0" max="300" value="80" id="neu" oninput="updateSlider('neu','val-neu','',0,300)">
-    <div class="range-ends"><span>0</span><span>300</span></div>
-  </div>
-  <div class="select-group">
-    <label class="select-label">Aktuelle Google-Bewertung</label>
-    <select id="rating">
-      <option value="low">Unter 3.5</option>
-      <option value="mid" selected>3.5 – 4.0</option>
-      <option value="good">4.0 – 4.5</option>
-      <option value="great">Über 4.5</option>
-    </select>
-  </div>
-  <button class="calc-btn" onclick="calculate()">ROI berechnen →</button>
-  <div class="result" id="result">
-    <p class="result-label">Ihr monatliches Umsatzpotenzial</p>
-    <div class="result-amount"><span>CHF</span><span id="result-amount">0</span></div>
-    <p class="result-subtitle" id="result-subtitle"></p>
-    <div class="result-breakdown">
-      <div class="breakdown-row"><span class="label">Zusätzliche Gäste/Monat</span><span class="val highlight" id="res-gaeste">—</span></div>
-      <div class="breakdown-row"><span class="label">Ø Bon pro Gast</span><span class="val" id="res-bon">—</span></div>
-      <div class="breakdown-row"><span class="label">Sichtbarkeits-Uplift</span><span class="val highlight" id="res-uplift">—</span></div>
-      <div class="breakdown-row"><span class="label">Geschätzter Monatsumsatz (aktuell)</span><span class="val" id="res-aktuell">—</span></div>
-    </div>
-    <p class="result-text" id="result-text"></p>
-    <a href="#kontakt" class="calc-btn" style="display:block; text-align:center; text-decoration:none; margin-top:0;">Kostenlose Analyse anfragen →</a>
-  </div>
-</section>
-<div class="divider"></div>
-<section class="contact-section" id="kontakt">
-  <div class="contact-inner reveal">
-    <p class="section-label">Nächster Schritt</p>
-    <h2>Lassen Sie uns über Ihr Restaurant sprechen.</h2>
-    <p>Kostenlose 20-minütige Strategie-Analyse. Keine Verpflichtung, keine Vorlagen.</p>
-    <form id="kontakt-form" onsubmit="submitForm(event)" action="https://formspree.io/f/mqeoqqgo" method="POST">
-      <div class="form-group"><label>Ihr Name</label><input type="text" name="name" placeholder="Max Müller" required></div>
-      <div class="form-group"><label>Restaurant</label><input type="text" name="restaurant" placeholder="Restaurant Bellavista" required></div>
-      <div class="form-group"><label>E-Mail</label><input type="email" name="email" placeholder="info@restaurant.ch" required></div>
-      <div class="form-group"><label>Telefon</label><input type="tel" name="telefon" placeholder="+41 79 000 00 00"></div>
-      <button type="submit" class="form-submit">Kostenlose Analyse anfragen →</button>
-    </form>
-    <div class="success-msg" id="success-msg">
-      <p>Danke. Wir melden uns innerhalb von 24 Stunden bei Ihnen.<br>AIMPACT · Zürich</p>
+  <span class="hero-wordmark" aria-hidden="true" style="--d:0s">AIMPACT</span>
+  <div class="hero-composition">
+    <div class="hero-grid-desktop">
+
+      <div class="hero-meta">
+        <p class="eyebrow reveal-fade" style="--d:.24s">Digital · Social · AI · Zürich</p>
+        <div class="hero-tech-labels" aria-hidden="true">
+          <span>01 / Visibility</span>
+          <span>02 / Signal</span>
+          <span>03 / Impact</span>
+        </div>
+      </div>
+
+      <div class="hero-visual-layer">
+        <img class="hero-visual-photo" src="assets/aimpact-hero-cropped.jpg" alt="" aria-hidden="true" width="2032" height="1143" loading="eager" decoding="async" style="--d:.16s">
+      </div>
+
+      <div class="hero-content">
+        <h1 class="hero-title">
+          <span class="lines-mobile">
+            <span class="line"><span class="line-inner" style="--d:.28s">Dein Unternehmen ist gut.</span></span>
+            <span class="line"><span class="line-inner" style="--d:.36s">Aber sieht</span></span>
+            <span class="line"><span class="line-inner" style="--d:.44s"><em>Google</em></span></span>
+            <span class="line"><span class="line-inner" style="--d:.52s">das auch?</span></span>
+          </span>
+          <span class="lines-desktop">
+            <span class="line"><span class="line-inner" style="--d:.28s">Dein Unternehmen</span></span>
+            <span class="line"><span class="line-inner" style="--d:.36s">ist gut.</span></span>
+            <span class="line"><span class="line-inner" style="--d:.44s">Aber sieht</span></span>
+            <span class="line"><span class="line-inner" style="--d:.52s"><em>Google</em> das auch?</span></span>
+          </span>
+        </h1>
+        <p class="lede reveal-fade" style="--d:.62s">AIMPACT hilft lokalen Unternehmen und Gastronomiebetrieben, online sichtbarer zu werden und aus digitaler Sichtbarkeit konkrete Anfragen und Kunden zu gewinnen.</p>
+        <div class="hero-ctas reveal-fade" style="--d:.72s">
+          <a href="sichtbarkeits-check.html" class="btn-primary"><span>Kostenlosen Sichtbarkeits-Check starten</span><span class="btn-arrow" aria-hidden="true">→</span></a>
+          <a href="#leistungen" class="btn-text">Leistungen ansehen</a>
+        </div>
+        <p class="micro-copy reveal-fade" style="--d:.82s">Kostenlos · 4 kurze Fragen · direktes Ergebnis</p>
+      </div>
+
     </div>
   </div>
 </section>
+
+<!-- 02 Problem / Value Proposition -->
+<section class="problem">
+  <div class="problem-inner reveal">
+    <h2 class="sr-only">Warum gute Unternehmen online unsichtbar bleiben</h2>
+    <div class="problem-layout">
+      <div class="problem-list">
+        <div class="problem-item">
+          <span class="problem-num">01</span>
+          <p>Bei Google kaum sichtbar</p>
+        </div>
+        <div class="problem-item">
+          <span class="problem-num">02</span>
+          <p>Social Media ohne messbaren Effekt</p>
+        </div>
+        <div class="problem-item">
+          <span class="problem-num">03</span>
+          <p>Website ohne genügend Anfragen</p>
+        </div>
+      </div>
+      <div class="problem-synthesis-col">
+        <div class="mark-rule"></div>
+        <p class="problem-synthesis">AIMPACT verbindet Strategie, Content, Performance und AI zu einem digitalen System, das Sichtbarkeit in Kunden verwandelt.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 Was AIMPACT macht -->
+<section class="leistungen" id="leistungen">
+  <div class="section-head reveal">
+    <div class="mark-rule"></div>
+    <p class="section-label">Leistungen</p>
+    <h2>WAS AIMPACT MACHT</h2>
+  </div>
+  <div class="leistungen-list">
+    <div class="leistung-row reveal">
+      <div class="leistung-row-inner">
+        <span class="leistung-num">01</span>
+        <div class="leistung-content">
+          <h3>Sichtbarkeit</h3>
+          <p>Google, lokale SEO und digitale Präsenz.</p>
+        </div>
+      </div>
+    </div>
+    <div class="leistung-row reveal">
+      <div class="leistung-row-inner">
+        <span class="leistung-num">02</span>
+        <div class="leistung-content">
+          <h3>Social &amp; Performance</h3>
+          <p>Content, Social Media und bezahlte Kampagnen.</p>
+        </div>
+      </div>
+    </div>
+    <div class="leistung-row reveal">
+      <div class="leistung-row-inner">
+        <span class="leistung-num">03</span>
+        <div class="leistung-content">
+          <h3>Websites &amp; AI</h3>
+          <p>Conversion-orientierte Websites, Automatisierung und AI-Lösungen.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Über AIMPACT -->
+<section class="ueber" id="ueber-aimpact">
+  <div class="ueber-inner reveal">
+    <div class="ueber-layout">
+      <div class="ueber-label-col">
+        <div class="mark-rule"></div>
+        <p class="section-label">Über AIMPACT</p>
+        <div class="ueber-accent" aria-hidden="true">
+          <svg viewBox="0 0 100 100">
+            <circle cx="42" cy="42" r="12" fill="none" stroke="#c9a84c" stroke-width="1.4"/>
+            <circle cx="42" cy="42" r="26" fill="none" stroke="#0a0a0a" stroke-opacity="0.12" stroke-width="1.2"/>
+            <circle cx="80" cy="78" r="2" fill="#0a0a0a" fill-opacity="0.25"/>
+            <circle cx="72" cy="18" r="2" fill="#c9a84c"/>
+          </svg>
+        </div>
+      </div>
+      <div class="ueber-content-col">
+        <p class="ueber-lede">AIMPACT ist eine Digital-Marketing-Boutique aus Zürich.</p>
+        <p class="ueber-text">Wir verbinden Strategie, Social Media, Performance Marketing und AI, um lokale Unternehmen digital sichtbarer und erfolgreicher zu machen.</p>
+        <p class="ueber-tags">Persönlich. Messbar. Ohne Agentur-Ballast.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Sichtbarkeits-Check (Teaser -> verlinkt auf sichtbarkeits-check.html, keine Neu-Implementierung) -->
+<section class="check-teaser" id="sichtbarkeits-check">
+  <span class="check-teaser-ghost" aria-hidden="true">4</span>
+  <div class="check-teaser-dots" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+  <div class="check-teaser-inner reveal">
+    <h2>WIE SICHTBAR IST DEIN UNTERNEHMEN WIRKLICH?</h2>
+    <p>Beantworte vier kurze Fragen und erhalte eine erste Einschätzung deiner digitalen Sichtbarkeit — basierend auf deinen Angaben, keine Live-Analyse deiner Google- oder Social-Media-Kanäle.</p>
+    <a href="sichtbarkeits-check.html" class="btn-primary"><span>Kostenlosen Check starten</span><span class="btn-arrow" aria-hidden="true">→</span></a>
+    <p class="micro-copy">Dauert ca. 60 Sekunden.</p>
+  </div>
+</section>
+
+<!-- Abschluss / CTA -->
+<section class="closing" id="kontakt">
+  <span class="closing-glow" aria-hidden="true"></span>
+  <div class="closing-inner reveal">
+    <h2>DEIN NÄCHSTER KUNDE SUCHT BEREITS.</h2>
+    <p class="closing-subline">Die Frage ist nur, ob er dich findet.</p>
+    <a href="sichtbarkeits-check.html" class="btn-primary"><span>Kostenlosen Check starten</span><span class="btn-arrow" aria-hidden="true">→</span></a>
+  </div>
+</section>
+
 <footer>
-  <div class="logo">AIMPACT<span style="color:var(--gold)">.</span></div>
-  <p>AI Performance Marketing · Zürich · aimpact.ch</p>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="logo">AIMPACT<span style="color:var(--gold)">.</span></span>
+      <p>Digital. Social. AI.<br>Zürich, Schweiz</p>
+    </div>
+    <div class="footer-links">
+      <a href="https://www.instagram.com/aimpact.ch" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://www.linkedin.com/in/adembuelbuel/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="#kontakt">Kontakt</a>
+    </div>
+    <div class="footer-legal">
+      <span class="placeholder-link" title="Seite folgt">Impressum</span>
+      <span class="placeholder-link" title="Seite folgt">Datenschutz</span>
+    </div>
+  </div>
+  <p class="footer-copy" style="max-width:64rem; margin:1.5rem auto 0;">© <span id="year"></span> AIMPACT</p>
 </footer>
+
 <script>
-  function updateSlider(id, valId, prefix, min, max) {
-    const val = document.getElementById(id).value;
-    document.getElementById(valId).textContent = prefix + val;
-  }
-  function calculate() {
-    const sitze = parseInt(document.getElementById('sitze').value);
-    const bon = parseInt(document.getElementById('bon').value);
-    const neu = parseInt(document.getElementById('neu').value);
-    const rating = document.getElementById('rating').value;
-    const upliftMap = { low: 0.45, mid: 0.30, good: 0.15, great: 0.08 };
-    const upliftPct = upliftMap[rating];
-    const upliftLabel = { low: '+45%', mid: '+30%', good: '+15%', great: '+8%' }[rating];
-    const currentMonthlyGuests = sitze * 0.70 * 2 * 22;
-    const currentRevenue = currentMonthlyGuests * bon;
-    const additionalFromMarketing = Math.round(neu * upliftPct);
-    const additionalFromVisibility = Math.round(currentMonthlyGuests * upliftPct * 0.15);
-    const totalAdditional = additionalFromMarketing + additionalFromVisibility;
-    const potentialRevenue = Math.round(totalAdditional * bon);
-    const fmt = n => n.toLocaleString('de-CH');
-    document.getElementById('result-amount').textContent = fmt(potentialRevenue);
-    document.getElementById('res-gaeste').textContent = '+' + fmt(totalAdditional) + ' Gäste';
-    document.getElementById('res-bon').textContent = 'CHF ' + bon;
-    document.getElementById('res-uplift').textContent = upliftLabel + ' mehr Sichtbarkeit';
-    document.getElementById('res-aktuell').textContent = 'CHF ' + fmt(Math.round(currentRevenue));
-    const ratingText = { low: 'Ihre Google-Bewertung unter 3.5 kostet Sie täglich Gäste. Restaurants mit Bewertungen über 4.2 erhalten bis zu 45% mehr Klicks — dieser Unterschied schlägt sich direkt im Umsatz nieder.', mid: 'Mit einer Bewertung zwischen 3.5 und 4.0 verlieren Sie täglich Gäste an besser bewertete Konkurrenten. Eine gezielte Bewertungsstrategie kann Ihre Sichtbarkeit um 30% steigern.', good: 'Ihre Google-Bewertung ist solide. Mit professionellem Performance Marketing können Sie diesen Vorteil weiter ausbauen und gezielt mehr Neukunden gewinnen.', great: 'Ausgezeichnete Bewertung. Jetzt geht es darum, diese Stärke durch bezahlte Kanäle zu skalieren und das volle Potenzial auszuschöpfen.' }[rating];
-    document.getElementById('result-text').textContent = ratingText;
-    document.getElementById('result-subtitle').textContent = 'zusätzlich pro Monat durch professionelles Marketing möglich.';
-    const resultEl = document.getElementById('result');
-    resultEl.classList.add('visible');
-    resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-  async function submitForm(e) {
-    e.preventDefault();
-    const form = document.getElementById('kontakt-form');
-    const btn = form.querySelector('.form-submit');
-    btn.textContent = 'Wird gesendet...';
-    btn.disabled = true;
-    const data = new FormData(form);
-    try {
-      const res = await fetch('https://formspree.io/f/mqeoqqgo', { method: 'POST', body: data, headers: { 'Accept': 'application/json' } });
-      if (res.ok) { form.style.display = 'none'; document.getElementById('success-msg').classList.add('visible'); }
-      else { btn.textContent = 'Fehler — bitte erneut versuchen'; btn.disabled = false; }
-    } catch { btn.textContent = 'Fehler — bitte erneut versuchen'; btn.disabled = false; }
-  }
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  const navToggle = document.getElementById('nav-toggle');
+  const navMenu = document.getElementById('nav-menu');
+  navToggle.addEventListener('click', () => {
+    const isOpen = navMenu.classList.toggle('open');
+    navToggle.classList.toggle('is-active', isOpen);
+    navToggle.setAttribute('aria-expanded', String(isOpen));
+    navToggle.setAttribute('aria-label', isOpen ? 'Menü schliessen' : 'Menü öffnen');
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+  navMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    navMenu.classList.remove('open');
+    navToggle.classList.remove('is-active');
+    navToggle.setAttribute('aria-expanded', 'false');
+    navToggle.setAttribute('aria-label', 'Menü öffnen');
+    document.body.style.overflow = '';
+  }));
+
   (function initReveal() {
     const els = document.querySelectorAll('.reveal');
     if (!els.length) return;
@@ -252,6 +470,23 @@
       });
     }, { threshold: 0.15 });
     els.forEach(el => io.observe(el));
+  })();
+
+  (function heroParallax() {
+    const layer = document.querySelector('.hero-visual-layer');
+    const hero = document.querySelector('.hero');
+    if (!layer || !hero) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let ticking = false;
+    function update() {
+      const rect = hero.getBoundingClientRect();
+      const progress = Math.min(Math.max(-rect.top / Math.max(rect.height, 1), 0), 1);
+      layer.style.transform = 'translateY(' + (progress * 16).toFixed(1) + 'px)';
+      ticking = false;
+    }
+    window.addEventListener('scroll', () => {
+      if (!ticking) { requestAnimationFrame(update); ticking = true; }
+    }, { passive: true });
   })();
 </script>
 </body>

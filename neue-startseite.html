@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIMPACT — Digital. Social. AI.</title>
+<meta name="description" content="AIMPACT hilft lokalen Unternehmen, digital sichtbarer zu werden, mehr qualifizierte Anfragen zu gewinnen und digitale Arbeit durch moderne Websites, Social Media und KI zu vereinfachen. Kostenloser Sichtbarkeits-Check in 60 Sekunden.">
+<link rel="canonical" href="https://www.aimpact.ch/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="de_CH">
+<meta property="og:title" content="AIMPACT — Digital. Social. AI.">
+<meta property="og:description" content="Mehr Kunden. Weniger digitaler Aufwand. Webdesign, Social Media und KI für lokale Unternehmen.">
+<meta property="og:url" content="https://www.aimpact.ch/">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 100%; scroll-behavior: smooth; }
+  :root {
+    --black: #0a0a0a; --white: #f5f4f0; --gold: #c9a84c; --grey: #888; --light: #e8e6e0;
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  body { background: var(--white); color: var(--black); font-family: 'DM Sans', sans-serif; font-weight: 300; overflow-x: hidden; }
+  section[id] { scroll-margin-top: 5rem; }
+  img, svg { max-width: 100%; display: block; }
+
+  /* ---- Nav ---- */
+  nav { position: sticky; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.125rem 1.25rem; background: rgba(245, 244, 240, 0.8); backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%); box-shadow: 0 1px 0 rgba(10,10,10,0.06); }
+  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.375rem; letter-spacing: 0.14em; color: var(--black); text-decoration: none; }
+  .logo span { color: var(--gold); }
+  .nav-links { display: none; }
+  .nav-cta-desktop { display: none; }
+  .nav-toggle { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 0.3125rem; width: 2.75rem; height: 2.75rem; background: none; border: none; cursor: pointer; padding: 0; }
+  .nav-toggle span { display: block; width: 1.375rem; height: 1.5px; background: var(--black); transition: transform 220ms var(--ease-out), opacity 220ms var(--ease-out); }
+  .nav-toggle.is-active span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .nav-toggle.is-active span:nth-child(2) { opacity: 0; }
+  .nav-toggle.is-active span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  .nav-menu { position: fixed; inset: 0; background: var(--white); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem; opacity: 0; visibility: hidden; transform: translateY(-0.5rem); transition: opacity 260ms var(--ease-out), transform 260ms var(--ease-out), visibility 0s linear 260ms; }
+  .nav-menu.open { opacity: 1; visibility: visible; transform: translateY(0); transition: opacity 260ms var(--ease-out), transform 260ms var(--ease-out), visibility 0s linear 0s; }
+  .nav-menu a { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.02em; color: var(--black); text-decoration: none; }
+  .nav-menu .nav-menu-cta { display: inline-block; margin-top: 0.5rem; background: var(--black); color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 1.125rem 2.25rem; }
+
+  @media (min-width: 48rem) {
+    nav { padding: 1.25rem 2.5rem; }
+    .nav-links { display: flex; gap: 2.5rem; }
+    .nav-links a { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--black); text-decoration: none; padding: 0.5rem 0; border-bottom: 1px solid transparent; transition: border-color 0.2s; }
+    .nav-links a:hover { border-color: var(--black); }
+    .nav-cta-desktop { display: inline-block; font-size: 0.6875rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--white); background: var(--black); text-decoration: none; padding: 0.75rem 1.5rem; transition: background 0.2s, transform 130ms var(--ease-out); }
+    .nav-cta-desktop:hover { background: var(--gold); color: var(--black); }
+    .nav-cta-desktop:active { transform: scale(0.97); }
+    .nav-toggle { display: none; }
+  }
+
+  /* ---- Buttons ---- */
+  .btn-primary { display: inline-block; background: var(--black); color: var(--white); font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 1.125rem 2.25rem; text-decoration: none; cursor: pointer; border: none; font-family: 'DM Sans', sans-serif; font-weight: 500; transition: background 0.2s, color 0.2s, transform 130ms var(--ease-out); }
+  .btn-primary:hover { background: var(--gold); color: var(--black); }
+  .btn-primary:active { transform: scale(0.97); }
+  .micro-copy { font-size: 0.75rem; color: var(--grey); letter-spacing: 0.02em; margin-top: 1rem; }
+
+  /* ---- Reveal ---- */
+  .reveal { opacity: 0; transform: translateY(1rem); transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out); }
+  .reveal.in-view { opacity: 1; transform: translateY(0); }
+
+  /* ---- Hero ---- */
+  .hero { padding: 6.5rem 1.25rem 4.5rem; max-width: 48rem; margin: 0 auto; }
+  .eyebrow { font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; }
+  .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.75rem, 11vw, 5.75rem); line-height: 0.94; letter-spacing: -0.02em; text-wrap: balance; margin-bottom: 1.5rem; }
+  .hero .lede { font-size: 1.0625rem; color: #333; line-height: 1.5; max-width: 32rem; margin-bottom: 1rem; }
+  .hero p.support { font-size: 0.9375rem; color: #666; line-height: 1.7; max-width: 30rem; margin-bottom: 2.25rem; }
+
+  /* ---- Problem / Über Aimpact ---- */
+  .problem { background: var(--black); color: var(--white); padding: 4.5rem 1.25rem; }
+  .problem-inner { max-width: 48rem; margin: 0 auto; }
+  .problem h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 7.5vw, 3.5rem); line-height: 1.03; letter-spacing: -0.015em; text-wrap: balance; margin-bottom: 3rem; }
+  .problem-grid { display: grid; gap: 2.25rem; }
+  .problem-item h3 { font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.9375rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.625rem; }
+  .problem-item p { font-size: 0.9375rem; line-height: 1.7; color: #ccc; }
+
+  /* ---- Leistungen ---- */
+  .leistungen { padding: 4.5rem 1.25rem; max-width: 64rem; margin: 0 auto; }
+  .section-head { max-width: 34rem; margin-bottom: 3rem; }
+  .section-label { font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+  .section-head h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 7.5vw, 3.5rem); line-height: 1.03; letter-spacing: -0.015em; text-wrap: balance; margin-bottom: 0.75rem; }
+  .section-head p { font-size: 0.9375rem; color: #555; }
+  .leistungen-grid { display: grid; gap: 1px; background: var(--light); border: 1px solid var(--light); }
+  .leistung-card { background: var(--white); padding: 2.25rem 1.75rem; }
+  .leistung-card .service-num { font-family: 'Bebas Neue', sans-serif; font-size: 0.8125rem; letter-spacing: 0.1em; color: var(--gold); display: block; margin-bottom: 1.25rem; }
+  .leistung-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: -0.005em; margin-bottom: 0.75rem; }
+  .leistung-card p { font-size: 0.875rem; color: #555; line-height: 1.65; }
+
+  @media (min-width: 48rem) {
+    .leistungen-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* ---- Sichtbarkeits-Check teaser ---- */
+  .check-teaser { background: var(--black); color: var(--white); padding: 5rem 1.25rem; position: relative; overflow: hidden; }
+  .check-teaser::before { content: ''; position: absolute; top: -3rem; right: -3rem; width: 12rem; height: 12rem; border-radius: 50%; background: var(--gold); opacity: 0.07; }
+  .check-teaser-inner { max-width: 40rem; margin: 0 auto; text-align: center; position: relative; }
+  .check-teaser h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.125rem, 8vw, 3.75rem); line-height: 1.03; letter-spacing: -0.015em; text-wrap: balance; margin-bottom: 1.25rem; }
+  .check-teaser p { font-size: 0.9375rem; color: #bbb; line-height: 1.7; max-width: 30rem; margin: 0 auto 2rem; }
+  .check-teaser .micro-copy { color: #777; }
+  .check-teaser .btn-primary { background: var(--gold); color: var(--black); }
+  .check-teaser .btn-primary:hover { background: var(--white); }
+
+  /* ---- Projekte ---- */
+  .projekte { padding: 4.5rem 1.25rem; max-width: 64rem; margin: 0 auto; }
+  .projekte-grid { display: grid; gap: 2rem; }
+  .projekt-card a { text-decoration: none; color: inherit; display: block; }
+  .projekt-visual { aspect-ratio: 4 / 3; background: var(--black); display: flex; align-items: center; justify-content: center; }
+  .projekt-visual span { font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem; letter-spacing: -0.01em; color: var(--gold); }
+  .projekt-card h3 { font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 1.0625rem; margin-top: 1.25rem; }
+  .projekt-card .kategorie { font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--grey); margin-top: 0.25rem; }
+  .projekt-card .beschreibung { font-size: 0.875rem; color: #777; margin-top: 0.375rem; font-style: italic; }
+
+  @media (min-width: 48rem) {
+    .projekte-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* ---- Abschluss / CTA ---- */
+  .closing { background: var(--black); color: var(--white); padding: 6rem 1.25rem; }
+  .closing-inner { max-width: 40rem; margin: 0 auto; }
+  .closing h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.375rem, 9vw, 4.25rem); line-height: 0.98; letter-spacing: -0.018em; text-wrap: balance; margin-bottom: 1.5rem; }
+  .closing p { font-size: 0.9375rem; color: #999; line-height: 1.7; margin-bottom: 2.25rem; max-width: 28rem; }
+  .closing .btn-primary { background: var(--gold); color: var(--black); }
+  .closing .btn-primary:hover { background: var(--white); }
+
+  /* ---- Footer ---- */
+  footer { padding: 3rem 1.25rem 2.5rem; border-top: 1px solid var(--light); }
+  .footer-inner { max-width: 64rem; margin: 0 auto; display: flex; flex-direction: column; gap: 2rem; }
+  .footer-brand .logo { display: block; margin-bottom: 0.375rem; }
+  .footer-brand p { font-size: 0.75rem; color: var(--grey); letter-spacing: 0.04em; }
+  .footer-links { display: flex; flex-wrap: wrap; gap: 1.5rem; }
+  .footer-links a, .footer-links .placeholder-link { font-size: 0.75rem; letter-spacing: 0.04em; color: var(--black); text-decoration: none; border-bottom: 1px solid var(--light); padding-bottom: 2px; }
+  .footer-legal { display: flex; flex-wrap: wrap; gap: 1.25rem; font-size: 0.6875rem; color: var(--grey); }
+  .footer-legal a, .footer-legal .placeholder-link { color: var(--grey); text-decoration: underline; text-underline-offset: 2px; }
+  .footer-links .placeholder-link { border-bottom-style: dashed; opacity: 0.55; cursor: default; }
+  .footer-legal .placeholder-link { text-decoration-style: dashed; opacity: 0.7; cursor: default; }
+  .footer-copy { font-size: 0.6875rem; color: #aaa; }
+
+  @media (min-width: 48rem) {
+    .footer-inner { flex-direction: row; justify-content: space-between; align-items: flex-start; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn-primary:active, .nav-cta-desktop:active { transform: none; }
+    .reveal { transition: opacity 0.3s ease; transform: none; }
+    .nav-toggle span { transition: opacity 0.2s ease; }
+    .nav-toggle.is-active span:nth-child(1), .nav-toggle.is-active span:nth-child(3) { transform: none; }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <a href="#" class="logo">AIMPACT<span>.</span></a>
+  <div class="nav-links">
+    <a href="#leistungen">Leistungen</a>
+    <a href="#projekte">Projekte</a>
+    <a href="#ueber-aimpact">Über Aimpact</a>
+  </div>
+  <a href="sichtbarkeits-check.html" class="nav-cta-desktop">Sichtbarkeits-Check</a>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="nav-menu" id="nav-menu">
+  <a href="#leistungen">Leistungen</a>
+  <a href="#projekte">Projekte</a>
+  <a href="#ueber-aimpact">Über Aimpact</a>
+  <a href="sichtbarkeits-check.html" class="nav-menu-cta">Sichtbarkeits-Check</a>
+</div>
+
+<!-- 01 Hero -->
+<section class="hero">
+  <p class="eyebrow">Digital. Social. AI.</p>
+  <h1>MEHR KUNDEN.<br>WENIGER DIGITALER AUFWAND.</h1>
+  <p class="lede">Webdesign, Social Media und KI für lokale Unternehmen.</p>
+  <p class="support">AIMPACT hilft dir, online besser gefunden zu werden, professioneller aufzutreten und aus digitaler Sichtbarkeit echte Anfragen zu machen.</p>
+  <a href="sichtbarkeits-check.html" class="btn-primary">Sichtbarkeits-Check starten</a>
+  <p class="micro-copy">Kostenlos · 4 kurze Fragen · direktes Ergebnis</p>
+</section>
+
+<!-- 02 Problem / dient zugleich als "Über Aimpact"-Anker -->
+<section class="problem" id="ueber-aimpact">
+  <div class="problem-inner reveal">
+    <h2>DEIN UNTERNEHMEN IST GUT.<br>ABER SIEHT MAN DAS AUCH ONLINE?</h2>
+    <div class="problem-grid">
+      <div class="problem-item">
+        <h3>Nicht gefunden.</h3>
+        <p>Potenzielle Kunden suchen online – finden aber zuerst die Konkurrenz.</p>
+      </div>
+      <div class="problem-item">
+        <h3>Nicht überzeugend.</h3>
+        <p>Website und Social Media zeigen nicht die Qualität, die dein Unternehmen tatsächlich bietet.</p>
+      </div>
+      <div class="problem-item">
+        <h3>Zu viel Handarbeit.</h3>
+        <p>Anfragen, Inhalte und digitale Abläufe kosten unnötig Zeit.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 Leistungen -->
+<section class="leistungen" id="leistungen">
+  <div class="section-head reveal">
+    <p class="section-label">Leistungen</p>
+    <h2>DREI BEREICHE.<br>EIN ZIEL.</h2>
+    <p>Mehr digitale Wirkung für dein Unternehmen.</p>
+  </div>
+  <div class="leistungen-grid">
+    <div class="leistung-card reveal">
+      <span class="service-num">01</span>
+      <h3>Web</h3>
+      <p>Websites, die nicht nur gut aussehen, sondern aus Besuchern Anfragen machen.</p>
+    </div>
+    <div class="leistung-card reveal">
+      <span class="service-num">02</span>
+      <h3>Social</h3>
+      <p>Content und Social Media, die dein Unternehmen sichtbar und relevant machen.</p>
+    </div>
+    <div class="leistung-card reveal">
+      <span class="service-num">03</span>
+      <h3>AI</h3>
+      <p>Smarte KI-Lösungen und Automationen, die dir repetitive Arbeit abnehmen.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 04 Sichtbarkeits-Check (Teaser -> verlinkt auf sichtbarkeits-check.html, keine Neu-Implementierung) -->
+<section class="check-teaser" id="sichtbarkeits-check">
+  <div class="check-teaser-inner reveal">
+    <h2>WIE SICHTBAR IST DEIN UNTERNEHMEN WIRKLICH?</h2>
+    <p>Beantworte vier kurze Fragen und erhalte eine erste Einschätzung deiner digitalen Sichtbarkeit — basierend auf deinen Angaben, keine Live-Analyse deiner Google- oder Social-Media-Kanäle.</p>
+    <a href="sichtbarkeits-check.html" class="btn-primary">Kostenlosen Check starten</a>
+    <p class="micro-copy">Dauert ca. 60 Sekunden.</p>
+  </div>
+</section>
+
+<!-- 05 Projekte -->
+<section class="projekte" id="projekte">
+  <div class="section-head reveal">
+    <p class="section-label">Projekte</p>
+    <h2>AUS IDEEN<br>WIRD WIRKUNG.</h2>
+  </div>
+  <div class="projekte-grid">
+    <div class="projekt-card reveal">
+      <div class="projekt-visual"><span>G</span></div>
+      <h3>Garhwal</h3>
+      <p class="kategorie">[Kategorie]</p>
+      <p class="beschreibung">[Kurzbeschreibung folgt]</p>
+    </div>
+    <div class="projekt-card reveal">
+      <div class="projekt-visual"><span>PS</span></div>
+      <h3>Pavillon S</h3>
+      <p class="kategorie">[Kategorie]</p>
+      <p class="beschreibung">[Kurzbeschreibung folgt]</p>
+    </div>
+    <div class="projekt-card reveal">
+      <div class="projekt-visual"><span>AI</span></div>
+      <h3>AIMPACT AI / Lead-System</h3>
+      <p class="kategorie">[Kategorie]</p>
+      <p class="beschreibung">[Kurzbeschreibung folgt]</p>
+    </div>
+  </div>
+</section>
+
+<!-- 06 Abschluss / CTA -->
+<section class="closing">
+  <div class="closing-inner reveal">
+    <h2>FINDE HERAUS, WO DEIN DIGITALES POTENZIAL LIEGT.</h2>
+    <p>Vier Fragen. Rund 60 Sekunden. Eine erste Einschätzung deiner digitalen Sichtbarkeit.</p>
+    <a href="sichtbarkeits-check.html" class="btn-primary">Sichtbarkeits-Check starten</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="logo">AIMPACT<span style="color:var(--gold)">.</span></span>
+      <p>Digital. Social. AI.</p>
+    </div>
+    <div class="footer-links">
+      <span class="placeholder-link" title="Link folgt">Instagram</span>
+      <span class="placeholder-link" title="Link folgt">LinkedIn</span>
+      <a href="sichtbarkeits-check.html#kontakt">Kontakt</a>
+    </div>
+    <div class="footer-legal">
+      <span class="placeholder-link" title="Seite folgt">Impressum</span>
+      <span class="placeholder-link" title="Seite folgt">Datenschutz</span>
+    </div>
+  </div>
+  <p class="footer-copy" style="max-width:64rem; margin:1.5rem auto 0;">© <span id="year"></span> AIMPACT</p>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  const navToggle = document.getElementById('nav-toggle');
+  const navMenu = document.getElementById('nav-menu');
+  navToggle.addEventListener('click', () => {
+    const isOpen = navMenu.classList.toggle('open');
+    navToggle.classList.toggle('is-active', isOpen);
+    navToggle.setAttribute('aria-expanded', String(isOpen));
+    navToggle.setAttribute('aria-label', isOpen ? 'Menü schliessen' : 'Menü öffnen');
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+  navMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    navMenu.classList.remove('open');
+    navToggle.classList.remove('is-active');
+    navToggle.setAttribute('aria-expanded', 'false');
+    navToggle.setAttribute('aria-label', 'Menü öffnen');
+    document.body.style.overflow = '';
+  }));
+
+  (function initReveal() {
+    const els = document.querySelectorAll('.reveal');
+    if (!els.length) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      els.forEach(el => el.classList.add('in-view'));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) { entry.target.classList.add('in-view'); io.unobserve(entry.target); }
+      });
+    }, { threshold: 0.15 });
+    els.forEach(el => io.observe(el));
+  })();
+</script>
+</body>
+</html>

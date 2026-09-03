@@ -82,8 +82,8 @@
 
   /* Layer 2 — visual: hero photograph, may overlap the wordmark and sit behind the headline */
   @keyframes photoFadeIn { to { opacity: 1; } }
-  .hero-visual-layer { position: relative; width: 15rem; height: 15rem; margin: 0 auto 1.5rem; z-index: 2; }
-  .hero-visual-photo { position: relative; width: 100%; height: 100%; z-index: 2; display: block; object-fit: cover; object-position: 46% 46%; -webkit-mask-image: radial-gradient(closest-side, #000 40%, transparent 88%); mask-image: radial-gradient(closest-side, #000 40%, transparent 88%); opacity: 0; animation: fadeUpIn 0.7s var(--ease-out) both; animation-delay: var(--d, 0s); }
+  .hero-visual-layer { position: absolute; z-index: 2; top: 4.25rem; left: 6%; width: 88%; height: 11.5rem; overflow: hidden; }
+  .hero-visual-photo { position: relative; width: 100%; height: 100%; z-index: 2; display: block; object-fit: cover; object-position: 60% 44%; transform: scale(1.18); transform-origin: 60% 44%; -webkit-mask-image: none; mask-image: none; opacity: 0; animation: photoFadeIn 0.7s var(--ease-out) both; animation-delay: var(--d, 0s); }
 
   /* Meta typography — small counterweight to the display headline */
   .hero-meta { position: relative; z-index: 3; margin-bottom: 1.25rem; }
@@ -276,10 +276,7 @@
       </div>
 
       <div class="hero-visual-layer">
-        <picture>
-          <source media="(min-width: 64rem)" srcset="assets/aimpact-hero-cropped.jpg">
-          <img class="hero-visual-photo" src="assets/hero-visual.jpg" alt="" aria-hidden="true" width="1400" height="1349" loading="eager" decoding="async" style="--d:.16s">
-        </picture>
+        <img class="hero-visual-photo" src="assets/aimpact-hero-cropped.jpg" alt="" aria-hidden="true" width="2032" height="1143" loading="eager" decoding="async" style="--d:.16s">
       </div>
 
       <div class="hero-content">

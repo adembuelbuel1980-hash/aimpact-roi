@@ -70,42 +70,69 @@
   .reveal { opacity: 0; transform: translateY(1rem); transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out); }
   .reveal.in-view { opacity: 1; transform: translateY(0); }
 
-  /* ---- Hero ---- */
-  .hero { position: relative; padding: 7rem 1.25rem 4rem; overflow: hidden; }
-  .hero-wordmark { position: absolute; top: -0.5rem; left: 50%; transform: translateX(-50%); font-family: 'Bebas Neue', sans-serif; font-size: 34vw; line-height: 1; letter-spacing: -0.01em; color: rgba(10,10,10,0.045); white-space: nowrap; pointer-events: none; user-select: none; z-index: 0; opacity: 0; animation: wordmarkIn 1.1s var(--ease-out) both; animation-delay: var(--d, 0s); }
+  /* ---- Hero — editorial composition system ---- */
+  .hero { position: relative; overflow: hidden; padding: 6.5rem 1.25rem 3rem; background: var(--white); }
+
+  /* Layer 1 — background: oversized wordmark, architectural not headline */
+  .hero-wordmark { position: absolute; top: -1rem; left: 50%; transform: translateX(-50%); font-family: 'Bebas Neue', sans-serif; font-size: 30vw; line-height: 0.85; letter-spacing: -0.01em; color: rgba(10,10,10,0.05); white-space: nowrap; pointer-events: none; user-select: none; z-index: 1; opacity: 0; animation: wordmarkIn 0.9s var(--ease-out) both; animation-delay: var(--d, 0s); }
   @keyframes wordmarkIn { to { opacity: 1; } }
-  .hero-grid { position: relative; z-index: 1; max-width: 78rem; margin: 0 auto; }
-  .hero-visual { width: 6.5rem; height: 6.5rem; margin-bottom: 2rem; opacity: 0; animation: fadeUpIn 0.8s var(--ease-out) both; animation-delay: var(--d, 0s); }
-  .hero-visual svg { width: 100%; height: 100%; display: block; }
-  .eyebrow { font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; position: relative; }
-  .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.75rem, 8vw, 6rem); line-height: 0.94; letter-spacing: -0.025em; margin-bottom: 1.75rem; position: relative; }
+
+  .hero-composition { position: relative; z-index: 2; max-width: 90rem; margin: 0 auto; }
+  .hero-grid-desktop { display: block; }
+
+  /* Layer 2 — visual: blurred depth panel + sharp signal graphic, may overlap the wordmark */
+  .hero-blur-panel { position: absolute; width: 15rem; height: 15rem; top: 0.5rem; left: 50%; transform: translateX(-50%); border-radius: 62% 38% 55% 45% / 50% 60% 40% 50%; background: rgba(245,244,240,0.55); backdrop-filter: blur(26px); -webkit-backdrop-filter: blur(26px); pointer-events: none; z-index: 1; opacity: 0; animation: fadeUpIn 0.6s var(--ease-out) both; animation-delay: var(--d, 0s); }
+  .hero-visual-layer { position: relative; width: 12rem; height: 12rem; margin: 0 auto 1.5rem; z-index: 2; }
+  .hero-visual-inner { position: relative; width: 100%; height: 100%; z-index: 2; opacity: 0; animation: fadeUpIn 0.6s var(--ease-out) both; animation-delay: var(--d, 0s); }
+  .hero-visual-inner svg { width: 100%; height: 100%; display: block; }
+
+  /* Meta typography — small counterweight to the display headline */
+  .hero-meta { position: relative; z-index: 3; margin-bottom: 1.25rem; }
+  .eyebrow { font-size: 0.6875rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); }
+  .hero-tech-labels { display: none; }
+
+  /* Layer 3 — text */
+  .hero-content { position: relative; z-index: 3; }
+  .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.8rem, 12vw, 4rem); line-height: 0.92; letter-spacing: -0.02em; margin-bottom: 1.5rem; }
   .hero-title .lines-desktop { display: none; }
   .hero-title .line { display: block; overflow: hidden; }
-  .hero-title .line-inner { display: inline-block; transform: translateY(110%); animation: lineUp 0.85s var(--ease-out) both; animation-delay: var(--d, 0s); }
+  .hero-title .line-inner { display: inline-block; transform: translateY(110%); animation: lineUp 0.6s var(--ease-out) both; animation-delay: var(--d, 0s); }
   .hero-title em { font-style: normal; color: var(--gold); }
   @keyframes lineUp { to { transform: translateY(0); } }
-  .reveal-fade { opacity: 0; transform: translateY(0.6rem); animation: fadeUpIn 0.7s var(--ease-out) both; animation-delay: var(--d, 0s); }
+  .reveal-fade { opacity: 0; transform: translateY(0.6rem); animation: fadeUpIn 0.5s var(--ease-out) both; animation-delay: var(--d, 0s); }
   @keyframes fadeUpIn { to { opacity: 1; transform: translateY(0); } }
-  .hero .lede { font-size: 0.9375rem; color: #666; line-height: 1.65; max-width: 28rem; margin-bottom: 2.25rem; }
+  .hero .lede { font-size: 1rem; color: #555; line-height: 1.6; max-width: 26rem; margin-bottom: 2rem; }
   .hero-ctas { display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem; }
+  .hero .btn-primary { width: 100%; justify-content: center; }
   .btn-text { position: relative; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--black); text-decoration: none; padding-bottom: 2px; border-bottom: 1px solid var(--black); transition: color 0.2s, border-color 0.2s; }
   .btn-text:hover { color: var(--gold); border-color: var(--gold); }
 
+  @media (hover: hover) and (pointer: fine) {
+    .hero .btn-primary:hover { box-shadow: none; }
+  }
+
   @media (min-width: 64rem) {
-    .hero { padding: 9rem 3rem 7rem; }
-    .hero-wordmark { top: 1rem; left: auto; right: -2vw; transform: none; font-size: 15vw; }
-    .hero-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; align-items: center; gap: 3rem; }
-    .hero-content { position: relative; z-index: 2; order: 1; }
-    .hero-title .lines-mobile { display: none; }
-    .hero-title .lines-desktop { display: block; }
-    .hero-title { font-size: clamp(3.5rem, 6.4vw, 6.5rem); }
-    .hero-visual { position: relative; width: 100%; max-width: 22rem; height: 22rem; margin: 0 auto; z-index: 1; order: 2; }
+    .hero { min-height: 90vh; display: flex; align-items: center; padding: 8rem 3rem 4rem; overflow: hidden; }
+    .hero-composition { width: 100%; }
+    .hero-wordmark { top: 0; left: auto; right: -3%; transform: none; font-size: 15vw; line-height: 0.8; }
+    .hero-grid-desktop { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: 1.5rem; align-items: start; }
+
+    .hero-meta { grid-column: 2 / 7; grid-row: 1; margin-bottom: 0; margin-top: 0.5rem; }
+    .hero-tech-labels { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 2.5rem; }
+    .hero-tech-labels span { font-size: 0.625rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(10,10,10,0.32); }
+
+    .hero-blur-panel { width: 26rem; height: 26rem; top: -5rem; left: auto; right: 4%; transform: none; }
+    .hero-visual-layer { grid-column: 5 / 13; grid-row: 1 / 4; width: 100%; height: 32rem; margin: 0 0 0 -3.5rem; }
+
+    .hero-content { grid-column: 2 / 9; grid-row: 2 / 4; align-self: end; padding-bottom: 0.5rem; }
+    .hero-title { font-size: clamp(3.5rem, 6vw, 6.5rem); line-height: 0.9; margin-bottom: 1.5rem; }
+    .hero .btn-primary { width: auto; }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .hero-title .line-inner { animation: none; transform: none; }
     .reveal-fade { animation: none; opacity: 1; transform: none; }
-    .hero-wordmark, .hero-visual { animation: none; opacity: 1; }
+    .hero-wordmark, .hero-visual-inner, .hero-blur-panel { animation: none; opacity: 1; }
   }
 
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
@@ -234,45 +261,69 @@
   <a href="sichtbarkeits-check.html" class="nav-menu-cta">Kostenloser Check</a>
 </div>
 
-<!-- 01 Hero -->
+<!-- 01 Hero — editorial composition: background wordmark layer, signal-visual layer, text layer -->
 <section class="hero">
   <span class="hero-wordmark" aria-hidden="true" style="--d:0s">AIMPACT</span>
-  <div class="hero-grid">
-    <div class="hero-visual" aria-hidden="true" style="--d:.12s">
-      <svg viewBox="0 0 200 200">
-        <circle cx="120" cy="80" r="18" fill="none" stroke="#c9a84c" stroke-width="1.4"/>
-        <circle cx="120" cy="80" r="38" fill="none" stroke="#0a0a0a" stroke-opacity="0.16" stroke-width="1.2"/>
-        <circle cx="120" cy="80" r="60" fill="none" stroke="#0a0a0a" stroke-opacity="0.08" stroke-width="1.2"/>
-        <line x1="120" y1="80" x2="52" y2="172" stroke="#0a0a0a" stroke-opacity="0.14" stroke-width="1" stroke-dasharray="2 4"/>
-        <circle cx="52" cy="172" r="3" fill="#0a0a0a" fill-opacity="0.45"/>
-        <circle cx="168" cy="150" r="2.5" fill="#0a0a0a" fill-opacity="0.35"/>
-        <circle cx="24" cy="58" r="2" fill="#0a0a0a" fill-opacity="0.3"/>
-        <circle cx="182" cy="34" r="2.5" fill="#c9a84c"/>
-        <circle cx="148" cy="176" r="2" fill="#0a0a0a" fill-opacity="0.3"/>
-      </svg>
-    </div>
-    <div class="hero-content">
-      <p class="eyebrow reveal-fade" style="--d:.3s">Digital. Social. AI. · Zürich</p>
-      <h1 class="hero-title">
-        <span class="lines-mobile">
-          <span class="line"><span class="line-inner" style="--d:.38s">Dein Unternehmen ist gut.</span></span>
-          <span class="line"><span class="line-inner" style="--d:.5s">Aber sieht</span></span>
-          <span class="line"><span class="line-inner" style="--d:.62s"><em>Google</em></span></span>
-          <span class="line"><span class="line-inner" style="--d:.74s">das auch?</span></span>
-        </span>
-        <span class="lines-desktop">
-          <span class="line"><span class="line-inner" style="--d:.38s">Dein Unternehmen</span></span>
-          <span class="line"><span class="line-inner" style="--d:.5s">ist gut.</span></span>
-          <span class="line"><span class="line-inner" style="--d:.62s">Aber sieht</span></span>
-          <span class="line"><span class="line-inner" style="--d:.74s"><em>Google</em> das auch?</span></span>
-        </span>
-      </h1>
-      <p class="lede reveal-fade" style="--d:.92s">AIMPACT hilft lokalen Unternehmen und Gastronomiebetrieben, online sichtbarer zu werden und aus digitaler Sichtbarkeit konkrete Anfragen und Kunden zu gewinnen.</p>
-      <div class="hero-ctas reveal-fade" style="--d:1.04s">
-        <a href="sichtbarkeits-check.html" class="btn-primary"><span>Kostenlosen Sichtbarkeits-Check starten</span><span class="btn-arrow" aria-hidden="true">→</span></a>
-        <a href="#leistungen" class="btn-text">Leistungen ansehen</a>
+  <div class="hero-composition">
+    <div class="hero-grid-desktop">
+
+      <div class="hero-meta">
+        <p class="eyebrow reveal-fade" style="--d:.24s">Digital · Social · AI · Zürich</p>
+        <div class="hero-tech-labels" aria-hidden="true">
+          <span>01 / Visibility</span>
+          <span>02 / Signal</span>
+          <span>03 / Impact</span>
+        </div>
       </div>
-      <p class="micro-copy reveal-fade" style="--d:1.16s">Kostenlos · 4 kurze Fragen · direktes Ergebnis</p>
+
+      <div class="hero-visual-layer">
+        <span class="hero-blur-panel" aria-hidden="true" style="--d:.08s"></span>
+        <div class="hero-visual-inner" aria-hidden="true" style="--d:.16s">
+          <svg viewBox="0 0 600 600">
+            <circle cx="330" cy="300" r="200" fill="none" stroke="#c9a84c" stroke-width="2.5" stroke-dasharray="942 315" transform="rotate(-40 330 300)"/>
+            <circle cx="330" cy="300" r="130" fill="none" stroke="#0a0a0a" stroke-opacity="0.12" stroke-width="1.2"/>
+            <circle cx="330" cy="300" r="80" fill="none" stroke="#0a0a0a" stroke-opacity="0.18" stroke-width="1.2"/>
+            <line x1="330" y1="300" x2="520" y2="140" stroke="#0a0a0a" stroke-opacity="0.15" stroke-width="1"/>
+            <line x1="330" y1="300" x2="140" y2="420" stroke="#0a0a0a" stroke-opacity="0.18" stroke-width="1" stroke-dasharray="3 5"/>
+            <line x1="330" y1="300" x2="470" y2="470" stroke="#0a0a0a" stroke-opacity="0.1" stroke-width="1"/>
+            <line x1="330" y1="300" x2="200" y2="120" stroke="#0a0a0a" stroke-opacity="0.12" stroke-width="1"/>
+            <circle cx="90" cy="80" r="3" fill="#0a0a0a" fill-opacity="0.3"/>
+            <circle cx="540" cy="90" r="2.5" fill="#c9a84c"/>
+            <circle cx="60" cy="520" r="2" fill="#0a0a0a" fill-opacity="0.25"/>
+            <circle cx="500" cy="530" r="3" fill="#0a0a0a" fill-opacity="0.3"/>
+            <circle cx="250" cy="60" r="2" fill="#0a0a0a" fill-opacity="0.2"/>
+            <circle cx="560" cy="320" r="2.5" fill="#0a0a0a" fill-opacity="0.25"/>
+            <circle cx="150" cy="540" r="2" fill="#c9a84c"/>
+            <circle cx="420" cy="60" r="2" fill="#0a0a0a" fill-opacity="0.2"/>
+            <circle cx="330" cy="300" r="16" fill="#c9a84c" fill-opacity="0.15"/>
+            <circle cx="330" cy="300" r="5" fill="#c9a84c"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="hero-content">
+        <h1 class="hero-title">
+          <span class="lines-mobile">
+            <span class="line"><span class="line-inner" style="--d:.28s">Dein Unternehmen ist gut.</span></span>
+            <span class="line"><span class="line-inner" style="--d:.36s">Aber sieht</span></span>
+            <span class="line"><span class="line-inner" style="--d:.44s"><em>Google</em></span></span>
+            <span class="line"><span class="line-inner" style="--d:.52s">das auch?</span></span>
+          </span>
+          <span class="lines-desktop">
+            <span class="line"><span class="line-inner" style="--d:.28s">Dein Unternehmen</span></span>
+            <span class="line"><span class="line-inner" style="--d:.36s">ist gut.</span></span>
+            <span class="line"><span class="line-inner" style="--d:.44s">Aber sieht</span></span>
+            <span class="line"><span class="line-inner" style="--d:.52s"><em>Google</em> das auch?</span></span>
+          </span>
+        </h1>
+        <p class="lede reveal-fade" style="--d:.62s">AIMPACT hilft lokalen Unternehmen und Gastronomiebetrieben, online sichtbarer zu werden und aus digitaler Sichtbarkeit konkrete Anfragen und Kunden zu gewinnen.</p>
+        <div class="hero-ctas reveal-fade" style="--d:.72s">
+          <a href="sichtbarkeits-check.html" class="btn-primary"><span>Kostenlosen Sichtbarkeits-Check starten</span><span class="btn-arrow" aria-hidden="true">→</span></a>
+          <a href="#leistungen" class="btn-text">Leistungen ansehen</a>
+        </div>
+        <p class="micro-copy reveal-fade" style="--d:.82s">Kostenlos · 4 kurze Fragen · direktes Ergebnis</p>
+      </div>
+
     </div>
   </div>
 </section>
@@ -441,6 +492,23 @@
       });
     }, { threshold: 0.15 });
     els.forEach(el => io.observe(el));
+  })();
+
+  (function heroParallax() {
+    const layer = document.querySelector('.hero-visual-layer');
+    const hero = document.querySelector('.hero');
+    if (!layer || !hero) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let ticking = false;
+    function update() {
+      const rect = hero.getBoundingClientRect();
+      const progress = Math.min(Math.max(-rect.top / Math.max(rect.height, 1), 0), 1);
+      layer.style.transform = 'translateY(' + (progress * 16).toFixed(1) + 'px)';
+      ticking = false;
+    }
+    window.addEventListener('scroll', () => {
+      if (!ticking) { requestAnimationFrame(update); ticking = true; }
+    }, { passive: true });
   })();
 </script>
 </body>

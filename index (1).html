@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="de-CH">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aimpact Zürich | Local SEO, Google Maps & AI Visibility</title>
+  <meta name="description" content="Aimpact hilft lokalen Unternehmen und Gastronomiebetrieben in Zürich, bei Google, Google Maps und KI-Systemen besser sichtbar zu werden – mit Fokus auf qualifizierte Anfragen und Kunden.">
+  <link rel="canonical" href="https://aimpact.ch/">
+  <meta name="robots" content="index,follow">
+  <meta name="theme-color" content="#0a0a0a">
+
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="de_CH">
+  <meta property="og:title" content="Aimpact Zürich | Local SEO, Google Maps & AI Visibility">
+  <meta property="og:description" content="Mehr Sichtbarkeit. Mehr qualifizierte Anfragen. Mehr Kunden.">
+  <meta property="og:url" content="https://aimpact.ch/">
+  <meta property="og:site_name" content="Aimpact">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "Aimpact",
+    "url": "https://aimpact.ch/",
+    "description": "Digital Marketing für lokale Unternehmen mit Fokus auf Local SEO, Google Maps, Website-Optimierung, Content und AI Visibility.",
+    "areaServed": {
+      "@type": "City",
+      "name": "Zürich"
+    },
+    "serviceType": [
+      "Local SEO",
+      "Google Business Profile Optimierung",
+      "Website- und Conversion-Optimierung",
+      "Content Marketing",
+      "AI Visibility"
+    ]
+  }
+  </script>
+
+  <style>
+    :root{
+      --black:#0a0a0a;
+      --black-2:#111;
+      --white:#f6f4ee;
+      --paper:#ece9df;
+      --gold:#c9a84c;
+      --muted:#a7a39a;
+      --line:rgba(255,255,255,.12);
+      --line-dark:rgba(10,10,10,.13);
+      --max:1180px;
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      background:var(--black);
+      color:var(--white);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      font-size:16px;
+      line-height:1.65;
+      -webkit-font-smoothing:antialiased;
+    }
+    a{color:inherit}
+    img{max-width:100%;display:block}
+    button,input,textarea,select{font:inherit}
+    .wrap{width:min(calc(100% - 40px),var(--max));margin:auto}
+    .eyebrow{
+      margin:0 0 18px;
+      color:var(--gold);
+      font-size:.76rem;
+      font-weight:700;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+    h1,h2,h3{margin:0;line-height:1.05;letter-spacing:-.035em}
+    h1{font-size:clamp(3.2rem,8vw,7.7rem);max-width:1000px}
+    h2{font-size:clamp(2.3rem,5vw,4.8rem);max-width:900px}
+    h3{font-size:1.35rem}
+    p{margin:0}
+    .lead{font-size:clamp(1.06rem,1.7vw,1.35rem);color:#d1cec6;max-width:760px}
+    .muted{color:var(--muted)}
+    .gold{color:var(--gold)}
+
+    header{
+      position:sticky;top:0;z-index:30;
+      background:rgba(10,10,10,.87);
+      backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--line);
+    }
+    .nav{
+      min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px;
+    }
+    .brand{
+      font-size:1.28rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;
+    }
+    .brand span{color:var(--gold)}
+    .nav-links{display:flex;align-items:center;gap:28px}
+    .nav-links>a:not(.btn){font-size:.86rem;text-decoration:none;color:#d9d6ce}
+    .nav-links>a:not(.btn):hover{color:var(--gold)}
+    .menu-btn{display:none;background:none;border:1px solid var(--line);color:var(--white);padding:9px 12px;border-radius:10px}
+
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      padding:14px 20px;border-radius:999px;text-decoration:none;font-size:.88rem;font-weight:800;
+      border:1px solid transparent;transition:.2s ease;cursor:pointer;
+    }
+    .btn-primary{background:var(--gold);color:var(--black)}
+    .btn-primary:hover{transform:translateY(-2px);background:#dfbd5e}
+    .btn-ghost{border-color:rgba(255,255,255,.26);color:var(--white)}
+    .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+
+    .hero{padding:108px 0 74px;overflow:hidden}
+    .hero h1 span{color:var(--gold)}
+    .hero .lead{margin-top:28px}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+    .platforms{
+      display:flex;flex-wrap:wrap;gap:10px;margin-top:50px;padding-top:26px;border-top:1px solid var(--line);
+    }
+    .platforms span{
+      border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:#c8c5bd;font-size:.79rem;
+    }
+    .hero-kicker{
+      margin-top:20px;color:#c7c4bd;font-size:.86rem;font-weight:700;letter-spacing:.03em
+    }
+
+    section{padding:96px 0}
+    .light{background:var(--white);color:var(--black)}
+    .light .lead,.light .muted{color:#57534b}
+    .light .eyebrow{color:#8d7023}
+    .section-head{display:grid;grid-template-columns:1.25fr .75fr;gap:60px;align-items:end;margin-bottom:54px}
+    .section-head .lead{justify-self:end;max-width:470px}
+
+    .search-grid,.service-grid,.why-grid,.audience-grid{display:grid;gap:16px}
+    .search-grid{grid-template-columns:repeat(4,1fr)}
+    .service-grid{grid-template-columns:repeat(2,1fr)}
+    .why-grid{grid-template-columns:repeat(3,1fr)}
+    .audience-grid{grid-template-columns:repeat(3,1fr)}
+    .card{
+      border:1px solid var(--line);border-radius:var(--radius);padding:28px;background:var(--black-2);
+    }
+    .light .card{border-color:var(--line-dark);background:#fff}
+    .card-number{color:var(--gold);font-size:.74rem;font-weight:900;letter-spacing:.12em;margin-bottom:34px}
+    .card h3{margin-bottom:12px}
+    .card p{color:#aaa69e;font-size:.94rem}
+    .light .card p{color:#625e56}
+    .card ul{padding:0;margin:18px 0 0;list-style:none}
+    .card li{padding:7px 0;color:#aaa69e;font-size:.9rem}
+    .light .card li{color:#625e56}
+    .card li::before{content:"→";color:var(--gold);margin-right:9px}
+
+    .statement{
+      font-size:clamp(1.5rem,3vw,2.65rem);
+      line-height:1.25;max-width:950px;letter-spacing:-.025em
+    }
+
+    .check{
+      position:relative;overflow:hidden;
+      background:linear-gradient(135deg,#171306,#0a0a0a 55%);
+      border-top:1px solid rgba(201,168,76,.3);border-bottom:1px solid rgba(201,168,76,.3)
+    }
+    .check::after{
+      content:"";position:absolute;width:480px;height:480px;border-radius:50%;
+      background:rgba(201,168,76,.08);right:-180px;top:-210px;filter:blur(6px)
+    }
+    .check-inner{position:relative;z-index:1;display:grid;grid-template-columns:1fr .85fr;gap:70px;align-items:center}
+    .check-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:28px}
+    .check-list span{
+      border:1px solid var(--line);padding:11px 13px;border-radius:10px;color:#d3d0c9;font-size:.88rem
+    }
+    .check-box{
+      background:var(--white);color:var(--black);border-radius:24px;padding:32px;
+      box-shadow:0 25px 80px rgba(0,0,0,.28)
+    }
+    .check-box strong{display:block;font-size:1.25rem;margin-bottom:12px}
+    .check-box p{color:#5a564f;margin-bottom:24px}
+    .check-box .btn{width:100%}
+    .small-note{font-size:.76rem!important;margin-top:14px!important;margin-bottom:0!important;color:#777168!important}
+
+    .steps{counter-reset:step;display:grid;gap:0;border-top:1px solid var(--line)}
+    .step{
+      display:grid;grid-template-columns:90px 1fr 1fr;gap:24px;padding:25px 0;border-bottom:1px solid var(--line);align-items:start
+    }
+    .step-num{color:var(--gold);font-weight:900;letter-spacing:.1em}
+    .step p{color:#aaa69e}
+
+    .seo-strip{padding:48px 0;background:var(--gold);color:var(--black)}
+    .seo-strip .wrap{display:flex;align-items:center;justify-content:space-between;gap:35px}
+    .seo-strip strong{font-size:clamp(1.45rem,3vw,2.5rem);line-height:1.15;letter-spacing:-.025em}
+    .seo-strip p{max-width:520px;font-weight:600}
+
+    .faq{max-width:900px}
+    details{border-bottom:1px solid var(--line-dark)}
+    summary{
+      list-style:none;cursor:pointer;padding:23px 0;font-size:1.08rem;font-weight:800;display:flex;justify-content:space-between;gap:20px
+    }
+    summary::-webkit-details-marker{display:none}
+    summary::after{content:"+";color:#8d7023;font-size:1.3rem}
+    details[open] summary::after{content:"–"}
+    details p{padding:0 0 25px;color:#5d5951;max-width:780px}
+
+    .final-cta{text-align:center}
+    .final-cta h2{margin-inline:auto}
+    .final-cta .lead{margin:22px auto 30px}
+    footer{border-top:1px solid var(--line);padding:42px 0 55px}
+    .footer-grid{display:flex;justify-content:space-between;gap:30px;align-items:flex-end}
+    .footer-links{display:flex;gap:20px;flex-wrap:wrap}
+    .footer-links a{font-size:.82rem;color:#aaa69e;text-decoration:none}
+    .footer-links a:hover{color:var(--gold)}
+    .copyright{color:#77736b;font-size:.78rem;margin-top:12px}
+
+    @media(max-width:900px){
+      .section-head,.check-inner{grid-template-columns:1fr;gap:28px}
+      .section-head .lead{justify-self:start}
+      .search-grid{grid-template-columns:repeat(2,1fr)}
+      .why-grid,.audience-grid{grid-template-columns:1fr}
+      .step{grid-template-columns:60px 1fr}
+      .step p{grid-column:2}
+      .seo-strip .wrap{align-items:flex-start;flex-direction:column}
+    }
+    @media(max-width:720px){
+      .wrap{width:min(calc(100% - 28px),var(--max))}
+      header{position:sticky}
+      .menu-btn{display:block}
+      .nav-links{
+        display:none;position:absolute;left:14px;right:14px;top:70px;
+        background:#111;border:1px solid var(--line);border-radius:16px;padding:18px;flex-direction:column;align-items:stretch
+      }
+      .nav-links.open{display:flex}
+      .nav-links .btn{width:100%}
+      .hero{padding:78px 0 58px}
+      section{padding:72px 0}
+      .search-grid,.service-grid,.check-list{grid-template-columns:1fr}
+      .platforms{margin-top:38px}
+      .footer-grid{flex-direction:column;align-items:flex-start}
+    }
+    @media(prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto}
+      *{transition:none!important}
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="#top">A<span>i</span>mpact</a>
+      <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="navLinks">Menü</button>
+      <nav class="nav-links" id="navLinks" aria-label="Hauptnavigation">
+        <a href="#leistungen">Leistungen</a>
+        <a href="#ablauf">Ablauf</a>
+        <a href="#faq">FAQ</a>
+        <a class="btn btn-primary" href="sichtbarkeits-check.html">Visibility Check</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap">
+        <p class="eyebrow">Digital · Local · AI · Zürich</p>
+        <h1>Dein Unternehmen ist gut. <span>Aber wird es auch gefunden?</span></h1>
+        <p class="lead">
+          Aimpact hilft lokalen Unternehmen und Gastronomiebetrieben in Zürich,
+          bei <strong>Google, Google Maps und KI-Systemen</strong> besser sichtbar zu werden –
+          und daraus mehr qualifizierte Anfragen und Kunden zu gewinnen.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="sichtbarkeits-check.html">Kostenlosen Visibility Check starten</a>
+          <a class="btn btn-ghost" href="#leistungen">Leistungen ansehen</a>
+        </div>
+        <div class="platforms" aria-label="Relevante Such- und Empfehlungsplattformen">
+          <span>Google</span><span>Google Maps</span><span>ChatGPT</span><span>Gemini</span><span>Perplexity</span><span>Social Media</span>
+        </div>
+        <p class="hero-kicker">Mehr Sichtbarkeit. Mehr qualifizierte Anfragen. Mehr Kunden.</p>
+      </div>
+    </section>
+
+    <section class="light">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Das Problem</p>
+            <h2>Deine Kunden suchen nicht mehr nur bei Google.</h2>
+          </div>
+          <p class="lead">
+            Die Customer Journey verteilt sich heute auf klassische Suche, Maps, Social Media und generative KI.
+            Aimpact verbindet diese Kontaktpunkte zu einer klaren Sichtbarkeitsstrategie.
+          </p>
+        </div>
+
+        <div class="search-grid">
+          <article class="card">
+            <p class="card-number">01</p>
+            <h3>Google</h3>
+            <p>Für klassische Informations-, Produkt- und Dienstleistungssuchen.</p>
+          </article>
+          <article class="card">
+            <p class="card-number">02</p>
+            <h3>Google Maps</h3>
+            <p>Für lokale Suchintentionen mit direkter Nähe zu Besuch, Anfrage oder Kauf.</p>
+          </article>
+          <article class="card">
+            <p class="card-number">03</p>
+            <h3>KI-Systeme</h3>
+            <p>Für Empfehlungen, Vergleiche und Antworten in Systemen wie ChatGPT, Gemini oder Perplexity.</p>
+          </article>
+          <article class="card">
+            <p class="card-number">04</p>
+            <h3>Social Media</h3>
+            <p>Für Entdeckung, Vertrauen, Wiedererkennung und zusätzliche Kontaktpunkte.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="leistungen">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Leistungen</p>
+            <h2>So macht Aimpact dein Unternehmen sichtbarer.</h2>
+          </div>
+          <p class="lead">
+            Keine isolierten Einzelmassnahmen. Wir verbinden lokale Sichtbarkeit,
+            Website, Content, Conversion und AI Visibility dort, wo es für dein Unternehmen Sinn ergibt.
+          </p>
+        </div>
+
+        <div class="service-grid">
+          <article class="card">
+            <p class="card-number">01 · Local Visibility</p>
+            <h3>Google & Google Maps</h3>
+            <p>Damit lokale Kunden dein Unternehmen genau dann finden, wenn sie nach deinem Angebot suchen.</p>
+            <ul>
+              <li>Google Business Profile</li>
+              <li>Local SEO</li>
+              <li>lokale Suchbegriffe</li>
+              <li>Bewertungen & lokale Relevanz</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <p class="card-number">02 · Website & Conversion</p>
+            <h3>Aus Besuchern werden Anfragen.</h3>
+            <p>Mehr Traffic allein genügt nicht. Die Website muss klar führen, Vertrauen schaffen und zur Handlung motivieren.</p>
+            <ul>
+              <li>Struktur & Nutzerführung</li>
+              <li>Call-to-Actions</li>
+              <li>Inhalte & Nutzenargumentation</li>
+              <li>Conversion-Optimierung</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <p class="card-number">03 · AI Visibility</p>
+            <h3>Sichtbar. Auch für KI.</h3>
+            <p>Wir verbessern die Voraussetzungen dafür, dass dein Unternehmen digital eindeutig verstanden und thematisch eingeordnet werden kann.</p>
+            <ul>
+              <li>GEO / Generative Engine Optimization</li>
+              <li>strukturierte Inhalte</li>
+              <li>FAQ & Schema Markup</li>
+              <li>thematische Relevanz</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <p class="card-number">04 · Content & Social</p>
+            <h3>Inhalte mit Funktion.</h3>
+            <p>Content soll nicht nur gefällig aussehen. Er soll Fragen beantworten, Vertrauen schaffen und die Sichtbarkeit stärken.</p>
+            <ul>
+              <li>Content-Strategie</li>
+              <li>Social Media</li>
+              <li>lokale Themen</li>
+              <li>Suchintentionen</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <p class="card-number">05 · Analyse</p>
+            <h3>Messen statt raten.</h3>
+            <p>Wir priorisieren Massnahmen und prüfen, welche davon tatsächlich zur gewünschten Entwicklung beitragen.</p>
+            <ul>
+              <li>Ziele & KPIs</li>
+              <li>Ist-Analyse</li>
+              <li>Wettbewerbsumfeld</li>
+              <li>laufende Optimierung</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <p class="card-number">Unser Prinzip</p>
+            <h3>Persönlich. Messbar. Ohne Agentur-Ballast.</h3>
+            <p>Direkter Austausch, verständliche Empfehlungen und klare Prioritäten statt unnötig komplizierter Marketingprozesse.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="check" id="check">
+      <div class="wrap check-inner">
+        <div>
+          <p class="eyebrow">Kostenloser Einstieg</p>
+          <h2>Wie sichtbar ist dein Unternehmen wirklich?</h2>
+          <p class="lead" style="margin-top:22px">
+            Mit dem Aimpact Visibility Check erhältst du eine erste Einschätzung deiner digitalen Sichtbarkeit
+            und erkennst, wo das grösste Potenzial liegt.
+          </p>
+          <div class="check-list">
+            <span>Google-Sichtbarkeit</span>
+            <span>Google Maps</span>
+            <span>Website-Basis</span>
+            <span>Content & Relevanz</span>
+            <span>AI-Visibility-Potenzial</span>
+            <span>Conversion-Potenzial</span>
+          </div>
+        </div>
+        <aside class="check-box">
+          <strong>Aimpact Visibility Check</strong>
+          <p>Starte mit einer klaren ersten Einschätzung statt mit einem langen Beratungsgespräch.</p>
+          <a class="btn btn-primary" href="sichtbarkeits-check.html">Check jetzt starten</a>
+          <p class="small-note">Der Check ist eine erste Einschätzung und keine Garantie für Rankings oder Empfehlungen in KI-Systemen.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section id="ablauf">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Arbeitsweise</p>
+            <h2>Von der Analyse zur messbaren Optimierung.</h2>
+          </div>
+          <p class="lead">Wir arbeiten mit klaren Prioritäten und entwickeln nur weiter, was für dein Unternehmen einen nachvollziehbaren Nutzen hat.</p>
+        </div>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">01</div>
+            <h3>Analysieren</h3>
+            <p>Wir prüfen den aktuellen Stand bei Google, Maps, Website, Content und relevanten digitalen Touchpoints.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">02</div>
+            <h3>Priorisieren</h3>
+            <p>Wir wählen zuerst die Massnahmen mit dem grössten Potenzial für Sichtbarkeit, Anfragen und Kunden.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">03</div>
+            <h3>Umsetzen</h3>
+            <p>Wir optimieren die relevanten Bereiche – verständlich, pragmatisch und passend zur Ausgangslage.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">04</div>
+            <h3>Messen</h3>
+            <p>Wir prüfen anhand passender KPIs, was sich verändert und welche Massnahmen Wirkung zeigen.</p>
+          </div>
+          <div class="step">
+            <div class="step-num">05</div>
+            <h3>Weiterentwickeln</h3>
+            <p>Was funktioniert, bauen wir aus. Was keinen Mehrwert bringt, wird angepasst oder verworfen.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="light">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Zielgruppe</p>
+            <h2>Für lokale Unternehmen, die nicht einfach nur Reichweite wollen.</h2>
+          </div>
+          <p class="lead">
+            Entscheidend ist nicht, möglichst viele Menschen zu erreichen.
+            Entscheidend ist, von den richtigen Menschen gefunden zu werden und daraus Geschäft zu entwickeln.
+          </p>
+        </div>
+
+        <div class="audience-grid">
+          <article class="card">
+            <h3>Gastronomie</h3>
+            <p>Restaurants, Cafés und lokale Konzepte, die über Suche, Maps, Content und Bewertungen mehr Gäste erreichen wollen.</p>
+          </article>
+          <article class="card">
+            <h3>Lokale Dienstleister</h3>
+            <p>Unternehmen, deren Kunden regional suchen und vor einer Anfrage vergleichen, prüfen und Vertrauen aufbauen.</p>
+          </article>
+          <article class="card">
+            <h3>Kleine KMU</h3>
+            <p>Betriebe ohne eigene Marketingabteilung, die eine klare, persönliche und umsetzbare Digitalstrategie benötigen.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <div class="seo-strip">
+      <div class="wrap">
+        <strong>Search Everywhere statt nur SEO.</strong>
+        <p>Google bleibt wichtig. Aimpact denkt Sichtbarkeit zusätzlich über Maps, Content, Social und KI-Systeme – mit Conversion als verbindendem Ziel.</p>
+      </div>
+    </div>
+
+    <section class="light" id="faq">
+      <div class="wrap faq">
+        <p class="eyebrow">FAQ</p>
+        <h2 style="margin-bottom:36px">Häufige Fragen.</h2>
+
+        <details>
+          <summary>Was bedeutet AI Visibility?</summary>
+          <p>AI Visibility beschreibt, wie gut ein Unternehmen, seine Marke und seine Inhalte von generativen KI-Systemen verstanden, thematisch eingeordnet und potenziell in Antworten berücksichtigt werden können.</p>
+        </details>
+
+        <details>
+          <summary>Ist klassisches SEO noch wichtig?</summary>
+          <p>Ja. Google bleibt ein zentraler Suchkanal. Gleichzeitig entstehen zusätzliche Suchwege über Maps, Social Media und generative KI. Deshalb betrachtet Aimpact SEO als Teil einer breiteren Sichtbarkeitsstrategie.</p>
+        </details>
+
+        <details>
+          <summary>Kann Aimpact garantieren, dass mein Unternehmen in ChatGPT empfohlen wird?</summary>
+          <p>Nein. Eine bestimmte Empfehlung oder Platzierung in einem KI-System kann seriös nicht garantiert werden. Optimiert werden können jedoch die digitalen Voraussetzungen wie klare Inhalte, Struktur, Relevanz und konsistente Unternehmenssignale.</p>
+        </details>
+
+        <details>
+          <summary>Ist Aimpact nur für Gastronomie?</summary>
+          <p>Nein. Gastronomie ist ein wichtiger Praxisbereich. Der Ansatz eignet sich ebenfalls für lokale Dienstleistungsbetriebe und kleinere Unternehmen, deren Kunden regional oder digital nach Angeboten suchen.</p>
+        </details>
+
+        <details>
+          <summary>Brauche ich bereits eine gute Website?</summary>
+          <p>Nein. Zuerst wird der bestehende Stand beurteilt. Danach werden die Massnahmen priorisiert, die für deine Situation tatsächlich sinnvoll sind.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="final-cta">
+      <div class="wrap">
+        <p class="eyebrow">Der nächste Schritt</p>
+        <h2>Finde heraus, wo dein grösstes Sichtbarkeitspotenzial liegt.</h2>
+        <p class="lead">Starte mit dem kostenlosen Aimpact Visibility Check.</p>
+        <a class="btn btn-primary" href="sichtbarkeits-check.html">Visibility Check starten</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-grid">
+      <div>
+        <a class="brand" href="#top">A<span>i</span>mpact</a>
+        <p class="copyright">Mehr Sichtbarkeit. Mehr qualifizierte Anfragen. Mehr Kunden.</p>
+        <p class="copyright">© <span id="year"></span> Aimpact · Zürich</p>
+      </div>
+      <div class="footer-links">
+        <a href="sichtbarkeits-check.html">Visibility Check</a>
+        <a href="impressum.html">Impressum</a>
+        <a href="datenschutz.html">Datenschutz</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const navLinks = document.getElementById('navLinks');
+    menuBtn?.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      menuBtn.setAttribute('aria-expanded', String(open));
+    });
+    navLinks?.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        menuBtn?.setAttribute('aria-expanded', 'false');
+      });
+    });
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

@@ -31,12 +31,33 @@
       position:relative;z-index:9999;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
     }
     #aa-launcher{
-      position:fixed;right:22px;bottom:22px;width:58px;height:58px;border-radius:50%;border:1px solid rgba(201,168,76,.45);
-      background:var(--aa-gold);color:var(--aa-black);display:grid;place-items:center;cursor:pointer;
-      box-shadow:0 16px 45px rgba(0,0,0,.38);font-weight:950;font-size:19px;transition:.2s ease
-    }
-    #aa-launcher:hover{transform:translateY(-2px);background:var(--aa-gold2)}
-    #aa-launcher[aria-expanded="true"]{background:var(--aa-white)}
+  position:fixed;
+  right:22px;
+  bottom:22px;
+  height:52px;
+  padding:0 18px;
+  border-radius:999px;
+  border:1px solid rgba(201,168,76,.55);
+  background:#0d0d0d;
+  color:var(--aa-white);
+  display:flex;
+  align-items:center;
+  gap:9px;
+  cursor:pointer;
+  box-shadow:0 16px 45px rgba(0,0,0,.38);
+  font-weight:850;
+  font-size:14px;
+  transition:.2s ease
+}
+#aa-launcher:hover{
+  transform:translateY(-2px);
+  border-color:var(--aa-gold);
+  color:var(--aa-gold)
+}
+#aa-launcher[aria-expanded="true"]{
+  border-color:var(--aa-gold);
+  color:var(--aa-gold)
+}
     #aa-window{
       position:fixed;right:22px;bottom:92px;width:min(390px,calc(100vw - 28px));height:min(620px,calc(100vh - 125px));
       display:none;flex-direction:column;overflow:hidden;border:1px solid rgba(201,168,76,.32);border-radius:22px;
@@ -79,7 +100,7 @@
   const root = document.createElement('div');
   root.id = 'aimpact-assistant-root';
   root.innerHTML = `
-    <button id="aa-launcher" aria-label="Aimpact Assistant öffnen" aria-expanded="false">A<span style="color:#fff">i</span></button>
+  <button id="aa-launcher" aria-label="Aimpact Assistant öffnen" aria-expanded="false">💬 Frag Aimpact</button>
     <section id="aa-window" role="dialog" aria-label="Aimpact Assistant" aria-hidden="true">
       <div class="aa-head">
         <div>

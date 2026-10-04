@@ -526,6 +526,12 @@
 
         if(response.ok){
           form.style.display = 'none';
+          if(typeof window.gtag === 'function'){
+  window.gtag('event','generate_lead',{
+    lead_source:'visibility_check',
+    form_name:'Aimpact Visibility Check'
+  });
+}
           success.style.display = 'block';
         }else{
           btn.disabled = false;

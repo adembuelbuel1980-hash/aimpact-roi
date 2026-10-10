@@ -8,32 +8,169 @@
 <section id="results" class="panel" hidden><h2>Prüfergebnisse</h2><p id="scope" class="muted"></p><div id="checks"></div><h2>Drei nächste Schritte</h2><ol id="actions"></ol><p class="muted"><small>Die Bewertung berücksichtigt ausschliesslich von Google zurückgegebene Prüfdaten. Nicht verfügbare Prüfungen gelten nicht als Fehler. Die Ergebnisse können je nach Abrufzeitpunkt variieren.</small></p></section>
 <p><a href="https://aimpact.ch/sichtbarkeits-check.html">Zum bisherigen Visibility Check</a></p></main>
 <script>
-const $=id=>document.getElementById(id);
-const rules=[
-{id:'document-title',name:'Seitentitel',tip:'Einen eindeutigen, aussagekräftigen Seitentitel ergänzen.'},
-{id:'meta-description',name:'Meta-Beschreibung',tip:'Eine verständliche Beschreibung für die Suchergebnisse ergänzen.'},
-{id:'canonical',name:'Canonical-URL',tip:'Eine eindeutige kanonische URL prüfen und festlegen.'},
-{id:'is-crawlable',name:'Indexierbarkeit',tip:'Robots- und Indexierungsanweisungen kontrollieren.'},
-{id:'heading-order',name:'Überschriftenstruktur',tip:'Die Hierarchie der Überschriften korrigieren.'},
-{id:'viewport',name:'Mobile Darstellung',tip:'Die mobile Viewport-Konfiguration prüfen.'},
-{id:'link-text',name:'Linktexte',tip:'Aussagekräftige Linktexte verwenden.'}
+
+const $ = id => document.getElementById(id);
+
+const rules = [
+  {
+    id: "document-title",
+    name: "Seitentitel",
+    tip: "Seitentitel prüfen und verbessern."
+  },
+  {
+    id: "meta-description",
+    name: "Meta-Beschreibung",
+    tip: "Eine aussagekräftige Meta-Beschreibung ergänzen."
+  },
+  {
+    id: "canonical",
+    name: "Canonical-URL",
+    tip: "Die kanonische URL überprüfen."
+  },
+  {
+    id: "is-crawlable",
+    name: "Indexierbarkeit",
+    tip: "Robots- und Indexierungsanweisungen prüfen."
+  },
+  {
+    id: "heading-order",
+    name: "Überschriftenstruktur",
+    tip: "Die Überschriftenhierarchie verbessern."
+  },
+  {
+    id: "viewport",
+    name: "Mobile Darstellung",
+    tip: "Die mobile Viewport-Konfiguration prüfen."
+  },
+  {
+    id: "link-text",
+    name: "Linktexte",
+    tip: "Aussagekräftige Linktexte verwenden."
+  }
 ];
-$('form').addEventListener('submit',async e=>{
-e.preventDefault();$('results').hidden=true;$('go').disabled=true;$('status').textContent='Prüfung läuft. Dies kann einige Sekunden dauern.';
-try{
-const u=new URL($('url').value.trim());if(!['http:','https:'].includes(u.protocol))throw Error('Bitte eine HTTP- oder HTTPS-Adresse eingeben.');
-const endpoint='https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url='+encodeURIComponent(u.href)+'&strategy=mobile&category=seo&category=accessibility';
-const response=await fetch(endpoint);const json=await response.json();
-if(!response.ok||!json.lighthouseResult)throw Error(json.error?.message||'Die externe Analyse ist momentan nicht verfügbar.');
-const audits=json.lighthouseResult.audits||{};const available=rules.map(r=>({...r,audit:audits[r.id]})).filter(r=>r.audit&&r.audit.score!==null&&r.audit.score!==undefined&&r.audit.scoreDisplayMode!=='notApplicable');
-$('scope').textContent='Geprüfte URL: '+(json.lighthouseResult.finalDisplayedUrl||u.href)+' · '+available.length+' auswertbare Kriterien';
-const checks=$('checks');checks.replaceChildren();const failed=[];
-for(const r of available){const pass=r.audit.score>=.9;if(!pass)failed.push(r);const div=document.createElement('div');div.className='item';const title=document.createElement('h3');title.textContent=(pass?'✓ ':'! ')+r.name;title.className=pass?'ok':'bad';const detail=document.createElement('p');detail.textContent=r.audit.description? r.audit.title||r.name:r.name;detail.className='muted';div.append(title,detail);checks.append(div)}
-if(!available.length){const p=document.createElement('p');p.textContent='Keine der ausgewählten Prüfungen lieferte auswertbare Daten.';checks.append(p)}
-const actions=$('actions');actions.replaceChildren();for(const r of failed.slice(0,3)){const li=document.createElement('li');li.textContent=r.tip;actions.append(li)}
-if(!failed.length){const li=document.createElement('li');li.textContent='Bei den verfügbaren Kriterien wurde kein konkreter Mangel erkannt. Für lokale Rankings und KI-Erwähnungen sind zusätzliche Daten erforderlich.';actions.append(li)}
-$('results').hidden=false;$('status').textContent='Prüfung abgeschlossen. '+failed.length+' auffällige Kriterien von '+available.length+' auswertbaren Kriterien.';
-}catch(err){$('status').textContent='Keine verlässliche Analyse möglich: '+err.message+' Bitte später erneut versuchen. Es wurden keine Ergebnisse geschätzt.'}
-finally{$('go').disabled=false}
+
+$("form").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  $("results").hidden = true;
+  $("go").disabled = true;
+  $("status").textContent =
+    "Website wird analysiert. Bitte warten.";
+
+  try {
+    const url = new URL($("url").value.trim());
+
+    if (!["https:", "http:"].includes(url.protocol)) {
+      throw new Error(
+        "Bitte eine gültige Website-Adresse eingeben."
+      );
+    }
+
+    const endpoint =
+      "/api/website-check?url=" +
+      encodeURIComponent(url.href);
+
+    const response = await fetch(endpoint);
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.error || "Analyse fehlgeschlagen."
+      );
+    }
+
+    const checks = $("checks");
+    const actions = $("actions");
+
+    checks.replaceChildren();
+    actions.replaceChildren();
+
+    const available = (data.checks || []).filter(
+      item => typeof item.score === "number"
+    );
+
+    const failed = [];
+
+    for (const item of available) {
+      const rule = rules.find(
+        r => r.id === item.id
+      );
+
+      const pass = item.score >= 0.9;
+
+      if (!pass) {
+        failed.push(rule || item);
+      }
+
+      const div = document.createElement("div");
+      div.className = "item";
+
+      const title = document.createElement("h3");
+      title.className = pass ? "ok" : "bad";
+      title.textContent =
+        (pass ? "✓ " : "! ") + item.name;
+
+      const detail = document.createElement("p");
+      detail.className = "muted";
+      detail.textContent = pass
+        ? "Prüfung bestanden."
+        : "Verbesserung empfohlen.";
+
+      div.append(title, detail);
+      checks.append(div);
+    }
+
+    if (!available.length) {
+      const p = document.createElement("p");
+      p.textContent =
+        "Keine Einzelprüfungen mit auswertbarem Ergebnis.";
+      checks.append(p);
+    }
+
+    $("scope").textContent =
+      "Geprüfte URL: " +
+      (data.analyzedUrl || url.href) +
+      " · Mobil · " +
+      available.length +
+      " auswertbare Kriterien" +
+      (typeof data.seo === "number"
+        ? " · Lighthouse SEO: " +
+          Math.round(data.seo * 100) + "/100"
+        : "");
+
+    for (const item of failed.slice(0, 3)) {
+      const li = document.createElement("li");
+      li.textContent =
+        item.tip ||
+        "Dieses Kriterium überprüfen.";
+      actions.append(li);
+    }
+
+    if (!failed.length) {
+      const li = document.createElement("li");
+      li.textContent =
+        "Keine Auffälligkeiten in den auswertbaren " +
+        "Kriterien. Für Rankings und KI-Sichtbarkeit " +
+        "sind weitere Analysen nötig.";
+      actions.append(li);
+    }
+
+    $("results").hidden = false;
+
+    $("status").textContent =
+      "Analyse abgeschlossen: " +
+      failed.length +
+      " Auffälligkeiten bei " +
+      available.length +
+      " auswertbaren Kriterien.";
+
+  } catch (error) {
+    $("status").textContent =
+      "Analyse nicht möglich: " +
+      error.message;
+  } finally {
+    $("go").disabled = false;
+  }
 });
+
 </script></body></html>

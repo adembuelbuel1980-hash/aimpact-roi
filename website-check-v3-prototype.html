@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Aimpact | Technischer Website-Check V3 – Test</title>
+<style>
+:root{color-scheme:dark;--bg:#090909;--panel:#151515;--line:#3b3526;--gold:#c9a84c;--text:#f5f2ea;--muted:#bcb7aa}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,sans-serif}.wrap{max-width:1000px;margin:auto;padding:55px 20px}h1{font-size:clamp(2rem,5vw,3.7rem);line-height:1.15}h1 span,.eyebrow,a{color:var(--gold)}.eyebrow{font-size:.8rem;letter-spacing:.17em;font-weight:750;text-transform:uppercase}.muted,small{color:var(--muted)}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px;margin:22px 0}form{display:flex;gap:10px;flex-wrap:wrap}input{min-width:240px;flex:1;background:#242424;border:1px solid #666;border-radius:8px;color:white;padding:15px;font:inherit}button{border:0;border-radius:8px;background:var(--gold);color:#171308;padding:15px 24px;font-weight:800;cursor:pointer}button:disabled{opacity:.6;cursor:wait}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.score{background:#1e1e1e;border:1px solid #39342b;border-radius:12px;padding:18px}.score strong{font-size:2.1rem;display:block}.good{color:#83d9a5}.warn{color:#f3c66e}.bad{color:#ff8e89}.unknown{color:#b7b7b7}.item{border-top:1px solid #39342b;padding:14px 0}.item h3{margin:0 0 4px;font-size:1rem}.item p{margin:0}.tag{font-size:.78rem;font-weight:700}.notice{border-left:3px solid var(--gold);padding-left:12px}a{word-break:break-word}#results[hidden]{display:none}#status{min-height:1.5em}ul{padding-left:20px}li{margin:6px 0}
+</style>
+</head>
+<body><main class="wrap">
+<p class="eyebrow">Aimpact · interne Entwicklungsversion</p>
+<h1>Technischer <span>Website-Check V3</span></h1>
+<p class="muted">Vier unabhängige Lighthouse-Kategorien und konkrete Hinweise. Keine Aussage über Google-Rankings oder KI-Sichtbarkeit.</p>
+<section class="panel"><form id="form"><label for="url" style="width:100%;font-weight:650">Website-Adresse</label><input id="url" type="url" value="https://aimpact.ch" placeholder="https://beispiel.ch" required><button id="go" type="submit">Website prüfen</button></form><p id="status" class="muted" role="status" aria-live="polite"></p></section>
+<section id="results" hidden><div class="panel"><h2>Prüfergebnisse</h2><p id="scope" class="muted"></p><div class="grid" id="scores"></div><p class="notice muted">Lighthouse-Werte sind technische Momentaufnahmen. Nicht verfügbare Werte werden nicht als 100 oder 0 interpretiert.</p></div><div class="panel"><h2>Messwerte</h2><div class="grid" id="metrics"></div></div><div class="panel"><h2>Priorisierte Empfehlungen</h2><div id="recommendations"></div></div><div class="panel"><h2>Weitere Prüfungen</h2><div id="checks"></div></div></section>
+<p><a href="https://aimpact.ch/sichtbarkeits-check.html">Zum bisherigen Visibility Check</a></p>
+</main>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const CATS=[['performance','Performance'],['accessibility','Barrierefreiheit'],['best-practices','Best Practices'],['seo','SEO']];
+const metricDefinitions=[['first-contentful-paint','First Contentful Paint'],['largest-contentful-paint','Largest Contentful Paint'],['total-blocking-time','Total Blocking Time'],['cumulative-layout-shift','Cumulative Layout Shift'],['speed-index','Speed Index']];
+const recommendations={
+'largest-contentful-paint':'Grösstes sichtbares Element schneller laden: Bilder optimieren und blockierende Ressourcen prüfen.',
+'render-blocking-resources':'Render-blockierende CSS- und JavaScript-Ressourcen reduzieren.',
+'uses-optimized-images':'Bilder passend komprimieren und moderne Bildformate prüfen.',
+'uses-responsive-images':'Bilder in geeigneten Grössen ausliefern.',
+'color-contrast':'Textkontraste verbessern.',
+'image-alt':'Aussagekräftige Alternativtexte für informative Bilder ergänzen.',
+'document-title':'Einen eindeutigen, beschreibenden Seitentitel ergänzen.',
+'meta-description':'Eine verständliche Meta-Beschreibung ergänzen.',
+'link-name':'Links mit aussagekräftigen Namen versehen.',
+'is-crawlable':'Indexierungsanweisungen und Robots-Regeln kontrollieren.',
+'uses-https':'HTTPS durchgehend aktivieren.',
+'viewport':'Mobilen Viewport korrekt konfigurieren.'
+};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const scoreValue=v=>typeof v==='number'&&Number.isFinite(v)?(v<=1?Math.round(v*100):Math.round(v)):null;
+const color=n=>n===null?'unknown':n>=90?'good':n>=50?'warn':'bad';
+function renderScore(label,value){const n=scoreValue(value);return `<div class="score"><small>${esc(label)}</small><strong class="${color(n)}">${n===null?'Nicht verfügbar':n+'/100'}</strong></div>`;}
+function item(title,detail,tone='unknown'){return `<div class="item"><h3 class="${tone}">${esc(title)}</h3><p class="muted">${esc(detail)}</p></div>`;}
+function normalizedPayload(data){
+ // V3 backend should return raw Lighthouse categories/audits. Legacy response is accepted but never faked.
+ const lhr=data.lighthouseResult||data.lighthouse||data;
+ const cats=lhr.categories||data.categories||{};
+ const audits=lhr.audits||data.audits||{};
+ const values={};
+ for(const [id] of CATS){values[id]=cats[id]?.score??data.scores?.[id]??(id==='seo'?data.seo:id==='performance'?data.performance:null);}
+ return {cats,values,audits,legacy:Array.isArray(data.checks)?data.checks:[],url:data.analyzedUrl||data.url||lhr.finalDisplayedUrl||'',strategy:data.strategy||'mobile',timestamp:data.measuredAt||new Date().toISOString()};
+}
+function render(data,requested){
+ const d=normalizedPayload(data);
+ $('scope').textContent=`Geprüfte URL: ${d.url||requested} · ${d.strategy} · ${new Date(d.timestamp).toLocaleString('de-CH')}`;
+ $('scores').innerHTML=CATS.map(([id,name])=>renderScore(name,d.values[id])).join('');
+ $('metrics').innerHTML=metricDefinitions.map(([id,name])=>{const a=d.audits[id];return `<div class="score"><small>${esc(name)}</small><strong style="font-size:1.25rem">${esc(a?.displayValue||'Nicht verfügbar')}</strong></div>`;}).join('');
+ const findings=[];
+ for(const [id,a] of Object.entries(d.audits)){
+   if(!a||a.scoreDisplayMode==='notApplicable'||a.scoreDisplayMode==='manual'||a.scoreDisplayMode==='informative'||a.score===null||a.score===undefined)continue;
+   if(typeof a.score==='number'&&a.score<.9){findings.push({id,title:a.title||id,score:a.score,detail:recommendations[id]||a.description?.replace(/\[[^\]]*\]\([^)]*\)/g,'').replace(/<[^>]*>/g,'').slice(0,240)||'Details im Lighthouse-Bericht prüfen.'});}
+ }
+ findings.sort((a,b)=>a.score-b.score);
+ $('recommendations').innerHTML=findings.length?findings.slice(0,8).map(f=>item(f.title,f.detail,f.score<.5?'bad':'warn')).join(''):
+ item('Keine konkreten Probleme aus den verfügbaren Audits ableitbar',Object.keys(d.audits).length?'Die vorhandenen Audits zeigen keine Werte unter 90 %. Das ist keine vollständige Qualitätsgarantie.':'Der API-Endpunkt liefert keine einzelnen Lighthouse-Audits. Für belastbare Empfehlungen muss der Backend-Endpunkt Kategorien und Audits bereitstellen.');
+ const legacy=d.legacy.map(c=>item(c.name||c.id,c.score===1?'Bestanden':c.score===0?(c.details||'Prüfung nicht bestanden'):'Nicht ausgewertet',c.score===1?'good':c.score===0?'bad':'unknown')).join('');
+ $('checks').innerHTML=legacy||item('Keine zusätzlichen Einzelprüfungen','Der Backend-Endpunkt hat keine gesonderten Checks übermittelt.');
+ $('results').hidden=false;
+}
+$('form').addEventListener('submit',async e=>{
+ e.preventDefault();$('results').hidden=true;$('go').disabled=true;$('status').textContent='Website wird analysiert. Bitte warten …';
+ try{
+  const u=new URL($('url').value.trim());if(!['https:','http:'].includes(u.protocol))throw new Error('Nur HTTP- oder HTTPS-Websites sind erlaubt.');
+  const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),65000);
+  let response;try{response=await fetch('/api/website-check?url='+encodeURIComponent(u.href)+'&strategy=mobile',{signal:controller.signal,headers:{Accept:'application/json'}});}finally{clearTimeout(timer);}
+  const data=await response.json().catch(()=>null);
+  if(!response.ok||!data||data.error)throw new Error(data?.error||data?.message||`API-Fehler ${response.status}`);
+  render(data,u.href);$('status').textContent='Analyse abgeschlossen.';
+ }catch(err){$('status').textContent=err.name==='AbortError'?'Zeitüberschreitung: Bitte erneut versuchen.':'Analyse fehlgeschlagen: '+err.message;}
+ finally{$('go').disabled=false;}
+});
+</script></body></html>

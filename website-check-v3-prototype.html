@@ -22,6 +22,10 @@ const $=id=>document.getElementById(id);
 const CATS=[['performance','Performance'],['accessibility','Barrierefreiheit'],['best-practices','Best Practices'],['seo','SEO']];
 const metricDefinitions=[['first-contentful-paint','First Contentful Paint'],['largest-contentful-paint','Largest Contentful Paint'],['total-blocking-time','Total Blocking Time'],['cumulative-layout-shift','Cumulative Layout Shift'],['speed-index','Speed Index']];
 const recommendations={
+ 'label-content-name-mismatch':'Sichtbare Beschriftungen stimmen nicht mit den Namen für Screenreader überein. Beschriftungen und ARIA-Labels angleichen.',
+'unused-javascript':'Nicht verwendetes JavaScript reduzieren. Unnötige Skripte entfernen oder erst bei Bedarf laden.',
+'color-contrast':'Text und Hintergrund haben zu wenig Kontrast. Farben für bessere Lesbarkeit anpassen.',
+'uses-long-cache-ttl':'Browser-Caching verbessern. Statische Dateien länger zwischenspeichern.',
 'largest-contentful-paint':'Grösstes sichtbares Element schneller laden: Bilder optimieren und blockierende Ressourcen prüfen.',
 'render-blocking-resources':'Render-blockierende CSS- und JavaScript-Ressourcen reduzieren.',
 'uses-optimized-images':'Bilder passend komprimieren und moderne Bildformate prüfen.',

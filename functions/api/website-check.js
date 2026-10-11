@@ -94,7 +94,7 @@ api.searchParams.append("category", "seo");
       ["canonical", "Canonical-URL"],
       ["is-crawlable", "Indexierbarkeit"],
       ["heading-order", "Überschriftenstruktur"],
-      ["viewport", "Mobile Darstellung"],
+      ["viewport", "Viewport-Meta-Tag prüfen"],
       ["link-text", "Linktexte"]
     ].map(([id, name]) => ({
       id,

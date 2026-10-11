@@ -46,7 +46,19 @@ function normalizedPayload(data){
  const cats=lhr.categories||data.categories||{};
  const audits=lhr.audits||data.audits||{};
  const values={};
- for(const [id] of CATS){values[id]=cats[id]?.score??data.scores?.[id]??(id==='seo'?data.seo:id==='performance'?data.performance:null);}
+ 
+for (const [id] of CATS) {
+  values[id] =
+    cats[id]?.score ??
+    data.scores?.[id] ??
+    (id === 'performance' ? data.performance :
+     id === 'accessibility' ? data.accessibility :
+     id === 'best-practices' ? data.bestPractices :
+     id === 'seo' ? data.seo : null);
+}
+
+
+
  return {cats,values,audits,legacy:Array.isArray(data.checks)?data.checks:[],url:data.analyzedUrl||data.url||lhr.finalDisplayedUrl||'',strategy:data.strategy||'mobile',timestamp:data.measuredAt||new Date().toISOString()};
 }
 function render(data,requested){

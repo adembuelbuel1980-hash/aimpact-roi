@@ -119,6 +119,24 @@ return respond({
     speedIndex: audits["speed-index"]?.displayValue ?? null
   },
   checks,
+  audits: Object.fromEntries(
+  Object.entries(audits)
+    .filter(([id, audit]) =>
+      audit &&
+      typeof audit.score === "number" &&
+      audit.score < 0.9 &&
+      !["manual", "informative", "notApplicable"].includes(audit.scoreDisplayMode)
+    )
+    .map(([id, audit]) => [
+      id,
+      {
+        title: audit.title,
+        score: audit.score,
+        description: audit.description || null,
+        scoreDisplayMode: audit.scoreDisplayMode
+      }
+    ])
+),
   measuredAt: new Date().toISOString()
 });
 

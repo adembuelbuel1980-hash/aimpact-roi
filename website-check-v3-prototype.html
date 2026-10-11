@@ -65,7 +65,19 @@ function render(data,requested){
  const d=normalizedPayload(data);
  $('scope').textContent=`Geprüfte URL: ${d.url||requested} · ${d.strategy} · ${new Date(d.timestamp).toLocaleString('de-CH')}`;
  $('scores').innerHTML=CATS.map(([id,name])=>renderScore(name,d.values[id])).join('');
- $('metrics').innerHTML=metricDefinitions.map(([id,name])=>{const a=d.audits[id];return `<div class="score"><small>${esc(name)}</small><strong style="font-size:1.25rem">${esc(a?.displayValue||'Nicht verfügbar')}</strong></div>`;}).join('');
+ 
+$('metrics').innerHTML = metricDefinitions.map(([id, name]) => {
+  const keys = {
+    'first-contentful-paint': 'fcp',
+    'largest-contentful-paint': 'lcp',
+    'total-blocking-time': 'tbt',
+    'cumulative-layout-shift': 'cls',
+    'speed-index': 'speedIndex'
+  };
+  const value = data.metrics?.[keys[id]] ?? 'Nicht verfügbar';
+  return `<div class="score"><small>${esc(name)}</small><strong style="font-size:1.25rem">${esc(value)}</strong></div>`;
+}).join('');
+
  const findings=[];
  for(const [id,a] of Object.entries(d.audits)){
    if(!a||a.scoreDisplayMode==='notApplicable'||a.scoreDisplayMode==='manual'||a.scoreDisplayMode==='informative'||a.score===null||a.score===undefined)continue;

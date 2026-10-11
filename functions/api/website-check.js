@@ -64,8 +64,10 @@ export async function onRequestGet({ request, env }) {
 
     api.searchParams.set("url", target.href);
     api.searchParams.set("strategy", "mobile");
-    api.searchParams.set("category", "performance");
-    api.searchParams.set("category", "seo");
+    api.searchParams.append("category", "performance");
+api.searchParams.append("category", "accessibility");
+api.searchParams.append("category", "best-practices");
+api.searchParams.append("category", "seo");
     api.searchParams.set("key", env.PAGESPEED_API_KEY);
 
     const response = await fetch(api.toString(), {
@@ -101,14 +103,25 @@ export async function onRequestGet({ request, env }) {
       details: audits[id]?.title ?? null
     }));
 
-    return respond({
-      analyzedUrl: data.lighthouseResult?.finalUrl || target.href,
-      strategy: "mobile",
-      performance: categories.performance?.score ?? null,
-      seo: categories.seo?.score ?? null,
-      checks,
-      measuredAt: new Date().toISOString()
-    });
+   
+return respond({
+  analyzedUrl: data.lighthouseResult?.finalUrl || target.href,
+  strategy: "mobile",
+  performance: categories.performance?.score ?? null,
+  accessibility: categories.accessibility?.score ?? null,
+  bestPractices: categories["best-practices"]?.score ?? null,
+  seo: categories.seo?.score ?? null,
+  metrics: {
+    fcp: audits["first-contentful-paint"]?.displayValue ?? null,
+    lcp: audits["largest-contentful-paint"]?.displayValue ?? null,
+    tbt: audits["total-blocking-time"]?.displayValue ?? null,
+    cls: audits["cumulative-layout-shift"]?.displayValue ?? null,
+    speedIndex: audits["speed-index"]?.displayValue ?? null
+  },
+  checks,
+  measuredAt: new Date().toISOString()
+});
+
   } catch (error) {
     console.error("Website check failed", error?.message);
     return respond({

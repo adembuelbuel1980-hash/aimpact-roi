@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Aimpact | Technischer Website-Check V3 – Test</title>
+  <style>
+    :root{color-scheme:dark;--bg:#090909;--panel:#151515;--tile:#202020;--line:#393325;--gold:#d0ad4f;--text:#f5f2eb;--muted:#bcb7aa;--green:#8bd8aa;--yellow:#f1c56b;--red:#ff918e}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    main{max-width:1050px;margin:0 auto;padding:60px 20px 90px}.eyebrow{font-size:.78rem;font-weight:800;letter-spacing:.19em;text-transform:uppercase;color:var(--gold)}
+    h1{font-size:clamp(2.1rem,5vw,3.65rem);line-height:1.12;margin:34px 0}h1 span,a{color:var(--gold)}h2{font-size:1.5rem;margin:0 0 18px}p{margin:12px 0}.muted,small{color:var(--muted)}
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:25px;margin:22px 0}.form-row{display:flex;gap:10px;flex-wrap:wrap}label{display:block;font-weight:700;margin-bottom:10px}
+    input{flex:1;min-width:240px;background:#252525;color:#fff;border:1px solid #666;border-radius:9px;padding:15px;font:inherit}input:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+    button{border:0;border-radius:9px;background:var(--gold);color:#18130a;padding:15px 24px;font:inherit;font-weight:800;cursor:pointer}button:disabled{opacity:.65;cursor:wait}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:12px}.tile{background:var(--tile);border:1px solid #39352d;border-radius:12px;padding:18px;min-width:0}.tile strong{display:block;font-size:clamp(1.55rem,3vw,2.1rem);overflow-wrap:anywhere}.metric strong{font-size:1.25rem}
+    .good{color:var(--green)}.warn{color:var(--yellow)}.bad{color:var(--red)}.unknown{color:#bdbdbd}.notice{border-left:3px solid var(--gold);padding-left:12px}
+    .item{border-top:1px solid #3a352c;padding:14px 0}.item h3{font-size:1rem;margin:0 0 4px}.item p{margin:0;color:var(--muted)}
+    #results[hidden]{display:none}#status{min-height:1.5em}a{overflow-wrap:anywhere}
+    @media(max-width:600px){main{padding-top:32px}.panel{padding:18px}.form-row button{width:100%}}
+  </style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Aimpact · interne Entwicklungsversion</p>
+  <h1>Technischer <span>Website-Check V3</span></h1>
+  <p class="muted">Vier Lighthouse-Kategorien, technische Messwerte und konkrete Verbesserungshinweise. Keine Aussage über Google-Rankings oder KI-Sichtbarkeit.</p>
+  <section class="panel" aria-label="Website prüfen">
+    <form id="check-form">
+      <label for="website-url">Website-Adresse</label>
+      <div class="form-row">
+        <input id="website-url" name="url" type="url" value="https://aimpact.ch" placeholder="https://beispiel.ch" autocomplete="url" required>
+        <button id="check-button" type="submit">Website prüfen</button>
+      </div>
+    </form>
+    <p id="status" class="muted" role="status" aria-live="polite"></p>
+  </section>
+  <div id="results" hidden>
+    <section class="panel"><h2>Prüfergebnisse</h2><p id="scope" class="muted"></p><div id="scores" class="grid"></div><p class="notice muted">Die Werte sind technische Momentaufnahmen von Google Lighthouse (Mobilgerät). SEO 100/100 bedeutet nicht, dass eine Website bei Google auf Platz 1 steht.</p></section>
+    <section class="panel"><h2>Messwerte</h2><div id="metrics" class="grid"></div></section>
+    <section class="panel"><h2>Priorisierte Empfehlungen</h2><div id="recommendations"></div></section>
+    <section class="panel"><h2>Weitere Prüfungen</h2><div id="checks"></div></section>
+  </div>
+  <p><a href="https://aimpact.ch/sichtbarkeits-check.html">Zum bisherigen Visibility Check</a></p>
+</main>
+<script>
+'use strict';
+const byId = id => document.getElementById(id);
+const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));
+const categories = [
+  ['performance','Performance'],['accessibility','Barrierefreiheit'],
+  ['bestPractices','Best Practices'],['seo','SEO']
+];
+const metricLabels = [
+  ['fcp','First Contentful Paint'],['lcp','Largest Contentful Paint'],
+  ['tbt','Total Blocking Time'],['cls','Cumulative Layout Shift'],
+  ['speedIndex','Speed Index']
+];
+const auditTitles = {
+  'color-contrast':'Textkontrast verbessern',
+  'label-content-name-mismatch':'Beschriftungen für Screenreader verbessern',
+  'link-name':'Links verständlich beschriften',
+  'heading-order':'Überschriftenstruktur verbessern',
+  'label':'Formularfelder korrekt beschriften',
+  'unused-javascript':'Nicht benötigtes JavaScript reduzieren',
+  'unused-css-rules':'Nicht benötigtes CSS reduzieren',
+  'cache-insight':'Browser-Caching verbessern',
+  'uses-long-cache-ttl':'Browser-Caching verbessern',
+  'render-blocking-resources':'Render-blockierende Ressourcen reduzieren',
+  'render-blocking-insight':'Render-blockierende Ressourcen reduzieren',
+  'largest-contentful-paint':'Ladezeit des grössten sichtbaren Elements verbessern',
+  'lcp-breakdown-insight':'LCP-Ladezeit analysieren',
+  'lcp-discovery-insight':'LCP-Bild früher laden',
+  'image-delivery-insight':'Bilder schneller laden',
+  'modern-image-formats':'Moderne Bildformate verwenden',
+  'uses-optimized-images':'Bilder komprimieren',
+  'uses-responsive-images':'Passende Bildgrössen verwenden',
+  'forced-reflow-insight':'Unnötige Layout-Berechnungen reduzieren',
+  'forced-reflow':'Unnötige Layout-Berechnungen reduzieren',
+  'network-dependency-tree-insight':'Ladeabhängigkeiten reduzieren',
+  'max-potential-fid':'JavaScript-Reaktionszeit verbessern',
+  'font-display-insight':'Schriftarten schneller anzeigen',
+  'font-display':'Schriftarten schneller anzeigen',
+  'document-title':'Seitentitel ergänzen',
+  'meta-description':'Meta-Beschreibung ergänzen',
+  'image-alt':'Alternativtexte für Bilder ergänzen',
+  'is-crawlable':'Indexierungsanweisungen prüfen',
+  'uses-https':'HTTPS aktivieren',
+  'viewport':'Mobile Darstellung prüfen'
+};
+const advice = {
+  'color-contrast':'Text- und Hintergrundfarben für bessere Lesbarkeit anpassen.',
+  'label-content-name-mismatch':'Sichtbare Beschriftungen und ARIA-Labels angleichen.',
+  'link-name':'Links mit aussagekräftigen, verständlichen Namen versehen.',
+  'heading-order':'Überschriften logisch von H1 über H2 zu H3 strukturieren.',
+  'label':'Jedem Formularfeld ein sichtbares Label oder einen zugänglichen Namen zuweisen.',
+  'unused-javascript':'Nicht benötigte Skripte entfernen oder erst bei Bedarf laden.',
+  'unused-css-rules':'Nicht verwendete CSS-Regeln entfernen und Stylesheets optimieren.',
+  'cache-insight':'Statische Ressourcen länger zwischenspeichern, soweit sinnvoll.',
+  'uses-long-cache-ttl':'Caching-Einstellungen für statische Ressourcen überprüfen.',
+  'render-blocking-resources':'Blockierende CSS- und JavaScript-Ressourcen reduzieren.',
+  'render-blocking-insight':'Kritische Ressourcen priorisieren und nicht kritische später laden.',
+  'largest-contentful-paint':'Das grösste sichtbare Element identifizieren und dessen Ladezeit optimieren.',
+  'lcp-breakdown-insight':'Prüfen, ob Serverantwort, Ressourcenladen oder Rendering die LCP-Zeit verzögert.',
+  'lcp-discovery-insight':'Das wichtigste Bild früh im HTML verfügbar machen und nicht verzögert laden.',
+  'image-delivery-insight':'Bilder komprimieren, passende Grössen und moderne Formate verwenden.',
+  'modern-image-formats':'WebP oder AVIF für geeignete Bilder prüfen.',
+  'uses-optimized-images':'Bilddateien ohne sichtbaren Qualitätsverlust verkleinern.',
+  'uses-responsive-images':'Responsive Bilder mit passenden Abmessungen ausliefern.',
+  'forced-reflow-insight':'Wiederholte Layout-Berechnungen durch JavaScript reduzieren.',
+  'forced-reflow':'JavaScript-Zugriffe auf Layoutdaten und DOM-Änderungen optimieren.',
+  'network-dependency-tree-insight':'Lange Abhängigkeitsketten bei Ressourcen verkürzen.',
+  'max-potential-fid':'Lange JavaScript-Aufgaben reduzieren.',
+  'font-display-insight':'Schriftarten so laden, dass Text früh sichtbar wird.',
+  'font-display':'font-display für Webfonts prüfen.',
+  'document-title':'Einen eindeutigen, beschreibenden Seitentitel verwenden.',
+  'meta-description':'Eine passende Beschreibung für die Seite ergänzen.',
+  'image-alt':'Informative Bilder mit aussagekräftigen Alternativtexten versehen.',
+  'is-crawlable':'Robots-Regeln und Indexierungsanweisungen kontrollieren.',
+  'uses-https':'Website vollständig über HTTPS ausliefern.',
+  'viewport':'Viewport für Mobilgeräte korrekt konfigurieren.'
+};
+function scoreNumber(value) {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return null;
+  return Math.round(value <= 1 ? value * 100 : value);
+}
+function tone(score) {return score === null ? 'unknown' : score >= 90 ? 'good' : score >= 50 ? 'warn' : 'bad';}
+function tile(label, value, metric = false) {
+  const number = metric ? null : scoreNumber(value);
+  const shown = metric ? (value ?? 'Nicht verfügbar') : (number === null ? 'Nicht verfügbar' : number + '/100');
+  return `<div class="tile${metric?' metric':''}"><small>${escapeHtml(label)}</small><strong class="${metric?'unknown':tone(number)}">${escapeHtml(shown)}</strong></div>`;
+}
+function item(title, description, state = 'unknown') {
+  return `<article class="item"><h3 class="${state}">${escapeHtml(title)}</h3><p>${escapeHtml(description)}</p></article>`;
+}
+function render(data, requestedUrl) {
+  const analyzedUrl = data.analyzedUrl || requestedUrl;
+  const timestamp = data.measuredAt ? new Date(data.measuredAt) : null;
+  const dateText = timestamp && !Number.isNaN(timestamp.getTime()) ? timestamp.toLocaleString('de-CH') : 'Zeitpunkt nicht verfügbar';
+  byId('scope').textContent = `Geprüfte URL: ${analyzedUrl} · ${data.strategy || 'mobile'} · ${dateText}`;
+  byId('scores').innerHTML = categories.map(([key,label]) => tile(label,data[key])).join('');
+  byId('metrics').innerHTML = metricLabels.map(([key,label]) => tile(label,data.metrics?.[key],true)).join('');
+  const findings = Object.entries(data.audits || {})
+    .filter(([,audit]) => audit && typeof audit.score === 'number' && audit.score < .9 && !['manual','informative','notApplicable'].includes(audit.scoreDisplayMode))
+    .map(([id,audit]) => ({id,score:audit.score,title:auditTitles[id] || audit.title || id,description:advice[id] || 'Die Details im vollständigen Lighthouse-Bericht prüfen.'}))
+    .sort((a,b) => a.score - b.score);
+  byId('recommendations').innerHTML = findings.length
+    ? findings.slice(0,8).map(f => item(f.title,f.description,f.score < .5 ? 'bad' : 'warn')).join('')
+    : item('Keine konkreten Empfehlungen verfügbar','Die API hat keine auswertbaren Auffälligkeiten übermittelt. Das ist keine vollständige Qualitätsgarantie.');
+  const checks = Array.isArray(data.checks) ? data.checks : [];
+  byId('checks').innerHTML = checks.length ? checks.map(check => {
+    const state = check.score === 1 ? 'good' : check.score === 0 ? 'bad' : 'unknown';
+    const description = check.score === 1 ? 'Bestanden' : check.score === 0 ? (check.details || 'Prüfung nicht bestanden') : 'Nicht ausgewertet';
+    return item(check.name || check.id || 'Prüfung',description,state);
+  }).join('') : item('Keine weiteren Einzelprüfungen verfügbar','Der API-Endpunkt hat keine zusätzlichen Prüfungen übermittelt.');
+  byId('results').hidden = false;
+}
+byId('check-form').addEventListener('submit',async event => {
+  event.preventDefault();
+  const status = byId('status');
+  const button = byId('check-button');
+  byId('results').hidden = true;
+  try {
+    const input = byId('website-url').value.trim();
+    const url = new URL(input);
+    if (!['https:','http:'].includes(url.protocol)) throw new Error('Bitte eine HTTP- oder HTTPS-Adresse eingeben.');
+    button.disabled = true;
+    status.textContent = 'Website wird geprüft. Das kann bis zu einer Minute dauern …';
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(),65000);
+    let response;
+    try {
+      response = await fetch('/api/website-check?url=' + encodeURIComponent(url.href), {signal:controller.signal,headers:{Accept:'application/json'}});
+    } finally {clearTimeout(timer);}
+    const data = await response.json().catch(() => null);
+    if (!response.ok || !data || data.error) throw new Error(data?.error || data?.message || `API-Fehler ${response.status}`);
+    render(data,url.href);
+    status.textContent = 'Analyse abgeschlossen.';
+  } catch (error) {
+    status.textContent = error.name === 'AbortError' ? 'Zeitüberschreitung. Bitte nochmals versuchen.' : 'Analyse fehlgeschlagen: ' + error.message;
+  } finally {button.disabled = false;}
+});
+</script>
+</body>
+</html>

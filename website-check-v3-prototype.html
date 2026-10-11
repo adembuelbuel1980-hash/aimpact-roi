@@ -22,13 +22,23 @@ const $=id=>document.getElementById(id);
 const CATS=[['performance','Performance'],['accessibility','Barrierefreiheit'],['best-practices','Best Practices'],['seo','SEO']];
 const metricDefinitions=[['first-contentful-paint','First Contentful Paint'],['largest-contentful-paint','Largest Contentful Paint'],['total-blocking-time','Total Blocking Time'],['cumulative-layout-shift','Cumulative Layout Shift'],['speed-index','Speed Index']];
  
+
 const auditTitles = {
-  'color-contrast': 'Text und Hintergrund haben zu wenig Kontrast',
-  'label-content-name-mismatch': 'Beschriftungen stimmen nicht mit Screenreader-Namen überein',
-  'unused-javascript': 'Nicht verwendetes JavaScript reduzieren',
+  'color-contrast': 'Textkontrast verbessern',
+  'label-content-name-mismatch': 'Beschriftungen für Screenreader verbessern',
+  'unused-javascript': 'Nicht benötigtes JavaScript reduzieren',
   'cache-insight': 'Browser-Caching verbessern',
-  'largest-contentful-paint': 'Ladezeit des grössten sichtbaren Elements verbessern'
+  'largest-contentful-paint': 'Ladezeit des grössten sichtbaren Elements verbessern',
+  'image-delivery-insight': 'Bilder schneller laden',
+  'modern-image-formats': 'Moderne Bildformate verwenden',
+  'forced-reflow-insight': 'Unnötige Layout-Berechnungen reduzieren',
+  'forced-reflow': 'Unnötige Layout-Berechnungen reduzieren',
+  'unused-css-rules': 'Nicht benötigtes CSS reduzieren',
+  'unminified-css': 'CSS-Dateien verkleinern',
+  'max-potential-fid': 'Reaktionszeit der Website verbessern',
+  'valid-source-maps': 'Entwickler-Diagnose verbessern'
 };
+
 
 const recommendations={
  'label-content-name-mismatch':'Sichtbare Beschriftungen stimmen nicht mit den Namen für Screenreader überein. Beschriftungen und ARIA-Labels angleichen.',
@@ -46,7 +56,14 @@ const recommendations={
 'link-name':'Links mit aussagekräftigen Namen versehen.',
 'is-crawlable':'Indexierungsanweisungen und Robots-Regeln kontrollieren.',
 'uses-https':'HTTPS durchgehend aktivieren.',
-'viewport':'Mobilen Viewport korrekt konfigurieren.'
+'viewport':'Mobilen Viewport korrekt konfigurieren.',
+ 
+'image-delivery-insight': 'Grosse Bilder können die Ladezeit deutlich verlängern. Bilder komprimieren, passende Bildgrössen verwenden und moderne Formate wie WebP oder AVIF prüfen.',
+'forced-reflow-insight': 'JavaScript verursacht zusätzliche Layout-Berechnungen. Wiederholte Berechnungen reduzieren und betroffene Skripte überprüfen.',
+'forced-reflow': 'Unnötige Layout-Berechnungen durch JavaScript reduzieren, damit die Website flüssiger reagiert.',
+'unused-css-rules': 'Nicht verwendete CSS-Regeln entfernen. Wichtige Formatierungen zuerst laden und übrige CSS-Dateien optimieren.',
+'valid-source-maps': 'Source Maps helfen Entwicklern bei der Fehlersuche. Sie sind normalerweise keine vorrangige Massnahme zur Verbesserung der Ladezeit.'
+
 };
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const scoreValue=v=>typeof v==='number'&&Number.isFinite(v)?(v<=1?Math.round(v*100):Math.round(v)):null;

@@ -21,6 +21,15 @@
 const $=id=>document.getElementById(id);
 const CATS=[['performance','Performance'],['accessibility','Barrierefreiheit'],['best-practices','Best Practices'],['seo','SEO']];
 const metricDefinitions=[['first-contentful-paint','First Contentful Paint'],['largest-contentful-paint','Largest Contentful Paint'],['total-blocking-time','Total Blocking Time'],['cumulative-layout-shift','Cumulative Layout Shift'],['speed-index','Speed Index']];
+ 
+const auditTitles = {
+  'color-contrast': 'Text und Hintergrund haben zu wenig Kontrast',
+  'label-content-name-mismatch': 'Beschriftungen stimmen nicht mit Screenreader-Namen überein',
+  'unused-javascript': 'Nicht verwendetes JavaScript reduzieren',
+  'uses-long-cache-ttl': 'Browser-Caching verbessern',
+  'largest-contentful-paint': 'Ladezeit des grössten sichtbaren Elements verbessern'
+};
+
 const recommendations={
  'label-content-name-mismatch':'Sichtbare Beschriftungen stimmen nicht mit den Namen für Screenreader überein. Beschriftungen und ARIA-Labels angleichen.',
 'unused-javascript':'Nicht verwendetes JavaScript reduzieren. Unnötige Skripte entfernen oder erst bei Bedarf laden.',
@@ -88,7 +97,7 @@ $('metrics').innerHTML = metricDefinitions.map(([id, name]) => {
    if(typeof a.score==='number'&&a.score<.9){findings.push({id,title:a.title||id,score:a.score,detail:recommendations[id]||a.description?.replace(/\[[^\]]*\]\([^)]*\)/g,'').replace(/<[^>]*>/g,'').slice(0,240)||'Details im Lighthouse-Bericht prüfen.'});}
  }
  findings.sort((a,b)=>a.score-b.score);
- $('recommendations').innerHTML=findings.length?findings.slice(0,8).map(f=>item(f.title,f.detail,f.score<.5?'bad':'warn')).join(''):
+ $('recommendations').innerHTML=findings.length?findings.slice(0,8).map(f=>item(auditTitles[f.id] || f.title,recommendations[f.id] || f.detail,f.score<.5?'bad':'warn')).join(''):
  item('Keine konkreten Probleme aus den verfügbaren Audits ableitbar',Object.keys(d.audits).length?'Die vorhandenen Audits zeigen keine Werte unter 90 %. Das ist keine vollständige Qualitätsgarantie.':'Der API-Endpunkt liefert keine einzelnen Lighthouse-Audits. Für belastbare Empfehlungen muss der Backend-Endpunkt Kategorien und Audits bereitstellen.');
  const legacy=d.legacy.map(c=>item(c.name||c.id,c.score===1?'Bestanden':c.score===0?(c.details||'Prüfung nicht bestanden'):'Nicht ausgewertet',c.score===1?'good':c.score===0?'bad':'unknown')).join('');
  $('checks').innerHTML=legacy||item('Keine zusätzlichen Einzelprüfungen','Der Backend-Endpunkt hat keine gesonderten Checks übermittelt.');

@@ -17,6 +17,9 @@
     .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:12px}.tile{background:var(--tile);border:1px solid #39352d;border-radius:12px;padding:18px;min-width:0}.tile strong{display:block;font-size:clamp(1.55rem,3vw,2.1rem);overflow-wrap:anywhere}.metric strong{font-size:1.25rem}
     .good{color:var(--green)}.warn{color:var(--yellow)}.bad{color:var(--red)}.unknown{color:#bdbdbd}.notice{border-left:3px solid var(--gold);padding-left:12px}
     .item{border-top:1px solid #3a352c;padding:14px 0}.item h3{font-size:1rem;margin:0 0 4px}.item p{margin:0;color:var(--muted)}
+    .priority-item{padding:16px 0;border-top:1px solid #3a352c}.priority-item h3{font-size:1.05rem;margin:0 0 5px}.priority-item p{margin:0;color:var(--muted)}
+    .priority-rank{color:var(--gold);font-size:.82rem;font-weight:800;letter-spacing:.04em}.subheading{font-size:1.05rem;margin:22px 0 8px}
+    .diagnostic-list{margin:12px 0 0;padding-left:20px;color:var(--muted)}.diagnostic-list li{padding:3px 0;overflow-wrap:anywhere}
     #results[hidden],#technical-findings-section[hidden]{display:none}#status{min-height:1.5em}a{overflow-wrap:anywhere}
     @media(max-width:600px){main{padding-top:32px}.panel{padding:18px}.form-row button{width:100%}}
   </style>
@@ -39,8 +42,8 @@
   <div id="results" hidden>
     <section class="panel"><h2>Prüfergebnisse</h2><p id="scope" class="muted"></p><div id="scores" class="grid"></div><p class="notice muted">Die Werte sind technische Momentaufnahmen von Google Lighthouse (Mobilgerät). SEO 100/100 bedeutet nicht, dass eine Website bei Google auf Platz 1 steht.</p></section>
     <section class="panel"><h2>Messwerte</h2><div id="metrics" class="grid"></div></section>
-    <section class="panel"><h2>Priorisierte Empfehlungen</h2><div id="recommendations"></div></section>
-    <section class="panel" id="technical-findings-section" hidden><h2>Weitere technische Befunde</h2><p class="muted">Diese Lighthouse-Prüfungen haben Auffälligkeiten gemeldet. Dafür liegt noch keine geprüfte deutsche Handlungsempfehlung vor. Die technischen Kennungen dienen der Zuordnung im Lighthouse-Bericht.</p><div id="technical-findings"></div></section>
+    <section class="panel"><h2>Die wichtigsten Massnahmen</h2><p class="muted">Bis zu drei erste Ansatzpunkte auf Basis der Lighthouse-Prüfungen. Die Reihenfolge ist eine fachliche Orientierung, keine berechnete Einsparprognose.</p><div id="recommendations"></div><div id="additional-recommendations"></div></section>
+    <section class="panel" id="technical-findings-section" hidden><h2>Weitere Lighthouse-Diagnosen</h2><p class="muted">Diese technischen Prüfungen wurden nicht als konkrete Handlungsempfehlung eingeordnet. Die Kennungen dienen zur Vertiefung im vollständigen Lighthouse-Bericht; sie sind nicht automatisch Fehler.</p><div id="technical-findings"></div></section>
     <section class="panel"><h2>Weitere Prüfungen</h2><div id="checks"></div></section>
   </div>
   <p><a href="https://aimpact.ch/sichtbarkeits-check.html">Zum bisherigen Visibility Check</a></p>
@@ -154,22 +157,56 @@ function render(data, requestedUrl) {
   byId('scope').textContent = `Geprüfte URL: ${analyzedUrl} · ${data.strategy || 'mobile'} · ${dateText}`;
   byId('scores').innerHTML = categories.map(([key,label]) => tile(label,data[key])).join('');
   byId('metrics').innerHTML = metricLabels.map(([key,label]) => tile(label,data.metrics?.[key],true)).join('');
+  // Fachliche Orientierung: kritische Erreichbarkeit und Indexierbarkeit zuerst,
+  // danach häufig wirksame Performance- und Barrierefreiheitsmassnahmen.
+  // Die Rangfolge ist KEINE Schätzung von Lighthouse-Einsparpotenzialen.
+  const priority = {
+    'http-status-code':120,'is-crawlable':118,'uses-https':116,
+    'document-title':112,'meta-description':108,
+    'render-blocking-insight':106,'render-blocking-resources':105,
+    'lcp-discovery-insight':103,'image-delivery-insight':101,
+    'cache-insight':99,'uses-long-cache-ttl':98,
+    'color-contrast':96,'link-name':95,'image-alt':94,
+    'label':93,'heading-order':92,'landmark-one-main':91,
+    'unused-javascript':87,'unused-css-rules':86,
+    'lcp-breakdown-insight':84,'largest-contentful-paint':83,
+    'modern-image-formats':82,'uses-optimized-images':81,
+    'uses-responsive-images':80,'network-dependency-tree-insight':79,
+    'errors-in-console':78
+  };
+  // Reine Messgrössen gehören in "Messwerte", nicht in eine Fehlerliste.
+  const metricAuditIds = new Set([
+    'first-contentful-paint','largest-contentful-paint','speed-index',
+    'interactive','total-blocking-time','cumulative-layout-shift',
+    'max-potential-fid','first-meaningful-paint','server-response-time'
+  ]);
   const findings = Object.entries(data.audits || {})
-    .filter(([,audit]) => audit && typeof audit.score === 'number' && audit.score < .9 && !['manual','informative','notApplicable'].includes(audit.scoreDisplayMode))
-    .map(([id,audit]) => ({id,score:audit.score,title:auditTitles[id],description:advice[id]}))
-    .sort((a,b) => a.score - b.score);
-  const actionable = findings.filter(f => f.title && f.description);
-  const untranslated = findings.filter(f => !f.title || !f.description);
-  byId('recommendations').innerHTML = actionable.length
-    ? actionable.slice(0,8).map(f => item(f.title,f.description,f.score < .5 ? 'bad' : 'warn')).join('')
-    : item('Keine konkreten Empfehlungen verfügbar','Für die erkannten Auffälligkeiten liegen derzeit keine geprüften deutschen Handlungsempfehlungen vor. Das ist keine vollständige Qualitätsgarantie.');
+    .filter(([,audit]) => audit && typeof audit.score === 'number' && audit.score < .9 &&
+      !['manual','informative','notApplicable'].includes(audit.scoreDisplayMode))
+    .map(([id,audit]) => ({id,score:audit.score,title:auditTitles[id],description:advice[id]}));
+  const actionable = findings.filter(f => f.title && f.description)
+    .sort((a,b) => (priority[b.id] || 50) - (priority[a.id] || 50) || a.score - b.score);
+  const primary = actionable.slice(0,3);
+  const secondary = actionable.slice(3,8);
+  byId('recommendations').innerHTML = primary.length
+    ? primary.map((f,i) =>
+        '<article class="priority-item"><span class="priority-rank">PRIORITÄT ' + (i+1) +
+        '</span><h3>' + escapeHtml(f.title) + '</h3><p>' + escapeHtml(f.description) +
+        '</p></article>').join('')
+    : item('Keine priorisierbare Massnahme','Es liegen keine geprüften deutschen Handlungsempfehlungen vor. Das bedeutet nicht, dass die Website fehlerfrei ist.');
+  byId('additional-recommendations').innerHTML = secondary.length
+    ? '<h3 class="subheading">Weitere Empfehlungen</h3>' +
+      secondary.map(f => item(f.title,f.description,'unknown')).join('')
+    : '';
+  const diagnostics = findings.filter(f =>
+    (!f.title || !f.description) && !metricAuditIds.has(f.id));
   const technicalSection = byId('technical-findings-section');
-  technicalSection.hidden = untranslated.length === 0;
-  byId('technical-findings').innerHTML = untranslated.map(f =>
-    item('Lighthouse-Prüfung: ' + f.id,
-      'Technischer Befund ohne geprüfte deutsche Empfehlung. Die Kennung im Lighthouse-Bericht nachschlagen.',
-      f.score < .5 ? 'bad' : 'warn')
-  ).join('');
+  technicalSection.hidden = diagnostics.length === 0;
+  byId('technical-findings').innerHTML = diagnostics.length
+    ? '<ul class="diagnostic-list">' +
+      diagnostics.map(f => '<li><code>' + escapeHtml(f.id) + '</code></li>').join('') +
+      '</ul>'
+    : '';
   const checks = Array.isArray(data.checks)
   ? data.checks.filter(check => check.score === 0 || check.score === 1)
   : [];

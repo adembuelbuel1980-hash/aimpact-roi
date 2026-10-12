@@ -238,12 +238,16 @@ function render(data, requestedUrl) {
       diagnostics.map(f => '<li><code>' + escapeHtml(f.id) + '</code></li>').join('') +
       '</ul>'
     : '';
+  const checkDescriptions = {
+  'meta-description': 'Die Meta-Beschreibung fehlt.',
+  'link-text': 'Einige Links haben keine aussagekräftigen Linktexte.'
+};
   const checks = Array.isArray(data.checks)
   ? data.checks.filter(check => check.score === 0 || check.score === 1)
   : [];
   byId('checks').innerHTML = checks.length ? checks.map(check => {
     const state = check.score === 1 ? 'good' : check.score === 0 ? 'bad' : 'unknown';
-    const description = check.score === 1 ? 'Bestanden' : check.score === 0 ? (check.details || 'Prüfung nicht bestanden') : 'Nicht ausgewertet';
+    const description = check.score === 1 ? 'Bestanden' : check.score === 0 ? (checkDescriptions[check.id] || check.details || 'Prüfung nicht bestanden') : 'Nicht ausgewertet';
     return item(check.name || check.id || 'Prüfung',description,state);
   }).join('') : item('Keine weiteren Einzelprüfungen verfügbar','Der API-Endpunkt hat keine zusätzlichen Prüfungen übermittelt.');
   byId('results').hidden = false;

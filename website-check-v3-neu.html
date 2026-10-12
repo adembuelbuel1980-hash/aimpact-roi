@@ -42,7 +42,7 @@
   <div id="results" hidden>
     <section class="panel"><h2>Prüfergebnisse</h2><p id="scope" class="muted"></p><div id="scores" class="grid"></div><p class="notice muted">Die Werte sind technische Momentaufnahmen von Google Lighthouse (Mobilgerät). SEO 100/100 bedeutet nicht, dass eine Website bei Google auf Platz 1 steht.</p></section>
     <section class="panel"><h2>Messwerte</h2><div id="metrics" class="grid"></div></section>
-    <section class="panel"><h2>Die wichtigsten Massnahmen</h2><p class="muted">Bis zu drei erste Ansatzpunkte. Gemeldete Lighthouse-Einsparpotenziale werden berücksichtigt; kritische technische Fehler haben Vorrang. Die Angaben sind Schätzwerte, keine Garantie.</p><div id="recommendations"></div><div id="additional-recommendations"></div></section>
+    <section class="panel"><h2>Die wichtigsten Massnahmen</h2><p class="muted">Bis zu drei erste Ansatzpunkte. Kritische technische Fehler, relevante Ladezeitpotenziale und Barrierefreiheit werden berücksichtigt. Kleine Einsparungen haben eine niedrigere Priorität. Lighthouse-Schätzungen sind keine Garantie.</p><div id="recommendations"></div><div id="additional-recommendations"></div></section>
     <section class="panel" id="technical-findings-section" hidden><h2>Weitere Lighthouse-Diagnosen</h2><p class="muted">Diese technischen Prüfungen wurden nicht als konkrete Handlungsempfehlung eingeordnet. Die Kennungen dienen zur Vertiefung im vollständigen Lighthouse-Bericht; sie sind nicht automatisch Fehler.</p><div id="technical-findings"></div></section>
     <section class="panel"><h2>Weitere Prüfungen</h2><div id="checks"></div></section>
   </div>
@@ -191,21 +191,30 @@ function render(data, requestedUrl) {
       ? 'Lighthouse schätzt ein Zeitpotenzial von rund ' + fmt(f.savingsMs) + ' ms.' : '';
     return preferBytes ? (bytes || ms) : (ms || bytes);
   };
+  // Erst kritische technische Fehler, dann relevante Einsparungen und
+  // konkrete Barrierefreiheitsprobleme. Kleinstpotenziale bleiben nachrangig.
+  // Bytes und Millisekunden werden in getrennten Grössenklassen bewertet.
+  const accessibilityIssues = new Set([
+    'color-contrast','link-name','label','label-content-name-mismatch',
+    'image-alt','heading-order','landmark-one-main','html-has-lang'
+  ]);
   const rank = f => {
-    const base = priority[f.id] || 50;
-    if (base >= 112) return base; // Erreichbarkeit, Indexierung und HTTPS zuerst.
-    // Moderne Lighthouse-Insights als zentrale Optimierungsfelder behandeln.
-    // Die Werte aus ms und KiB werden nicht gegeneinander aufgerechnet.
-    if (f.id === 'render-blocking-insight') return 111;
-if (f.id === 'lcp-discovery-insight') return 110;
-if (f.id === 'image-delivery-insight') return 109;
-if (f.id === 'cache-insight') return 108;
-  if (f.savingsMs !== null && f.savingsMs >= 1000) return 105;
-if (f.savingsBytes !== null && f.savingsBytes >= 1048576) return 104;
-if (f.savingsMs !== null && f.savingsMs >= 250) return 102;
-if (f.savingsBytes !== null && f.savingsBytes >= 512000) return 101;
-return Math.min(base, 100);  
-    
+    const base = priority[f.id] ?? 50;
+    if (base >= 112) return 300 + base; // Erreichbarkeit, Indexierung, HTTPS.
+    const ms = f.savingsMs ?? 0;
+    const bytes = f.savingsBytes ?? 0;
+    // Messbare grosse Zeitpotenziale vor kleinen Datenmengen behandeln.
+    if (ms >= 1000) return 180 + Math.min(ms / 1000, 15) + base / 1000;
+    if (accessibilityIssues.has(f.id)) return 165 + (1 - f.score) * 5;
+    if (ms >= 250) return 145 + Math.min(ms / 1000, 10);
+    if (bytes >= 1048576) return 140 + Math.min(bytes / 1048576, 10);
+    if (bytes >= 204800) return 120 + Math.min(bytes / 1048576, 10);
+    // Eine LCP-Auffälligkeit ist relevant, auch ohne berechnete Einsparung.
+    if (f.id === 'largest-contentful-paint') return 110;
+    if (bytes >= 51200) return 95 + Math.min(bytes / 1048576, 10);
+    if (ms > 0 || bytes > 0) return 30 + Math.min(ms / 100, 10) + Math.min(bytes / 102400, 10);
+    // Konkrete, aber nicht quantifizierte technische Empfehlungen.
+    return 70 + Math.min(base, 110) / 10;
   };
   const findings = Object.entries(data.audits || {})
     .filter(([,audit]) => audit && typeof audit.score === 'number' && audit.score < .9 &&
@@ -215,8 +224,14 @@ return Math.min(base, 100);
       savingsMs: typeof audit.savingsMs === 'number' && Number.isFinite(audit.savingsMs) && audit.savingsMs > 0 ? audit.savingsMs : null,
       savingsBytes: typeof audit.savingsBytes === 'number' && Number.isFinite(audit.savingsBytes) && audit.savingsBytes > 0 ? audit.savingsBytes : null
     }));
-  const actionable = findings.filter(f => f.title && f.description)
-    .sort((a,b) => rank(b) - rank(a) || a.score - b.score);
+  // Doppelte Lighthouse-Prüfungen mit gleicher Handlungsempfehlung
+  // nur einmal zeigen. Das aussagekräftigste Ergebnis bleibt erhalten.
+  const actionable = [...findings.filter(f => f.title && f.description)
+    .sort((a,b) => rank(b) - rank(a) || a.score - b.score)
+    .reduce((unique,f) => {
+      if (!unique.has(f.title)) unique.set(f.title,f);
+      return unique;
+    },new Map()).values()];
   const primary = actionable.slice(0,3);
   const secondary = actionable.slice(3,8);
   byId('recommendations').innerHTML = primary.length

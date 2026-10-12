@@ -86,6 +86,23 @@ api.searchParams.append("category", "seo");
     }
 
     const audits = data.lighthouseResult?.audits || {};
+    // Neue Lighthouse-Insights melden Einsparungen teils unter metricSavings
+    // oder in details.items statt unter details.overallSavings*.
+    const insightIds = new Set(["cache-insight", "render-blocking-insight", "image-delivery-insight"]);
+    const positive = v => typeof v === "number" && Number.isFinite(v) && v > 0 ? v : null;
+    const savingsFor = (id, audit) => {
+      const directMs = positive(audit.details?.overallSavingsMs);
+      const directBytes = positive(audit.details?.overallSavingsBytes);
+      if (!insightIds.has(id)) return { savingsMs: directMs, savingsBytes: directBytes };
+      const metric = audit.metricSavings || {};
+      const metricMs = Math.max(positive(metric.LCP) || 0, positive(metric.FCP) || 0);
+      const rows = Array.isArray(audit.details?.items) ? audit.details.items : [];
+      const rowBytes = rows.reduce((sum, row) => sum + (positive(row?.wastedBytes) || 0), 0);
+      return {
+        savingsMs: directMs ?? (metricMs > 0 ? metricMs : null),
+        savingsBytes: directBytes ?? (rowBytes > 0 ? rowBytes : null)
+      };
+    };
     const categories = data.lighthouseResult?.categories || {};
 
     const checks = [
@@ -134,10 +151,7 @@ return respond({
         score: audit.score,
         description: audit.description || null,
         scoreDisplayMode: audit.scoreDisplayMode,
-        savingsMs: Number.isFinite(audit.details?.overallSavingsMs) && audit.details.overallSavingsMs > 0
-          ? audit.details.overallSavingsMs : null,
-        savingsBytes: Number.isFinite(audit.details?.overallSavingsBytes) && audit.details.overallSavingsBytes > 0
-          ? audit.details.overallSavingsBytes : null
+        ...savingsFor(id, audit)
       }
     ])
 ),

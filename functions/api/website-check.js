@@ -85,7 +85,32 @@ api.searchParams.append("category", "seo");
       }, 502);
     }
 
-    const audits = data.lighthouseResult?.audits || {};
+    // Eine erfolgreiche Google-API-Antwort allein bestätigt keine gültige Messung.
+    const lighthouse = data.lighthouseResult;
+    const requiredCategories = ["performance", "accessibility", "best-practices", "seo"];
+    const validScores = requiredCategories.every(id => {
+      const score = lighthouse?.categories?.[id]?.score;
+      return typeof score === "number" && Number.isFinite(score) &&
+        score >= 0 && score <= 1;
+    });
+    const failedHttpStatus = lighthouse?.audits?.["http-status-code"]?.score === 0;
+
+    if (lighthouse?.runtimeError || !validScores || failedHttpStatus ||
+        !lighthouse?.finalUrl) {
+      console.warn("Invalid Lighthouse analysis", {
+        runtimeError: lighthouse?.runtimeError?.code || null,
+        validScores,
+        failedHttpStatus,
+        hasFinalUrl: Boolean(lighthouse?.finalUrl)
+      });
+      return respond({
+        error: failedHttpStatus
+          ? "Die Website lieferte bei der Google-Prüfung keinen erfolgreichen HTTP-Statuscode. Bitte die Adresse und Erreichbarkeit kontrollieren."
+          : "Google konnte die Website nicht vollständig auswerten. Bitte später erneut versuchen."
+      }, 502);
+    }
+
+    const audits = lighthouse.audits || {};
     // Neue Lighthouse-Insights melden Einsparungen teils unter metricSavings
     // oder in details.items statt unter details.overallSavings*.
     const insightIds = new Set(["cache-insight", "render-blocking-insight", "image-delivery-insight"]);

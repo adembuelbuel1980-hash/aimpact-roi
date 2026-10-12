@@ -197,14 +197,15 @@ function render(data, requestedUrl) {
     // Moderne Lighthouse-Insights als zentrale Optimierungsfelder behandeln.
     // Die Werte aus ms und KiB werden nicht gegeneinander aufgerechnet.
     if (f.id === 'render-blocking-insight') return 111;
-    if (f.id === 'cache-insight') return 110;
-    if (f.id === 'image-delivery-insight') return 109;
-    if (f.id === 'lcp-discovery-insight') return 108;
-    if (f.savingsMs !== null && f.savingsMs >= 1000) return 105;
-    if (f.savingsBytes !== null && f.savingsBytes >= 1048576) return 104;
-    if (f.savingsMs !== null && f.savingsMs >= 250) return 102;
-    if (f.savingsBytes !== null && f.savingsBytes >= 512000) return 101;
-    return Math.min(base, 100);
+if (f.id === 'lcp-discovery-insight') return 110;
+if (f.id === 'image-delivery-insight') return 109;
+if (f.id === 'cache-insight') return 108;
+  if (f.savingsMs !== null && f.savingsMs >= 1000) return 105;
+if (f.savingsBytes !== null && f.savingsBytes >= 1048576) return 104;
+if (f.savingsMs !== null && f.savingsMs >= 250) return 102;
+if (f.savingsBytes !== null && f.savingsBytes >= 512000) return 101;
+return Math.min(base, 100);  
+    
   };
   const findings = Object.entries(data.audits || {})
     .filter(([,audit]) => audit && typeof audit.score === 'number' && audit.score < .9 &&

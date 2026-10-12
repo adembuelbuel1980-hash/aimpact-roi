@@ -17,7 +17,7 @@
     .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:12px}.tile{background:var(--tile);border:1px solid #39352d;border-radius:12px;padding:18px;min-width:0}.tile strong{display:block;font-size:clamp(1.55rem,3vw,2.1rem);overflow-wrap:anywhere}.metric strong{font-size:1.25rem}
     .good{color:var(--green)}.warn{color:var(--yellow)}.bad{color:var(--red)}.unknown{color:#bdbdbd}.notice{border-left:3px solid var(--gold);padding-left:12px}
     .item{border-top:1px solid #3a352c;padding:14px 0}.item h3{font-size:1rem;margin:0 0 4px}.item p{margin:0;color:var(--muted)}
-    #results[hidden]{display:none}#status{min-height:1.5em}a{overflow-wrap:anywhere}
+    #results[hidden],#technical-findings-section[hidden]{display:none}#status{min-height:1.5em}a{overflow-wrap:anywhere}
     @media(max-width:600px){main{padding-top:32px}.panel{padding:18px}.form-row button{width:100%}}
   </style>
 </head>
@@ -40,6 +40,7 @@
     <section class="panel"><h2>Prüfergebnisse</h2><p id="scope" class="muted"></p><div id="scores" class="grid"></div><p class="notice muted">Die Werte sind technische Momentaufnahmen von Google Lighthouse (Mobilgerät). SEO 100/100 bedeutet nicht, dass eine Website bei Google auf Platz 1 steht.</p></section>
     <section class="panel"><h2>Messwerte</h2><div id="metrics" class="grid"></div></section>
     <section class="panel"><h2>Priorisierte Empfehlungen</h2><div id="recommendations"></div></section>
+    <section class="panel" id="technical-findings-section" hidden><h2>Weitere technische Befunde</h2><p class="muted">Diese Lighthouse-Prüfungen haben Auffälligkeiten gemeldet. Dafür liegt noch keine geprüfte deutsche Handlungsempfehlung vor. Die technischen Kennungen dienen der Zuordnung im Lighthouse-Bericht.</p><div id="technical-findings"></div></section>
     <section class="panel"><h2>Weitere Prüfungen</h2><div id="checks"></div></section>
   </div>
   <p><a href="https://aimpact.ch/sichtbarkeits-check.html">Zum bisherigen Visibility Check</a></p>
@@ -155,11 +156,20 @@ function render(data, requestedUrl) {
   byId('metrics').innerHTML = metricLabels.map(([key,label]) => tile(label,data.metrics?.[key],true)).join('');
   const findings = Object.entries(data.audits || {})
     .filter(([,audit]) => audit && typeof audit.score === 'number' && audit.score < .9 && !['manual','informative','notApplicable'].includes(audit.scoreDisplayMode))
-    .map(([id,audit]) => ({id,score:audit.score,title:auditTitles[id] || audit.title || id,description:advice[id] || 'Die Details im vollständigen Lighthouse-Bericht prüfen.'}))
+    .map(([id,audit]) => ({id,score:audit.score,title:auditTitles[id],description:advice[id]}))
     .sort((a,b) => a.score - b.score);
-  byId('recommendations').innerHTML = findings.length
-    ? findings.slice(0,8).map(f => item(f.title,f.description,f.score < .5 ? 'bad' : 'warn')).join('')
-    : item('Keine konkreten Empfehlungen verfügbar','Die API hat keine auswertbaren Auffälligkeiten übermittelt. Das ist keine vollständige Qualitätsgarantie.');
+  const actionable = findings.filter(f => f.title && f.description);
+  const untranslated = findings.filter(f => !f.title || !f.description);
+  byId('recommendations').innerHTML = actionable.length
+    ? actionable.slice(0,8).map(f => item(f.title,f.description,f.score < .5 ? 'bad' : 'warn')).join('')
+    : item('Keine konkreten Empfehlungen verfügbar','Für die erkannten Auffälligkeiten liegen derzeit keine geprüften deutschen Handlungsempfehlungen vor. Das ist keine vollständige Qualitätsgarantie.');
+  const technicalSection = byId('technical-findings-section');
+  technicalSection.hidden = untranslated.length === 0;
+  byId('technical-findings').innerHTML = untranslated.map(f =>
+    item('Lighthouse-Prüfung: ' + f.id,
+      'Technischer Befund ohne geprüfte deutsche Empfehlung. Die Kennung im Lighthouse-Bericht nachschlagen.',
+      f.score < .5 ? 'bad' : 'warn')
+  ).join('');
   const checks = Array.isArray(data.checks)
   ? data.checks.filter(check => check.score === 0 || check.score === 1)
   : [];

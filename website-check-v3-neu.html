@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="de-CH">
 <head>
@@ -147,7 +148,9 @@ function render(data, requestedUrl) {
   byId('recommendations').innerHTML = findings.length
     ? findings.slice(0,8).map(f => item(f.title,f.description,f.score < .5 ? 'bad' : 'warn')).join('')
     : item('Keine konkreten Empfehlungen verfügbar','Die API hat keine auswertbaren Auffälligkeiten übermittelt. Das ist keine vollständige Qualitätsgarantie.');
-  const checks = Array.isArray(data.checks) ? data.checks : [];
+  const checks = Array.isArray(data.checks)
+  ? data.checks.filter(check => check.score === 0 || check.score === 1)
+  : [];
   byId('checks').innerHTML = checks.length ? checks.map(check => {
     const state = check.score === 1 ? 'good' : check.score === 0 ? 'bad' : 'unknown';
     const description = check.score === 1 ? 'Bestanden' : check.score === 0 ? (check.details || 'Prüfung nicht bestanden') : 'Nicht ausgewertet';

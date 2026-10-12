@@ -88,6 +88,12 @@ const auditTitles = {
   'is-crawlable':'Indexierungsanweisungen prüfen',
   'uses-https':'HTTPS aktivieren',
   'viewport':'Viewport-Meta-Tag prüfen',
+  'errors-in-console':'JavaScript-Fehler beheben',
+'doctype':'HTML-Doctype ergänzen',
+'html-has-lang':'Sprache der Website festlegen',
+'charset':'Zeichenkodierung festlegen',
+'http-status-code':'HTTP-Statuscode überprüfen',
+'landmark-one-main':'Hauptinhalt der Website kennzeichnen',
 };
 const advice = {
   'color-contrast':'Text- und Hintergrundfarben für bessere Lesbarkeit anpassen.',
@@ -119,7 +125,13 @@ const advice = {
   'image-alt':'Informative Bilder mit aussagekräftigen Alternativtexten versehen.',
   'is-crawlable':'Robots-Regeln und Indexierungsanweisungen kontrollieren.',
   'uses-https':'Website vollständig über HTTPS ausliefern.',
-  'viewport':'Viewport für Mobilgeräte korrekt konfigurieren.'
+  'viewport':'Viewport für Mobilgeräte korrekt konfigurieren.',
+'errors-in-console':'JavaScript-Fehler in der Browserkonsole untersuchen und beheben.',
+'doctype':'Die HTML-Datei mit <!doctype html> beginnen, damit Browser die Seite korrekt darstellen.',
+'html-has-lang':'Im HTML-Element die Sprache angeben, zum Beispiel lang="de-CH".',
+'charset':'Die Zeichenkodierung im HTML-Kopf mit <meta charset="utf-8"> festlegen.',
+'http-status-code':'Prüfen, weshalb die Seite keinen erfolgreichen HTTP-Statuscode zurückliefert. Serverfehler, Weiterleitungen und Erreichbarkeit kontrollieren.',
+'landmark-one-main':'Den Hauptinhalt der Seite mit einem <main>-Element kennzeichnen.'
 };
 function scoreNumber(value) {
   if (typeof value !== 'number' || !Number.isFinite(value)) return null;

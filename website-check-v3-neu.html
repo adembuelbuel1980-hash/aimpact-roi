@@ -42,7 +42,7 @@
   <div id="results" hidden>
     <section class="panel"><h2>Prüfergebnisse</h2><p id="scope" class="muted"></p><div id="scores" class="grid"></div><p class="notice muted">Die Werte sind technische Momentaufnahmen von Google Lighthouse (Mobilgerät). SEO 100/100 bedeutet nicht, dass eine Website bei Google auf Platz 1 steht.</p></section>
     <section class="panel"><h2>Messwerte</h2><div id="metrics" class="grid"></div></section>
-    <section class="panel"><h2>Die wichtigsten Massnahmen</h2><p class="muted">Bis zu drei erste Ansatzpunkte auf Basis der Lighthouse-Prüfungen. Die Reihenfolge ist eine fachliche Orientierung, keine berechnete Einsparprognose.</p><div id="recommendations"></div><div id="additional-recommendations"></div></section>
+    <section class="panel"><h2>Die wichtigsten Massnahmen</h2><p class="muted">Bis zu drei erste Ansatzpunkte. Gemeldete Lighthouse-Einsparpotenziale werden berücksichtigt; kritische technische Fehler haben Vorrang. Die Angaben sind Schätzwerte, keine Garantie.</p><div id="recommendations"></div><div id="additional-recommendations"></div></section>
     <section class="panel" id="technical-findings-section" hidden><h2>Weitere Lighthouse-Diagnosen</h2><p class="muted">Diese technischen Prüfungen wurden nicht als konkrete Handlungsempfehlung eingeordnet. Die Kennungen dienen zur Vertiefung im vollständigen Lighthouse-Bericht; sie sind nicht automatisch Fehler.</p><div id="technical-findings"></div></section>
     <section class="panel"><h2>Weitere Prüfungen</h2><div id="checks"></div></section>
   </div>
@@ -157,9 +157,9 @@ function render(data, requestedUrl) {
   byId('scope').textContent = `Geprüfte URL: ${analyzedUrl} · ${data.strategy || 'mobile'} · ${dateText}`;
   byId('scores').innerHTML = categories.map(([key,label]) => tile(label,data[key])).join('');
   byId('metrics').innerHTML = metricLabels.map(([key,label]) => tile(label,data.metrics?.[key],true)).join('');
-  // Fachliche Orientierung: kritische Erreichbarkeit und Indexierbarkeit zuerst,
-  // danach häufig wirksame Performance- und Barrierefreiheitsmassnahmen.
-  // Die Rangfolge ist KEINE Schätzung von Lighthouse-Einsparpotenzialen.
+  // Kritische technische Fehler haben Vorrang. Wo Lighthouse Einsparpotenziale
+  // liefert, werden sie innerhalb von Grössenklassen berücksichtigt.
+  // Zeit (ms) und Datenmenge (Bytes) werden NICHT direkt miteinander verrechnet.
   const priority = {
     'http-status-code':120,'is-crawlable':118,'uses-https':116,
     'document-title':112,'meta-description':108,
@@ -180,23 +180,46 @@ function render(data, requestedUrl) {
     'interactive','total-blocking-time','cumulative-layout-shift',
     'max-potential-fid','first-meaningful-paint','server-response-time'
   ]);
+  const estimate = f => {
+    if (f.savingsMs !== null && f.savingsMs >= 1)
+      return 'Lighthouse schätzt ein Zeitpotenzial von rund ' +
+        new Intl.NumberFormat('de-CH', {maximumFractionDigits:0}).format(f.savingsMs) + ' ms.';
+    if (f.savingsBytes !== null && f.savingsBytes >= 1024)
+      return 'Lighthouse schätzt ein Datenpotenzial von rund ' +
+        new Intl.NumberFormat('de-CH', {maximumFractionDigits:0}).format(f.savingsBytes / 1024) + ' KiB.';
+    return '';
+  };
+  const rank = f => {
+    const base = priority[f.id] || 50;
+    if (base >= 112) return base; // Kritische Fehler bleiben vorne.
+    if (f.savingsMs !== null && f.savingsMs >= 1000) return 111;
+    if (f.savingsBytes !== null && f.savingsBytes >= 1048576) return 110;
+    if (f.savingsMs !== null && f.savingsMs >= 250) return 107;
+    if (f.savingsBytes !== null && f.savingsBytes >= 512000) return 104;
+    return Math.min(base, 103);
+  };
   const findings = Object.entries(data.audits || {})
     .filter(([,audit]) => audit && typeof audit.score === 'number' && audit.score < .9 &&
       !['manual','informative','notApplicable'].includes(audit.scoreDisplayMode))
-    .map(([id,audit]) => ({id,score:audit.score,title:auditTitles[id],description:advice[id]}));
+    .map(([id,audit]) => ({
+      id,score:audit.score,title:auditTitles[id],description:advice[id],
+      savingsMs: typeof audit.savingsMs === 'number' && Number.isFinite(audit.savingsMs) && audit.savingsMs > 0 ? audit.savingsMs : null,
+      savingsBytes: typeof audit.savingsBytes === 'number' && Number.isFinite(audit.savingsBytes) && audit.savingsBytes > 0 ? audit.savingsBytes : null
+    }));
   const actionable = findings.filter(f => f.title && f.description)
-    .sort((a,b) => (priority[b.id] || 50) - (priority[a.id] || 50) || a.score - b.score);
+    .sort((a,b) => rank(b) - rank(a) || a.score - b.score);
   const primary = actionable.slice(0,3);
   const secondary = actionable.slice(3,8);
   byId('recommendations').innerHTML = primary.length
     ? primary.map((f,i) =>
         '<article class="priority-item"><span class="priority-rank">PRIORITÄT ' + (i+1) +
         '</span><h3>' + escapeHtml(f.title) + '</h3><p>' + escapeHtml(f.description) +
-        '</p></article>').join('')
+        '</p>' + (estimate(f) ? '<p class="muted">' + escapeHtml(estimate(f)) + '</p>' : '') +
+        '</article>').join('')
     : item('Keine priorisierbare Massnahme','Es liegen keine geprüften deutschen Handlungsempfehlungen vor. Das bedeutet nicht, dass die Website fehlerfrei ist.');
   byId('additional-recommendations').innerHTML = secondary.length
     ? '<h3 class="subheading">Weitere Empfehlungen</h3>' +
-      secondary.map(f => item(f.title,f.description,'unknown')).join('')
+      secondary.map(f => item(f.title,f.description + (estimate(f) ? ' ' + estimate(f) : ''),'unknown')).join('')
     : '';
   const diagnostics = findings.filter(f =>
     (!f.title || !f.description) && !metricAuditIds.has(f.id));

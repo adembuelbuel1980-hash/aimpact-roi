@@ -133,7 +133,11 @@ return respond({
         title: audit.title,
         score: audit.score,
         description: audit.description || null,
-        scoreDisplayMode: audit.scoreDisplayMode
+        scoreDisplayMode: audit.scoreDisplayMode,
+        savingsMs: Number.isFinite(audit.details?.overallSavingsMs) && audit.details.overallSavingsMs > 0
+          ? audit.details.overallSavingsMs : null,
+        savingsBytes: Number.isFinite(audit.details?.overallSavingsBytes) && audit.details.overallSavingsBytes > 0
+          ? audit.details.overallSavingsBytes : null
       }
     ])
 ),

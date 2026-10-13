@@ -1,4 +1,11 @@
 
+// Reuse recent measurements to reduce Google quota consumption.
+// Cloudflare Cache API is best-effort and local to the serving data center.
+// It is NOT a per-user or globally distributed rate limiter.
+const inflight = new Map();
+const CACHE_SECONDS = 600;
+const CACHE_PREFIX = "https://aimpact-cache.invalid/website-check-v3?url=";
+
 export async function onRequestGet({ request, env }) {
   const headers = {
     "Content-Type": "application/json; charset=utf-8",
@@ -64,6 +71,32 @@ export async function onRequestGet({ request, env }) {
       return respond({ error: "API-Konfiguration fehlt." }, 503);
     }
 
+    // Only valid, public targets are eligible for caching. Normalize fragments:
+    // they do not affect the network request or Lighthouse analysis.
+    target.hash = "";
+    const cacheKey = new Request(CACHE_PREFIX + encodeURIComponent(target.href));
+    const edgeCache = typeof caches !== "undefined" ? caches.default : null;
+    if (edgeCache) {
+      try {
+        const cached = await edgeCache.match(cacheKey);
+        if (cached) {
+          const result = await cached.json();
+          return respond({ ...result, cached: true });
+        }
+      } catch (error) {
+        console.warn("Website check cache read failed", error?.message);
+      }
+    }
+
+    // Coalesce concurrent requests for the same URL within a single isolate.
+    // Other isolates and regions remain independent.
+    const key = target.href;
+    if (inflight.has(key)) {
+      const shared = await inflight.get(key);
+      return shared.clone();
+    }
+
+    const run = async () => {
     const api = new URL(
       "https://www.googleapis.com/pagespeedonline/v5/runPagespeed"
     );
@@ -155,7 +188,7 @@ export async function onRequestGet({ request, env }) {
     }));
 
    
-return respond({
+const payload = {
   analyzedUrl: data.lighthouseResult?.finalUrl || target.href,
   strategy: "mobile",
   performance: categories.performance?.score ?? null,
@@ -190,8 +223,31 @@ return respond({
     ])
 ),
   measuredAt: new Date().toISOString()
-});
+};
+    if (edgeCache) {
+      try {
+        const stored = new Response(JSON.stringify(payload), {
+          status: 200,
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            "Cache-Control": "public, max-age=" + CACHE_SECONDS
+          }
+        });
+        await edgeCache.put(cacheKey, stored);
+      } catch (error) {
+        console.warn("Website check cache write failed", error?.message);
+      }
+    }
+    return respond({ ...payload, cached: false });
 
+    };
+    const work = run();
+    inflight.set(key, work);
+    try {
+      return (await work).clone();
+    } finally {
+      if (inflight.get(key) === work) inflight.delete(key);
+    }
   } catch (error) {
     console.error("Website check failed", error?.message);
     return respond({

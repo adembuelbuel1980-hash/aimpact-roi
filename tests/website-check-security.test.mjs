@@ -253,3 +253,36 @@ test('upstream Google server errors are handled without exposing internals', asy
     assert.equal(JSON.stringify(data).includes('INTERNAL'), false);
   } finally { globalThis.fetch = previous; }
 });
+
+
+test('best-effort client throttle stops fourth uncached scan in one isolate', async () => {
+  const previous = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = async url => {
+    calls++;
+    assert.ok(String(url).includes('pagespeedonline/v5/runPagespeed'));
+    return Response.json({ lighthouseResult: {
+      finalUrl: 'https://example.org/',
+      categories: {
+        performance: { score: 0.9 },
+        accessibility: { score: 0.9 },
+        'best-practices': { score: 1 },
+        seo: { score: 1 }
+      },
+      audits: {}
+    } });
+  };
+  try {
+    for (let i = 0; i < 4; i++) {
+      const url = 'https://aimpact-v2-test.pages.dev/api/website-check?url=' +
+        encodeURIComponent('https://rate-limit-test-' + i + '.example.org');
+      const response = await onRequestGet({
+        request: new Request(url, { headers: { 'CF-Connecting-IP': '198.51.100.88' } }),
+        env: { PAGESPEED_API_KEY: 'dummy-key' }
+      });
+      assert.equal(response.status, i === 3 ? 429 : 200);
+      if (i === 3) assert.match((await response.json()).error, /Zu viele/);
+    }
+    assert.equal(calls, 3);
+  } finally { globalThis.fetch = previous; }
+});

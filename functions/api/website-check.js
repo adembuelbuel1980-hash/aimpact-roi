@@ -2,8 +2,7 @@
 export async function onRequestGet({ request, env }) {
   const headers = {
     "Content-Type": "application/json; charset=utf-8",
-    "Cache-Control": "no-store",
-    "Access-Control-Allow-Origin": "*"
+    "Cache-Control": "no-store"
   };
 
   const respond = (data, status = 200) =>
@@ -14,6 +13,9 @@ export async function onRequestGet({ request, env }) {
 
     if (!input) {
       return respond({ error: "Website-Adresse fehlt." }, 400);
+    }
+    if (input.length > 2048) {
+      return respond({ error: "Die Website-Adresse ist zu lang." }, 400);
     }
 
     let target;
@@ -70,8 +72,8 @@ api.searchParams.append("category", "best-practices");
 api.searchParams.append("category", "seo");
     api.searchParams.set("key", env.PAGESPEED_API_KEY);
 
-    // Ein API-Aufruf pro öffentlicher IP pro Minute reduziert unbeabsichtigte
-    // Mehrfachanfragen und schützt das Google-API-Kontingent.
+    // Optionales Cloudflare Rate-Limit-Binding schützt das Google-API-Kontingent.
+    // Die tatsächliche Frequenz wird in Cloudflare konfiguriert.
     const ip = request.headers?.get("CF-Connecting-IP");
     if (ip && env.WEBSITE_CHECK_RATE_LIMIT) {
       const { success } = await env.WEBSITE_CHECK_RATE_LIMIT.limit({ key: ip });

@@ -34,7 +34,7 @@ export async function onRequestGet({ request, env }) {
     const hostname = target.hostname.toLowerCase();
     // Literal IP-Adressen (IPv4, IPv6 und alternative Zahlenschreibweisen)
     // nicht als zu prüfende öffentliche Website zulassen.
-    const ipLiteral = hostname.startsWith("[") || /^\\d+\\.\\d+\\.\\d+\\.\\d+$/.test(hostname);
+    const ipLiteral = hostname.startsWith("[") || /^\d+\.\d+\.\d+\.\d+$/.test(hostname);
     if (ipLiteral ||
 
       hostname === "localhost" ||

@@ -70,6 +70,14 @@ api.searchParams.append("category", "best-practices");
 api.searchParams.append("category", "seo");
     api.searchParams.set("key", env.PAGESPEED_API_KEY);
 
+    // Ein API-Aufruf pro öffentlicher IP pro Minute reduziert unbeabsichtigte
+    // Mehrfachanfragen und schützt das Google-API-Kontingent.
+    const ip = request.headers?.get("CF-Connecting-IP");
+    if (ip && env.WEBSITE_CHECK_RATE_LIMIT) {
+      const { success } = await env.WEBSITE_CHECK_RATE_LIMIT.limit({ key: ip });
+      if (!success) return respond({ error: "Bitte eine Minute warten und erneut versuchen." }, 429);
+    }
+
     const response = await fetch(api.toString(), {
       signal: AbortSignal.timeout(45000)
     });

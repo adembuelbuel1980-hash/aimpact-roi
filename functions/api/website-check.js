@@ -71,6 +71,46 @@ export async function onRequestGet({ request, env }) {
       return respond({ error: "API-Konfiguration fehlt." }, 503);
     }
 
+    // Cloudflare Turnstile is enforced when both environment variables exist.
+    // If only one is configured, fail closed rather than silently bypassing it.
+    const hasSiteKey = Boolean(env.TURNSTILE_SITE_KEY);
+    const hasSecret = Boolean(env.TURNSTILE_SECRET_KEY);
+    if (hasSiteKey !== hasSecret) {
+      return respond({ error: "Sicherheitsprüfung ist nicht vollständig konfiguriert." }, 503);
+    }
+    if (hasSiteKey && hasSecret) {
+      const token = request.headers.get("X-Turnstile-Token") || "";
+      if (!token || token.length > 2048) {
+        return respond({ error: "Bitte die Sicherheitsprüfung abschliessen." }, 403);
+      }
+      let verification;
+      try {
+        const params = new URLSearchParams({
+          secret: env.TURNSTILE_SECRET_KEY,
+          response: token
+        });
+        const clientIp = request.headers.get("CF-Connecting-IP");
+        if (clientIp) params.set("remoteip", clientIp);
+        const verifyResponse = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: params.toString(),
+          signal: AbortSignal.timeout(8000)
+        });
+        if (!verifyResponse.ok) throw new Error("Turnstile siteverify unavailable");
+        verification = await verifyResponse.json();
+      } catch (error) {
+        console.error("Turnstile verification failed", error?.message);
+        return respond({ error: "Sicherheitsprüfung momentan nicht verfügbar." }, 503);
+      }
+      const expectedHost = new URL(request.url).hostname.toLowerCase();
+      if (verification.success !== true ||
+          String(verification.hostname || "").toLowerCase() !== expectedHost ||
+          verification.action !== "website_check") {
+        return respond({ error: "Sicherheitsprüfung fehlgeschlagen. Bitte erneut versuchen." }, 403);
+      }
+    }
+
     // Only valid, public targets are eligible for caching. Normalize fragments:
     // they do not affect the network request or Lighthouse analysis.
     target.hash = "";

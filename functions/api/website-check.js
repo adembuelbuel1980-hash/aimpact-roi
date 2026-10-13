@@ -4,7 +4,7 @@
 // It is NOT a per-user or globally distributed rate limiter.
 const inflight = new Map();
 const CACHE_SECONDS = 600;
-const CACHE_PREFIX = "https://aimpact-cache.invalid/website-check-v3?url=";
+const CACHE_PATH = "/__internal_cache/website-check-v3?url=";
 
 export async function onRequestGet({ request, env }) {
   const headers = {
@@ -74,7 +74,7 @@ export async function onRequestGet({ request, env }) {
     // Only valid, public targets are eligible for caching. Normalize fragments:
     // they do not affect the network request or Lighthouse analysis.
     target.hash = "";
-    const cacheKey = new Request(CACHE_PREFIX + encodeURIComponent(target.href));
+    const cacheKey = new Request(new URL(CACHE_PATH + encodeURIComponent(target.href), request.url));
     const edgeCache = typeof caches !== "undefined" ? caches.default : null;
     if (edgeCache) {
       try {

@@ -96,3 +96,94 @@ test('valid challenge allows a successful Google Lighthouse response', async () 
     assert.match(calls[1], /pagespeedonline\/v5\/runPagespeed/);
   } finally { globalThis.fetch = previous; }
 });
+
+
+test('missing and invalid target URLs are rejected without upstream calls', async () => {
+  const previous = globalThis.fetch;
+  globalThis.fetch = async () => { throw new Error('Unexpected upstream request'); };
+  try {
+    const invalid = [
+      'https://aimpact-v2-test.pages.dev/api/website-check',
+      'https://aimpact-v2-test.pages.dev/api/website-check?url=' + encodeURIComponent('file:///etc/passwd'),
+      'https://aimpact-v2-test.pages.dev/api/website-check?url=' + encodeURIComponent('http://127.0.0.1/'),
+      'https://aimpact-v2-test.pages.dev/api/website-check?url=' + encodeURIComponent('http://[::1]/'),
+      'https://aimpact-v2-test.pages.dev/api/website-check?url=' + encodeURIComponent('https://example.pages.dev/')
+    ];
+    for (const url of invalid) {
+      const response = await onRequestGet({ request: new Request(url), env });
+      assert.equal(response.status, 400, url);
+    }
+  } finally { globalThis.fetch = previous; }
+});
+
+test('missing PageSpeed API key returns configuration error', async () => {
+  const response = await onRequestGet({
+    request: req(),
+    env: { ...env, PAGESPEED_API_KEY: '' }
+  });
+  assert.equal(response.status, 503);
+});
+
+test('Google quota exhaustion returns a controlled error', async () => {
+  const previous = globalThis.fetch;
+  const calls = [];
+  globalThis.fetch = async (url) => {
+    calls.push(String(url));
+    if (String(url).includes('turnstile/v0/siteverify')) {
+      return Response.json({ success: true, hostname: 'aimpact-v2-test.pages.dev', action: 'website_check' });
+    }
+    return Response.json({ error: { status: 'RESOURCE_EXHAUSTED' } }, { status: 429 });
+  };
+  try {
+    const response = await onRequestGet({ request: req('valid-token'), env });
+    assert.equal(response.status, 502);
+    assert.match((await response.json()).error, /Limit/);
+    assert.equal(calls.length, 2);
+  } finally { globalThis.fetch = previous; }
+});
+
+test('incomplete Lighthouse scores are not presented as valid analysis', async () => {
+  const previous = globalThis.fetch;
+  globalThis.fetch = async (url) => {
+    if (String(url).includes('turnstile/v0/siteverify')) {
+      return Response.json({ success: true, hostname: 'aimpact-v2-test.pages.dev', action: 'website_check' });
+    }
+    return Response.json({ lighthouseResult: {
+      finalUrl: 'https://example.org/',
+      categories: { performance: { score: 0.95 }, seo: { score: 1 } },
+      audits: {}
+    } });
+  };
+  try {
+    const response = await onRequestGet({ request: req('valid-token'), env });
+    assert.equal(response.status, 502);
+    assert.match((await response.json()).error, /nicht vollständig/);
+  } finally { globalThis.fetch = previous; }
+});
+
+test('Turnstile disabled preserves the existing test API path', async () => {
+  const previous = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = async (url) => {
+    calls++;
+    assert.match(String(url), /pagespeedonline\\/v5\\/runPagespeed/);
+    return Response.json({ lighthouseResult: {
+      finalUrl: 'https://example.org/',
+      categories: {
+        performance: { score: 0.95 },
+        accessibility: { score: 0.9 },
+        'best-practices': { score: 1 },
+        seo: { score: 1 }
+      },
+      audits: {}
+    } });
+  };
+  try {
+    const response = await onRequestGet({
+      request: req(),
+      env: { PAGESPEED_API_KEY: 'dummy-key' }
+    });
+    assert.equal(response.status, 200);
+    assert.equal(calls, 1);
+  } finally { globalThis.fetch = previous; }
+});

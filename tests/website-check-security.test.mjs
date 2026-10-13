@@ -187,3 +187,69 @@ test('Turnstile disabled preserves the existing test API path', async () => {
     assert.equal(calls, 1);
   } finally { globalThis.fetch = previous; }
 });
+
+
+test('Lighthouse runtime errors are rejected', async () => {
+  const previous = globalThis.fetch;
+  globalThis.fetch = async url => {
+    if (String(url).includes('turnstile/v0/siteverify')) {
+      return Response.json({ success: true, hostname: 'aimpact-v2-test.pages.dev', action: 'website_check' });
+    }
+    return Response.json({ lighthouseResult: {
+      finalUrl: 'https://example.org/',
+      runtimeError: { code: 'ERRORED_DOCUMENT_REQUEST' },
+      categories: {
+        performance: { score: 0.9 },
+        accessibility: { score: 0.9 },
+        'best-practices': { score: 1 },
+        seo: { score: 1 }
+      },
+      audits: {}
+    } });
+  };
+  try {
+    const response = await onRequestGet({ request: req('valid-token'), env });
+    assert.equal(response.status, 502);
+  } finally { globalThis.fetch = previous; }
+});
+
+test('HTTP failure detected by Lighthouse is not shown as a successful scan', async () => {
+  const previous = globalThis.fetch;
+  globalThis.fetch = async url => {
+    if (String(url).includes('turnstile/v0/siteverify')) {
+      return Response.json({ success: true, hostname: 'aimpact-v2-test.pages.dev', action: 'website_check' });
+    }
+    return Response.json({ lighthouseResult: {
+      finalUrl: 'https://example.org/missing',
+      categories: {
+        performance: { score: 0.9 },
+        accessibility: { score: 0.9 },
+        'best-practices': { score: 1 },
+        seo: { score: 1 }
+      },
+      audits: { 'http-status-code': { score: 0 } }
+    } });
+  };
+  try {
+    const response = await onRequestGet({ request: req('valid-token'), env });
+    assert.equal(response.status, 502);
+    assert.match((await response.json()).error, /HTTP-Statuscode/);
+  } finally { globalThis.fetch = previous; }
+});
+
+test('upstream Google server errors are handled without exposing internals', async () => {
+  const previous = globalThis.fetch;
+  globalThis.fetch = async url => {
+    if (String(url).includes('turnstile/v0/siteverify')) {
+      return Response.json({ success: true, hostname: 'aimpact-v2-test.pages.dev', action: 'website_check' });
+    }
+    return Response.json({ error: { status: 'INTERNAL' } }, { status: 503 });
+  };
+  try {
+    const response = await onRequestGet({ request: req('valid-token'), env });
+    const data = await response.json();
+    assert.equal(response.status, 502);
+    assert.match(data.error, /nicht verfügbar/);
+    assert.equal(JSON.stringify(data).includes('INTERNAL'), false);
+  } finally { globalThis.fetch = previous; }
+});

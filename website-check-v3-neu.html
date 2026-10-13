@@ -42,6 +42,7 @@
         <button id="check-button" type="submit">Website prüfen</button>
       </div>
     </form>
+    <div id="turnstile-box" hidden><p class="muted">Sicherheitsprüfung zum Schutz vor automatisierten Anfragen</p><div id="turnstile-widget"></div><p class="muted"><small>Die Sicherheitsprüfung wird durch Cloudflare Turnstile bereitgestellt.</small></p></div>
     <p id="status" class="muted" role="status" aria-live="polite"></p>
   </section>
   <div id="results" hidden>
@@ -316,12 +317,57 @@ byId('lead-form').addEventListener('submit', async event => {
     status.textContent = error.message + ' Bitte später erneut versuchen.';
   } finally {button.disabled = false;}
 });
+let securityReady = false;
+let turnstileRequired = false;
+let turnstileToken = '';
+let turnstileWidgetId = null;
+async function initializeSecurity() {
+  const button = byId('check-button');
+  const status = byId('status');
+  button.disabled = true;
+  try {
+    const response = await fetch('/api/website-check-config', {headers:{Accept:'application/json'},cache:'no-store'});
+    if (!response.ok) throw new Error('Sicherheitskonfiguration nicht verfügbar.');
+    const config = await response.json();
+    if (config.configurationError) throw new Error('Sicherheitskonfiguration unvollständig.');
+    if (config.turnstileEnabled) {
+      if (typeof config.siteKey !== 'string' || !config.siteKey) throw new Error('Sicherheitskonfiguration ungültig.');
+      turnstileRequired = true;
+      byId('turnstile-box').hidden = false;
+      await new Promise((resolve,reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+        script.async = true;
+        script.onload = resolve;
+        script.onerror = () => reject(new Error('Sicherheitsprüfung konnte nicht geladen werden.'));
+        document.head.appendChild(script);
+      });
+      turnstileWidgetId = window.turnstile.render('#turnstile-widget', {
+        sitekey: config.siteKey,
+        action: 'website_check',
+        theme: 'dark',
+        callback: token => { turnstileToken = token; },
+        'expired-callback': () => { turnstileToken = ''; },
+        'error-callback': () => { turnstileToken = ''; }
+      });
+    }
+    securityReady = true;
+    status.textContent = '';
+    button.disabled = false;
+  } catch (error) {
+    status.textContent = error.message + ' Bitte die Seite später erneut laden.';
+  }
+}
+initializeSecurity();
 byId('check-form').addEventListener('submit',async event => {
   event.preventDefault();
   const status = byId('status');
   const button = byId('check-button');
   byId('results').hidden = true;
   try {
+    if (!securityReady) throw new Error('Sicherheitsprüfung ist noch nicht bereit.');
+    if (turnstileRequired && !turnstileToken) throw new Error('Bitte zuerst die Sicherheitsprüfung abschliessen.');
+    const tokenForRequest = turnstileToken;
     const input = byId('website-url').value.trim();
     const url = new URL(input);
     if (!['https:','http:'].includes(url.protocol)) throw new Error('Bitte eine HTTP- oder HTTPS-Adresse eingeben.');
@@ -331,7 +377,7 @@ byId('check-form').addEventListener('submit',async event => {
     const timer = setTimeout(() => controller.abort(),65000);
     let response;
     try {
-      response = await fetch('/api/website-check?url=' + encodeURIComponent(url.href), {signal:controller.signal,headers:{Accept:'application/json'}});
+      response = await fetch('/api/website-check?url=' + encodeURIComponent(url.href), {signal:controller.signal,headers:{Accept:'application/json', ...(turnstileRequired ? {'X-Turnstile-Token':tokenForRequest} : {})}});
     } finally {clearTimeout(timer);}
     const data = await response.json().catch(() => null);
     if (!response.ok || !data || data.error) throw new Error(data?.error || data?.message || `API-Fehler ${response.status}`);
@@ -339,7 +385,13 @@ byId('check-form').addEventListener('submit',async event => {
     status.textContent = 'Analyse abgeschlossen.';
   } catch (error) {
     status.textContent = error.name === 'AbortError' ? 'Zeitüberschreitung. Bitte nochmals versuchen.' : 'Analyse fehlgeschlagen: ' + error.message;
-  } finally {button.disabled = false;}
+  } finally {
+    if (turnstileRequired && turnstileWidgetId !== null && window.turnstile) {
+      turnstileToken = '';
+      window.turnstile.reset(turnstileWidgetId);
+    }
+    button.disabled = !securityReady;
+  }
 });
 </script>
 </body>

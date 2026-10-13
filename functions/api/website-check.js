@@ -6,6 +6,37 @@ const inflight = new Map();
 const CACHE_SECONDS = 600;
 const CACHE_PATH = "/__internal_cache/website-check-v3?url=";
 
+// Additional best-effort per-client throttling within a single Worker isolate.
+// Cloudflare runs many isolates globally, so this is NOT a distributed rate limit.
+const clientWindows = new Map();
+const CLIENT_WINDOW_MS = 10 * 60 * 1000;
+const CLIENT_MAX_SCANS = 3;
+const MAX_TRACKED_CLIENTS = 1024;
+
+function allowClientScan(request) {
+  const ip = request.headers.get("CF-Connecting-IP");
+  // No trusted Cloudflare IP header in local tests; do not trust user-supplied
+  // forwarding headers as an identity substitute.
+  if (!ip) return true;
+  const now = Date.now();
+  const existing = clientWindows.get(ip);
+  if (existing && now - existing.startedAt < CLIENT_WINDOW_MS) {
+    if (existing.count >= CLIENT_MAX_SCANS) return false;
+    existing.count += 1;
+    return true;
+  }
+  if (clientWindows.size >= MAX_TRACKED_CLIENTS) {
+    for (const [key, value] of clientWindows) {
+      if (now - value.startedAt >= CLIENT_WINDOW_MS) clientWindows.delete(key);
+    }
+    if (clientWindows.size >= MAX_TRACKED_CLIENTS) {
+      clientWindows.delete(clientWindows.keys().next().value);
+    }
+  }
+  clientWindows.set(ip, { startedAt: now, count: 1 });
+  return true;
+}
+
 export async function onRequestGet({ request, env }) {
   const headers = {
     "Content-Type": "application/json; charset=utf-8",
@@ -134,6 +165,14 @@ export async function onRequestGet({ request, env }) {
     if (inflight.has(key)) {
       const shared = await inflight.get(key);
       return shared.clone();
+    }
+
+    // Count only scans that actually need an upstream Google request.
+    // Cached responses are served without consuming this local allowance.
+    if (!allowClientScan(request)) {
+      return respond({
+        error: "Zu viele Prüfungen. Bitte in etwa zehn Minuten erneut versuchen."
+      }, 429);
     }
 
     const run = async () => {

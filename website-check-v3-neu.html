@@ -226,7 +226,7 @@ function render(data, requestedUrl) {
     }));
   // Doppelte Lighthouse-Prüfungen mit gleicher Handlungsempfehlung
   // nur einmal zeigen. Das aussagekräftigste Ergebnis bleibt erhalten.
-  const actionable = [...findings.filter(f => f.title && f.description)
+  const actionable = [...findings.filter(f => f.title && f.description && !metricAuditIds.has(f.id))
     .sort((a,b) => rank(b) - rank(a) || a.score - b.score)
     .reduce((unique,f) => {
       if (!unique.has(f.title)) unique.set(f.title,f);

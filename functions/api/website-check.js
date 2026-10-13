@@ -32,7 +32,11 @@ export async function onRequestGet({ request, env }) {
     }
 
     const hostname = target.hostname.toLowerCase();
-    if (
+    // Literal IP-Adressen (IPv4, IPv6 und alternative Zahlenschreibweisen)
+    // nicht als zu prüfende öffentliche Website zulassen.
+    const ipLiteral = hostname.startsWith("[") || /^\\d+\\.\\d+\\.\\d+\\.\\d+$/.test(hostname);
+    if (ipLiteral ||
+
       hostname === "localhost" ||
       hostname.endsWith(".localhost") ||
       hostname.endsWith(".local") ||
@@ -67,18 +71,13 @@ export async function onRequestGet({ request, env }) {
     api.searchParams.set("url", target.href);
     api.searchParams.set("strategy", "mobile");
     api.searchParams.append("category", "performance");
-api.searchParams.append("category", "accessibility");
-api.searchParams.append("category", "best-practices");
-api.searchParams.append("category", "seo");
+    api.searchParams.append("category", "accessibility");
+    api.searchParams.append("category", "best-practices");
+    api.searchParams.append("category", "seo");
     api.searchParams.set("key", env.PAGESPEED_API_KEY);
 
-    // Optionales Cloudflare Rate-Limit-Binding schützt das Google-API-Kontingent.
-    // Die tatsächliche Frequenz wird in Cloudflare konfiguriert.
-    const ip = request.headers?.get("CF-Connecting-IP");
-    if (ip && env.WEBSITE_CHECK_RATE_LIMIT) {
-      const { success } = await env.WEBSITE_CHECK_RATE_LIMIT.limit({ key: ip });
-      if (!success) return respond({ error: "Bitte eine Minute warten und erneut versuchen." }, 429);
-    }
+    // API-Kontingent in Google Cloud begrenzen. Ein Cloudflare Pages
+    // Rate-Limit-Binding ist hier nicht eingerichtet; keinen Schutz vortäuschen.
 
     const response = await fetch(api.toString(), {
       signal: AbortSignal.timeout(45000)

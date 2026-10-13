@@ -166,7 +166,7 @@ test('Turnstile disabled preserves the existing test API path', async () => {
   let calls = 0;
   globalThis.fetch = async (url) => {
     calls++;
-    assert.match(String(url), /pagespeedonline\\/v5\\/runPagespeed/);
+    assert.ok(String(url).includes('pagespeedonline/v5/runPagespeed'));
     return Response.json({ lighthouseResult: {
       finalUrl: 'https://example.org/',
       categories: {

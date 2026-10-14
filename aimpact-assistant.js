@@ -3,7 +3,7 @@
 
   const FORM_ENDPOINT = 'https://formspree.io/f/mqeoqqgo';
   const CHECK_URL = 'https://aimpact.ch/sichtbarkeits-check.html';
-  const TECH_CHECK_URL = 'https://check.aimpact.ch/website-check-v3-neu.html';
+  const TECH_CHECK_URL = 'https://check.aimpact.ch/website-check';
 
   const topics = {
     local: {

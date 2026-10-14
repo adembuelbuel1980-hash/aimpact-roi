@@ -1,0 +1,36 @@
+name: Website-Check V3 deployment smoke test
+
+on:
+  push:
+    branches:
+      - feature/visibility-check-v2-20261010
+  workflow_dispatch:
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check Cloudflare Pages test deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="https://aimpact-v2-test.pages.dev"
+          echo "Checking test page (not a production release)"
+          curl --fail --show-error --silent --location --retry 3 --retry-delay 3 --max-time 25 \
+            "$BASE/website-check-v3-neu.html" -o /tmp/website-check-v3.html
+          test "$(wc -c < /tmp/website-check-v3.html)" -gt 1000
+          grep -qi 'website.check\|website-check\|PageSpeed\|Lighthouse' /tmp/website-check-v3.html
+          echo "Test page reachable and nonempty"
+          echo "Checking public API config (no Google scan or quota usage)"
+          curl --fail --show-error --silent --retry 3 --retry-delay 3 --max-time 25 \
+            "$BASE/api/website-check-config" -o /tmp/website-check-config.json
+          python3 - <<'PY'
+          import json
+          with open('/tmp/website-check-config.json', encoding='utf-8') as f:
+              data = json.load(f)
+          assert isinstance(data.get('turnstileEnabled'), bool), 'Invalid API config response'
+          assert 'secret' not in json.dumps(data).lower(), 'Unexpected secret in public config'
+          print('API config reachable, Turnstile enabled:', data['turnstileEnabled'])
+          PY
+          echo "Cloudflare test deployment smoke check passed"

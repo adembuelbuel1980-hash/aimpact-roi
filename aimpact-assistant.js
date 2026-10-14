@@ -3,6 +3,7 @@
 
   const FORM_ENDPOINT = 'https://formspree.io/f/mqeoqqgo';
   const CHECK_URL = 'https://aimpact.ch/sichtbarkeits-check.html';
+  const TECH_CHECK_URL = 'https://check.aimpact.ch/website-check-v3-neu.html';
 
   const topics = {
     local: {
@@ -141,6 +142,7 @@
       ['AI Visibility','ai'],
       ['Website & Conversion','conversion'],
       ['Visibility Check','check'],
+      ['Website-Check','techcheck'],
       ['Kostenlose Analyse','lead']
     ];
     opts.forEach(([label,key])=>{
@@ -165,6 +167,14 @@
     if(key==='check'){
       addMessage(
         `Mit dem kostenlosen Aimpact Visibility Check erhältst du eine erste Einschätzung deiner Sichtbarkeit bei Google, Maps, Website, Content, AI Visibility und Conversion.<br><a class="aa-primary" href="${CHECK_URL}">Visibility Check starten →</a>`,
+        'bot', true
+      );
+      addOptions();
+      return;
+    }
+    if(key==='techcheck'){
+      addMessage(
+        `Prüfe deine Website automatisch mit Google Lighthouse auf Ladezeit, Barrierefreiheit, technische Best Practices und grundlegende SEO-Kriterien.<br><a class="aa-primary" href="${TECH_CHECK_URL}">Technischen Website-Check starten →</a>`,
         'bot', true
       );
       addOptions();

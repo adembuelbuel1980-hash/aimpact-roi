@@ -142,7 +142,7 @@
       ['AI Visibility','ai'],
       ['Website & Conversion','conversion'],
       ['Visibility Check','check'],
-      ['Website-Check','techcheck'],
+      ['Technischer Website-Check','techcheck'],
       ['Kostenlose Analyse','lead']
     ];
     opts.forEach(([label,key])=>{

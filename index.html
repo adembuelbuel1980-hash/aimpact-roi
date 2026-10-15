@@ -115,8 +115,12 @@
     }
     .btn-primary{background:var(--gold);color:var(--black)}
     .btn-primary:hover{transform:translateY(-2px);background:#dfbd5e}
-    .btn-ghost{background:var(--gold);border-color:var(--gold);color:var(--black)}
-    .btn-ghost:hover{background:#dfbd5e;border-color:#dfbd5e;color:var(--black);transform:translateY(-2px)}
+    .btn-ghost{background:transparent;border-color:rgba(201,168,76,.55);color:var(--gold)}
+    .btn-ghost:hover{background:rgba(201,168,76,.12);border-color:var(--gold);transform:translateY(-2px)}
+    .check-alternative{margin-top:24px;padding-top:20px;border-top:1px solid var(--line);max-width:760px}
+    .check-alternative p{font-size:.92rem;color:#bdb8ad}
+    .check-alternative a{color:var(--gold);font-weight:750;text-underline-offset:4px}
+    .check-alternative a:hover{color:#dfbd5e}
 
     .hero{padding:108px 0 74px;overflow:hidden}
     .hero h1 span{color:var(--gold)}
@@ -275,9 +279,9 @@
         </p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="sichtbarkeits-check.html">Kostenlosen Visibility Check starten</a>
-          <a class="btn btn-ghost" href="https://check.aimpact.ch/website-check">Technischen Website-Check starten</a>
           <a class="btn btn-ghost" href="#leistungen">Leistungen ansehen</a>
         </div>
+        <p class="muted" style="margin-top:14px;font-size:.88rem">Dein Einstieg: eine erste Einschätzung deiner Sichtbarkeit bei Google, Maps und KI.</p>
         <div class="platforms" aria-label="Relevante Such- und Empfehlungsplattformen">
           <span>Google</span><span>Google Maps</span><span>ChatGPT</span><span>Gemini</span><span>Perplexity</span><span>Social Media</span>
         </div>
@@ -430,6 +434,9 @@
           <a class="btn btn-primary" href="sichtbarkeits-check.html">Check jetzt starten</a>
           <p class="small-note">Der Check ist eine erste Einschätzung und keine Garantie für Rankings oder Empfehlungen in KI-Systemen.</p>
         </aside>
+      </div>
+      <div class="wrap check-alternative">
+        <p><strong>Du möchtest stattdessen die Technik deiner Website prüfen?</strong> Der separate kostenlose <a href="https://check.aimpact.ch/website-check">Website-Check</a> analysiert Ladezeit, technische SEO-Grundlagen, Barrierefreiheit und Best Practices. Er ersetzt keine Prüfung deiner Sichtbarkeit bei Google Maps oder in KI-Systemen.</p>
       </div>
     </section>
 

@@ -82,8 +82,8 @@
       text-transform:uppercase;
     }
     h1,h2,h3{margin:0;line-height:1.05;letter-spacing:-.035em}
-    h1{font-size:clamp(3.2rem,8vw,7.7rem);max-width:1000px}
-    h2{font-size:clamp(2.3rem,5vw,4.8rem);max-width:900px}
+    h1{font-size:clamp(2.8rem,6.1vw,5.5rem);max-width:980px;line-height:1.08}
+    h2{font-size:clamp(2rem,3.8vw,3.45rem);max-width:900px;line-height:1.13}
     h3{font-size:1.35rem}
     p{margin:0}
     .lead{font-size:clamp(1.06rem,1.7vw,1.35rem);color:#d1cec6;max-width:760px}
@@ -122,12 +122,12 @@
     .check-alternative a{color:var(--gold);font-weight:750;text-underline-offset:4px}
     .check-alternative a:hover{color:#dfbd5e}
 
-    .hero{padding:108px 0 74px;overflow:hidden}
+    .hero{padding:90px 0 80px;overflow:hidden}
     .hero h1 span{color:var(--gold)}
-    .hero .lead{margin-top:28px}
+    .hero .lead{margin-top:24px;max-width:680px}
     .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
     .platforms{
-      display:flex;flex-wrap:wrap;gap:10px;margin-top:50px;padding-top:26px;border-top:1px solid var(--line);
+      display:flex;flex-wrap:wrap;gap:10px;margin-top:32px;padding-top:22px;border-top:1px solid var(--line);
     }
     .platforms span{
       border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:#c8c5bd;font-size:.79rem;
@@ -140,19 +140,19 @@
     .light{background:var(--white);color:var(--black)}
     .light .lead,.light .muted{color:#57534b}
     .light .eyebrow{color:#8d7023}
-    .section-head{display:grid;grid-template-columns:1.25fr .75fr;gap:60px;align-items:end;margin-bottom:54px}
+    .section-head{display:grid;grid-template-columns:1.25fr .75fr;gap:40px;align-items:end;margin-bottom:36px}
     .section-head .lead{justify-self:end;max-width:470px}
 
     .search-grid,.service-grid,.why-grid,.audience-grid{display:grid;gap:16px}
     .search-grid{grid-template-columns:repeat(4,1fr)}
-    .service-grid{grid-template-columns:repeat(2,1fr)}
+    .service-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
     .why-grid{grid-template-columns:repeat(3,1fr)}
     .audience-grid{grid-template-columns:repeat(3,1fr)}
     .card{
       border:1px solid var(--line);border-radius:var(--radius);padding:28px;background:var(--black-2);
     }
     .light .card{border-color:var(--line-dark);background:#fff}
-    .card-number{color:var(--gold);font-size:.74rem;font-weight:900;letter-spacing:.12em;margin-bottom:34px}
+    .card-number{color:var(--gold);font-size:.74rem;font-weight:900;letter-spacing:.12em;margin-bottom:20px}
     .card h3{margin-bottom:12px}
     .card p{color:#aaa69e;font-size:.94rem}
     .light .card p{color:#625e56}
@@ -191,7 +191,7 @@
 
     .steps{counter-reset:step;display:grid;gap:0;border-top:1px solid var(--line)}
     .step{
-      display:grid;grid-template-columns:90px 1fr 1fr;gap:24px;padding:25px 0;border-bottom:1px solid var(--line);align-items:start
+      display:grid;grid-template-columns:75px 1fr 1fr;gap:24px;padding:24px 0;border-bottom:1px solid var(--line);align-items:start
     }
     .step-num{color:var(--gold);font-weight:900;letter-spacing:.1em}
     .step p{color:#aaa69e}
@@ -225,6 +225,7 @@
       .section-head,.check-inner{grid-template-columns:1fr;gap:28px}
       .section-head .lead{justify-self:start}
       .search-grid{grid-template-columns:repeat(2,1fr)}
+      .service-grid{grid-template-columns:1fr}
       .why-grid,.audience-grid{grid-template-columns:1fr}
       .step{grid-template-columns:60px 1fr}
       .step p{grid-column:2}
@@ -271,59 +272,29 @@
     <section class="hero">
       <div class="wrap">
         <p class="eyebrow">Digital · Local · AI · Zürich</p>
-        <h1>Dein Unternehmen ist gut. <span>Aber wird es auch gefunden?</span></h1>
+        <h1>Wird dein Unternehmen <span>gefunden?</span></h1>
         <p class="lead">
-          Aimpact hilft lokalen Unternehmen und Gastronomiebetrieben in Zürich,
-          bei <strong>Google, Google Maps und KI-Systemen</strong> besser sichtbar zu werden –
-          und daraus mehr qualifizierte Anfragen und Kunden zu gewinnen.
+          Aimpact macht lokale Unternehmen in Zürich bei <strong>Google, Google Maps und KI-Systemen</strong> sichtbarer. Damit aus Sichtbarkeit qualifizierte Anfragen werden.
         </p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="sichtbarkeits-check.html">Kostenlosen Visibility Check starten</a>
           <a class="btn btn-ghost" href="#leistungen">Leistungen ansehen</a>
         </div>
-        <p class="muted" style="margin-top:14px;font-size:.88rem">Dein Einstieg: eine erste Einschätzung deiner Sichtbarkeit bei Google, Maps und KI.</p>
+        <p class="muted" style="margin-top:14px;font-size:.88rem">Kostenlos · ca. 2 Minuten · erste Selbsteinschätzung</p>
         <div class="platforms" aria-label="Relevante Such- und Empfehlungsplattformen">
-          <span>Google</span><span>Google Maps</span><span>ChatGPT</span><span>Gemini</span><span>Perplexity</span><span>Social Media</span>
+          <span>Google</span><span>Google Maps</span><span>KI-Sichtbarkeit</span>
         </div>
-        <p class="hero-kicker">Mehr Sichtbarkeit. Mehr qualifizierte Anfragen. Mehr Kunden.</p>
       </div>
     </section>
 
     <section class="light">
       <div class="wrap">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">Das Problem</p>
-            <h2>Deine Kunden suchen nicht mehr nur bei Google.</h2>
-          </div>
-          <p class="lead">
-            Die Customer Journey verteilt sich heute auf klassische Suche, Maps, Social Media und generative KI.
-            Aimpact verbindet diese Kontaktpunkte zu einer klaren Sichtbarkeitsstrategie.
-          </p>
-        </div>
-
-        <div class="search-grid">
-          <article class="card">
-            <p class="card-number">01</p>
-            <h3>Google</h3>
-            <p>Für klassische Informations-, Produkt- und Dienstleistungssuchen.</p>
-          </article>
-          <article class="card">
-            <p class="card-number">02</p>
-            <h3>Google Maps</h3>
-            <p>Für lokale Suchintentionen mit direkter Nähe zu Besuch, Anfrage oder Kauf.</p>
-          </article>
-          <article class="card">
-            <p class="card-number">03</p>
-            <h3>KI-Systeme</h3>
-            <p>Für Empfehlungen, Vergleiche und Antworten in Systemen wie ChatGPT, Gemini oder Perplexity.</p>
-          </article>
-          <article class="card">
-            <p class="card-number">04</p>
-            <h3>Social Media</h3>
-            <p>Für Entdeckung, Vertrauen, Wiedererkennung und zusätzliche Kontaktpunkte.</p>
-          </article>
-        </div>
+        <p class="eyebrow">Warum Aimpact?</p>
+        <h2>Deine Kunden suchen überall.</h2>
+        <p class="lead" style="margin-top:20px;max-width:800px">
+          Ob Google, Maps oder KI-Suche: Wir sorgen für einen klaren digitalen Auftritt,
+          der zu deinem Unternehmen passt und Anfragen erleichtert.
+        </p>
       </div>
     </section>
 
@@ -332,79 +303,28 @@
         <div class="section-head">
           <div>
             <p class="eyebrow">Leistungen</p>
-            <h2>So macht Aimpact dein Unternehmen sichtbarer.</h2>
+            <h2>Drei Bereiche. Ein Ziel.</h2>
           </div>
           <p class="lead">
-            Keine isolierten Einzelmassnahmen. Wir verbinden lokale Sichtbarkeit,
-            Website, Content, Conversion und AI Visibility dort, wo es für dein Unternehmen Sinn ergibt.
+            Mehr Sichtbarkeit und daraus mehr passende Kundenanfragen – mit klaren Prioritäten statt unnötiger Komplexität.
           </p>
         </div>
 
         <div class="service-grid">
           <article class="card">
-            <p class="card-number">01 · Local Visibility</p>
-            <h3>Google & Google Maps</h3>
-            <p>Damit lokale Kunden dein Unternehmen genau dann finden, wenn sie nach deinem Angebot suchen.</p>
-            <ul>
-              <li>Google Business Profile</li>
-              <li>Local SEO</li>
-              <li>lokale Suchbegriffe</li>
-              <li>Bewertungen & lokale Relevanz</li>
-            </ul>
+            <p class="card-number">01 · Local SEO</p>
+            <h3>Bei Google & Maps gefunden werden.</h3>
+            <p>Wir optimieren lokale Suchsignale, dein Google Business Profile und relevante Inhalte.</p>
           </article>
-
           <article class="card">
             <p class="card-number">02 · Website & Conversion</p>
-            <h3>Aus Besuchern werden Anfragen.</h3>
-            <p>Mehr Traffic allein genügt nicht. Die Website muss klar führen, Vertrauen schaffen und zur Handlung motivieren.</p>
-            <ul>
-              <li>Struktur & Nutzerführung</li>
-              <li>Call-to-Actions</li>
-              <li>Inhalte & Nutzenargumentation</li>
-              <li>Conversion-Optimierung</li>
-            </ul>
+            <h3>Mehr Anfragen gewinnen.</h3>
+            <p>Klare Inhalte, einfache Nutzerführung und passende Kontaktmöglichkeiten machen den nächsten Schritt leicht.</p>
           </article>
-
           <article class="card">
-            <p class="card-number">03 · AI Visibility</p>
-            <h3>Sichtbar. Auch für KI.</h3>
-            <p>Wir verbessern die Voraussetzungen dafür, dass dein Unternehmen digital eindeutig verstanden und thematisch eingeordnet werden kann.</p>
-            <ul>
-              <li>GEO / Generative Engine Optimization</li>
-              <li>strukturierte Inhalte</li>
-              <li>FAQ & Schema Markup</li>
-              <li>thematische Relevanz</li>
-            </ul>
-          </article>
-
-          <article class="card">
-            <p class="card-number">04 · Content & Social</p>
-            <h3>Inhalte mit Funktion.</h3>
-            <p>Content soll nicht nur gefällig aussehen. Er soll Fragen beantworten, Vertrauen schaffen und die Sichtbarkeit stärken.</p>
-            <ul>
-              <li>Content-Strategie</li>
-              <li>Social Media</li>
-              <li>lokale Themen</li>
-              <li>Suchintentionen</li>
-            </ul>
-          </article>
-
-          <article class="card">
-            <p class="card-number">05 · Analyse</p>
-            <h3>Messen statt raten.</h3>
-            <p>Wir priorisieren Massnahmen und prüfen, welche davon tatsächlich zur gewünschten Entwicklung beitragen.</p>
-            <ul>
-              <li>Ziele & KPIs</li>
-              <li>Ist-Analyse</li>
-              <li>Wettbewerbsumfeld</li>
-              <li>laufende Optimierung</li>
-            </ul>
-          </article>
-
-          <article class="card">
-            <p class="card-number">Unser Prinzip</p>
-            <h3>Persönlich. Messbar. Ohne Agentur-Ballast.</h3>
-            <p>Direkter Austausch, verständliche Empfehlungen und klare Prioritäten statt unnötig komplizierter Marketingprozesse.</p>
+            <p class="card-number">03 · KI-Sichtbarkeit</p>
+            <h3>Auch für KI verständlich sein.</h3>
+            <p>Wir strukturieren Unternehmensinformationen und Inhalte so, dass sie klar eingeordnet werden können.</p>
           </article>
         </div>
       </div>
@@ -414,29 +334,26 @@
       <div class="wrap check-inner">
         <div>
           <p class="eyebrow">Kostenloser Einstieg</p>
-          <h2>Wie sichtbar ist dein Unternehmen wirklich?</h2>
+          <h2>Wie sichtbar bist du heute?</h2>
           <p class="lead" style="margin-top:22px">
-            Mit dem Aimpact Visibility Check erhältst du eine erste Einschätzung deiner digitalen Sichtbarkeit
-            und erkennst, wo das grösste Potenzial liegt.
+            Sechs kurze Fragen zeigen dir, wo du bei Google, Maps, Website und KI-Sichtbarkeit ansetzen kannst.
           </p>
           <div class="check-list">
-            <span>Google-Sichtbarkeit</span>
-            <span>Google Maps</span>
-            <span>Website-Basis</span>
-            <span>Content & Relevanz</span>
-            <span>AI-Visibility-Potenzial</span>
-            <span>Conversion-Potenzial</span>
+            <span>Google & Maps</span>
+            <span>Website & Content</span>
+            <span>KI-Sichtbarkeit</span>
+            <span>Kontakt & Anfragen</span>
           </div>
         </div>
         <aside class="check-box">
           <strong>Aimpact Visibility Check</strong>
-          <p>Starte mit einer klaren ersten Einschätzung statt mit einem langen Beratungsgespräch.</p>
+          <p>In rund zwei Minuten erhältst du deinen persönlichen Selbsteinschätzungs-Score.</p>
           <a class="btn btn-primary" href="sichtbarkeits-check.html">Check jetzt starten</a>
           <p class="small-note">Der Check ist eine erste Einschätzung und keine Garantie für Rankings oder Empfehlungen in KI-Systemen.</p>
         </aside>
       </div>
       <div class="wrap check-alternative">
-        <p><strong>Du möchtest stattdessen die Technik deiner Website prüfen?</strong> Der separate kostenlose <a href="https://check.aimpact.ch/website-check">Website-Check</a> analysiert Ladezeit, technische SEO-Grundlagen, Barrierefreiheit und Best Practices. Er ersetzt keine Prüfung deiner Sichtbarkeit bei Google Maps oder in KI-Systemen.</p>
+        <p><strong>Du möchtest stattdessen die Technik deiner Website prüfen?</strong> Der <a href="https://check.aimpact.ch/website-check">kostenlose technische Website-Check</a> prüft Ladezeit, SEO-Grundlagen und Barrierefreiheit. Er ist unabhängig vom Visibility Check.</p>
       </div>
     </section>
 
@@ -445,36 +362,26 @@
         <div class="section-head">
           <div>
             <p class="eyebrow">Arbeitsweise</p>
-            <h2>Von der Analyse zur messbaren Optimierung.</h2>
+            <h2>Einfach. Klar. Messbar.</h2>
           </div>
-          <p class="lead">Wir arbeiten mit klaren Prioritäten und entwickeln nur weiter, was für dein Unternehmen einen nachvollziehbaren Nutzen hat.</p>
+          <p class="lead">Drei Schritte von der ersten Einschätzung bis zur laufenden Verbesserung.</p>
         </div>
 
         <div class="steps">
           <div class="step">
             <div class="step-num">01</div>
-            <h3>Analysieren</h3>
-            <p>Wir prüfen den aktuellen Stand bei Google, Maps, Website, Content und relevanten digitalen Touchpoints.</p>
+            <h3>Prüfen</h3>
+            <p>Wir betrachten deine aktuelle Sichtbarkeit und die wichtigsten Kontaktpunkte.</p>
           </div>
           <div class="step">
             <div class="step-num">02</div>
-            <h3>Priorisieren</h3>
-            <p>Wir wählen zuerst die Massnahmen mit dem grössten Potenzial für Sichtbarkeit, Anfragen und Kunden.</p>
+            <h3>Verbessern</h3>
+            <p>Wir setzen zuerst die Massnahmen mit dem grössten Potenzial um.</p>
           </div>
           <div class="step">
             <div class="step-num">03</div>
-            <h3>Umsetzen</h3>
-            <p>Wir optimieren die relevanten Bereiche – verständlich, pragmatisch und passend zur Ausgangslage.</p>
-          </div>
-          <div class="step">
-            <div class="step-num">04</div>
             <h3>Messen</h3>
-            <p>Wir prüfen anhand passender KPIs, was sich verändert und welche Massnahmen Wirkung zeigen.</p>
-          </div>
-          <div class="step">
-            <div class="step-num">05</div>
-            <h3>Weiterentwickeln</h3>
-            <p>Was funktioniert, bauen wir aus. Was keinen Mehrwert bringt, wird angepasst oder verworfen.</p>
+            <p>Wir prüfen Ergebnisse anhand nachvollziehbarer Kennzahlen.</p>
           </div>
         </div>
       </div>
@@ -485,38 +392,30 @@
         <div class="section-head">
           <div>
             <p class="eyebrow">Zielgruppe</p>
-            <h2>Für lokale Unternehmen, die nicht einfach nur Reichweite wollen.</h2>
+            <h2>Für lokale Unternehmen in Zürich.</h2>
           </div>
           <p class="lead">
-            Entscheidend ist nicht, möglichst viele Menschen zu erreichen.
-            Entscheidend ist, von den richtigen Menschen gefunden zu werden und daraus Geschäft zu entwickeln.
+            Für Restaurants, Dienstleister und KMU, die online besser gefunden werden und mehr passende Anfragen erhalten möchten.
           </p>
         </div>
 
         <div class="audience-grid">
           <article class="card">
             <h3>Gastronomie</h3>
-            <p>Restaurants, Cafés und lokale Konzepte, die über Suche, Maps, Content und Bewertungen mehr Gäste erreichen wollen.</p>
+            <p>Für Restaurants und Cafés, die online mehr Gäste erreichen möchten.</p>
             <p style="margin-top:16px"><a href="local-seo-gastronomie-zuerich.html" style="color:var(--gold);font-weight:800;text-decoration:none">Local SEO für Gastronomie in Zürich →</a></p>
           </article>
           <article class="card">
             <h3>Lokale Dienstleister</h3>
-            <p>Unternehmen, deren Kunden regional suchen und vor einer Anfrage vergleichen, prüfen und Vertrauen aufbauen.</p>
+            <p>Für Betriebe, die bei lokalen Suchanfragen sichtbar sein wollen.</p>
           </article>
           <article class="card">
             <h3>Kleine KMU</h3>
-            <p>Betriebe ohne eigene Marketingabteilung, die eine klare, persönliche und umsetzbare Digitalstrategie benötigen.</p>
+            <p>Für Unternehmen, die ohne eigene Marketingabteilung vorankommen möchten.</p>
           </article>
         </div>
       </div>
     </section>
-
-    <div class="seo-strip">
-      <div class="wrap">
-        <strong>Search Everywhere statt nur SEO.</strong>
-        <p>Google bleibt wichtig. Aimpact denkt Sichtbarkeit zusätzlich über Maps, Content, Social und KI-Systeme – mit Conversion als verbindendem Ziel.</p>
-      </div>
-    </div>
 
     <section class="light" id="faq">
       <div class="wrap faq">

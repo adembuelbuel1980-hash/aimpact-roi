@@ -190,8 +190,11 @@
     .why-card p{color:var(--muted);font-size:.9rem;margin-top:8px}
 
     .contact{
-      display:grid;grid-template-columns:.85fr 1.15fr;gap:50px;align-items:start
+      display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start
     }
+    .contact h2{font-size:clamp(2rem,3.5vw,3.2rem);line-height:1.14;max-width:510px}
+    .contact .lead{font-size:1.04rem;line-height:1.65;max-width:480px}
+    .contact:has(.success[style*="block"]) .form-card{align-self:start}
     .form-card{background:var(--black-2);border:1px solid var(--line);border-radius:var(--radius);padding:30px}
     .form-group{margin-bottom:20px}
     .form-group label{
@@ -208,8 +211,10 @@
     }
     .form-submit:hover{background:var(--gold-2)}
     .success{
-      display:none;border:1px solid rgba(201,168,76,.4);border-radius:14px;padding:18px;color:var(--gold);margin-top:16px
+      display:none;border:1px solid rgba(201,168,76,.4);border-radius:14px;padding:28px;color:var(--white);line-height:1.6
     }
+    .success strong{display:block;color:var(--gold);font-size:1.25rem;margin-bottom:10px}
+    .success p{color:#d1cec6;font-size:.96rem}
 
     footer{
       border-top:1px solid var(--line);
@@ -399,9 +404,9 @@
       <div class="wrap contact">
         <div>
           <p class="eyebrow">Nächster Schritt</p>
-          <h2>Willst du wissen, wo dein grösstes Potenzial wirklich liegt?</h2>
+          <h2>Dein nächster Schritt.</h2>
           <p class="lead" style="margin-top:18px">
-            Dann schauen wir uns deinen digitalen Auftritt konkreter an und priorisieren die nächsten sinnvollen Schritte.
+            Du möchtest konkrete Empfehlungen? Frage ein kostenloses, persönliches Video-Audit an. Wir zeigen dir drei mögliche Verbesserungen.
           </p>
         </div>
 
@@ -425,10 +430,11 @@
               <label for="telefon">Telefon</label>
               <input id="telefon" type="tel" name="telefon" placeholder="+41 ...">
             </div>
-            <button class="form-submit" type="submit">Kostenlose Analyse anfragen</button>
+            <button class="form-submit" type="submit">Video-Audit kostenlos anfragen</button>
           </form>
-          <div class="success" id="success">
-            Danke. Deine Anfrage ist angekommen. Wir melden uns so bald wie möglich.
+          <div class="success" id="success" role="status" aria-live="polite" tabindex="-1">
+            <strong>Danke, deine Anfrage ist angekommen.</strong>
+            <p>Wir prüfen deine Angaben und melden uns persönlich bei dir, um die nächsten Schritte zu besprechen.</p>
           </div>
         </div>
       </div>
@@ -533,6 +539,7 @@
   });
 }
           success.style.display = 'block';
+          success.focus({preventScroll:true});
         }else{
           btn.disabled = false;
           btn.textContent = 'Bitte erneut versuchen';

@@ -408,6 +408,9 @@
           <p class="lead" style="margin-top:18px">
             Du möchtest konkrete Empfehlungen? Frage ein kostenloses, persönliches Video-Audit an. Wir zeigen dir drei mögliche Verbesserungen.
           </p>
+          <p style="margin-top:18px;color:var(--muted)">
+            Du führst ein Restaurant oder Café in Zürich? <a href="local-seo-gastronomie-zuerich.html" style="color:var(--gold);text-underline-offset:4px">Erfahre, wie Local SEO für Gastronomie funktioniert.</a>
+          </p>
         </div>
 
         <div class="form-card">
@@ -431,6 +434,8 @@
               <input id="telefon" type="tel" name="telefon" placeholder="+41 ...">
             </div>
             <button class="form-submit" type="submit">Video-Audit kostenlos anfragen</button>
+            <p style="margin-top:12px;font-size:.82rem;color:var(--muted);line-height:1.5">Wir verwenden deine Angaben ausschliesslich zur Bearbeitung deiner Anfrage. Weitere Informationen findest du in unserer <a href="datenschutz.html" style="color:var(--gold);text-underline-offset:3px">Datenschutzerklärung</a>.</p>
+            <p id="form-error" role="alert" aria-live="assertive" style="display:none;margin-top:12px;color:#ffb7aa"></p>
           </form>
           <div class="success" id="success" role="status" aria-live="polite" tabindex="-1">
             <strong>Danke, deine Anfrage ist angekommen.</strong>
@@ -520,6 +525,9 @@
       const btn = form.querySelector('.form-submit');
       const success = document.getElementById('success');
       const original = btn.textContent;
+      const errorMessage = document.getElementById('form-error');
+      errorMessage.style.display = 'none';
+      errorMessage.textContent = '';
       btn.disabled = true;
       btn.textContent = 'Wird gesendet...';
 
@@ -542,12 +550,15 @@
           success.focus({preventScroll:true});
         }else{
           btn.disabled = false;
-          btn.textContent = 'Bitte erneut versuchen';
+          btn.textContent = original;
+          errorMessage.textContent = 'Die Anfrage konnte nicht gesendet werden. Bitte versuche es erneut.';
+          errorMessage.style.display = 'block';
         }
       }catch(err){
         btn.disabled = false;
         btn.textContent = original;
-        alert('Die Anfrage konnte nicht gesendet werden. Bitte versuche es erneut.');
+        errorMessage.textContent = 'Die Anfrage konnte nicht gesendet werden. Prüfe deine Verbindung und versuche es erneut.';
+        errorMessage.style.display = 'block';
       }
     });
   </script>

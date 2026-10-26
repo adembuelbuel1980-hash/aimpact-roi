@@ -1,0 +1,56 @@
+name: Website-Check V3 security tests
+
+on:
+  push:
+    branches:
+      - feature/visibility-check-v2-20261010
+  pull_request:
+    paths:
+      - 'functions/api/website-check*.js'
+      - 'website-check.html'
+      - 'tests/website-check-security.test.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  security-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test Turnstile security and PageSpeed API contract
+        run: node --test tests/website-check-security.test.mjs
+
+  deployment-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - name: Verify Cloudflare Pages test deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="https://check.aimpact.ch"
+          curl --fail --show-error --silent --location --retry 6 --retry-all-errors --retry-delay 10 --max-time 30 \
+            "$BASE/website-check.html" -o /tmp/website-check-v3.html
+          test "$(wc -c < /tmp/website-check-v3.html)" -gt 1000
+          grep -Eiq 'website.check|website-check|PageSpeed|Lighthouse' /tmp/website-check-v3.html
+          grep -q 'id="lead-form"' /tmp/website-check-v3.html
+          grep -q 'action="https://formspree.io/f/mqeoqqgo"' /tmp/website-check-v3.html
+          grep -q 'id="lead-consent"' /tmp/website-check-v3.html
+          grep -q 'href="/datenschutz.html"' /tmp/website-check-v3.html
+          curl --fail --show-error --silent --location --retry 6 --retry-all-errors --retry-delay 10 --max-time 30 "$BASE/datenschutz.html" -o /tmp/website-check-datenschutz.html
+          grep -q 'PageSpeed Insights' /tmp/website-check-datenschutz.html
+          curl --fail --show-error --silent --retry 6 --retry-all-errors --retry-delay 10 --max-time 30 \
+            "$BASE/api/website-check-config" -o /tmp/website-check-config.json
+          python3 - <<'PY'
+          import json
+          with open('/tmp/website-check-config.json', encoding='utf-8') as f:
+              data = json.load(f)
+          assert isinstance(data.get('turnstileEnabled'), bool), 'Invalid API config response'
+          assert 'secret' not in json.dumps(data).lower(), 'Unexpected secret in public config'
+          print('Cloudflare test page and API config reachable')
+          PY

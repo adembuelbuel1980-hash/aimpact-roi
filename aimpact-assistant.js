@@ -29,10 +29,13 @@
     #aimpact-assistant-root{
       --aa-black:#0a0a0a;--aa-panel:#121212;--aa-panel2:#191919;--aa-gold:#c9a84c;
       --aa-gold2:#dfbd5e;--aa-white:#f6f4ee;--aa-muted:#a7a39a;--aa-line:rgba(255,255,255,.12);
-      position:relative;z-index:9999;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
+      position:relative;z-index:2147483000;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
     }
     #aa-launcher{
   position:fixed;
+  z-index:2147483001;
+  pointer-events:auto;
+  touch-action:manipulation;
   right:22px;
   bottom:22px;
   height:52px;
@@ -60,7 +63,7 @@
   color:var(--aa-gold)
 }
     #aa-window{
-      position:fixed;right:22px;bottom:92px;width:min(390px,calc(100vw - 28px));height:min(620px,calc(100vh - 125px));
+      position:fixed;z-index:2147483002;right:22px;bottom:92px;width:min(390px,calc(100vw - 28px));height:min(620px,calc(100vh - 125px));
       display:none;flex-direction:column;overflow:hidden;border:1px solid rgba(201,168,76,.32);border-radius:22px;
       background:var(--aa-black);color:var(--aa-white);box-shadow:0 28px 90px rgba(0,0,0,.55)
     }
@@ -91,8 +94,9 @@
     .aa-note{font-size:10px;color:#77736c;line-height:1.4;margin-top:9px}
     .aa-foot{padding:10px 14px;border-top:1px solid var(--aa-line);font-size:10px;color:#69665f;text-align:center;background:#0d0d0d}
     @media(max-width:600px){
-      #aa-launcher{right:14px;bottom:14px}
-      #aa-window{left:14px;right:14px;bottom:84px;width:auto;height:min(650px,calc(100vh - 106px))}
+      #aa-launcher{right:16px;bottom:calc(16px + env(safe-area-inset-bottom, 0px));width:52px;height:52px;padding:0;justify-content:center;font-size:0;gap:0}
+      #aa-launcher::before{content:"💬";font-size:23px;line-height:1}
+      #aa-window{left:14px;right:14px;bottom:calc(84px + env(safe-area-inset-bottom, 0px));width:auto;height:min(650px,calc(100vh - 106px - env(safe-area-inset-bottom, 0px)))}
     }
     @media(prefers-reduced-motion:reduce){#aa-launcher{transition:none}.aa-chat{scroll-behavior:auto}}
   `;
@@ -101,7 +105,7 @@
   const root = document.createElement('div');
   root.id = 'aimpact-assistant-root';
   root.innerHTML = `
-  <button id="aa-launcher" aria-label="Aimpact Assistant öffnen" aria-expanded="false">💬 Frag Aimpact</button>
+  <button type="button" id="aa-launcher" aria-label="Aimpact Assistant öffnen" aria-expanded="false">💬 Frag Aimpact</button>
     <section id="aa-window" role="dialog" aria-label="Aimpact Assistant" aria-hidden="true">
       <div class="aa-head">
         <div>

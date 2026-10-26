@@ -27,20 +27,36 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    "name": "Aimpact",
-    "url": "https://aimpact.ch/",
-    "description": "Digital Marketing für lokale Unternehmen mit Fokus auf Local SEO, Google Maps, Website-Optimierung, Content und AI Visibility.",
-    "areaServed": {
-      "@type": "City",
-      "name": "Zürich"
-    },
-    "serviceType": [
-      "Local SEO",
-      "Google Business Profile Optimierung",
-      "Website- und Conversion-Optimierung",
-      "Content Marketing",
-      "AI Visibility"
+    "@graph": [
+      {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        "name": "Aimpact",
+        "url": "https://aimpact.ch/",
+        "description": "Digital Marketing für lokale Unternehmen mit Fokus auf Local SEO, Google Maps, Website-Optimierung, Content und AI Visibility.",
+        "areaServed": {
+          "@type": "City",
+          "name": "Zürich"
+        },
+        "serviceType": [
+          "Local SEO",
+          "Google Business Profile Optimierung",
+          "Website- und Conversion-Optimierung",
+          "Content Marketing",
+          "AI Visibility"
+        ],
+        "@id": "https://aimpact.ch/#business"
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://aimpact.ch/#website",
+        "url": "https://aimpact.ch/",
+        "name": "Aimpact",
+        "inLanguage": "de-CH",
+        "publisher": {
+          "@id": "https://aimpact.ch/#business"
+        }
+      }
     ]
   }
   </script>

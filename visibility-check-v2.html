@@ -34,9 +34,20 @@ small{color:#aaa}.footer{padding-top:40px;padding-bottom:45px}
 .loading-indicator span{display:block;height:100%;width:32%;background:#c9a84c;border-radius:999px}
 @media(prefers-reduced-motion:no-preference){.loading-indicator span{animation:indeterminate 1.4s ease-in-out infinite}@keyframes indeterminate{0%{transform:translateX(-110%)}100%{transform:translateX(330%)}}}
 @media(prefers-reduced-motion:reduce){.loading-indicator span{width:100%}}
+
+.analysis-live{display:flex;align-items:center;gap:22px;padding:25px 10px}
+.analysis-ring{width:88px;height:88px;border-radius:50%;flex:0 0 88px;border:6px solid #39301a;border-top-color:#d9b658;border-right-color:#d9b658;animation:spin 1.2s linear infinite;display:grid;place-items:center}
+.analysis-ring::after{content:"";width:53px;height:53px;border-radius:50%;border:1px solid #7c6734}
+.analysis-title{font-size:1.15rem;font-weight:800;color:#e8c66d}
+.analysis-sub{color:#c6bfb1;font-size:.9rem}
+.result-enter{animation:resultIn .72s cubic-bezier(.2,.8,.25,1) both}
+.metric .number{font-variant-numeric:tabular-nums}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes resultIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.analysis-ring,.result-enter{animation:none!important}}
 </style></head>
 <body><header><div class="wrap"><div class="logo">A<span class="gold">I</span>MPACT</div><a href="index.html">Zur Startseite</a></div></header>
-<main class="wrap"><section class="hero"><p class="gold eyebrow">Kostenlos · Website-Check 2.3 · Vorschau</p>
+<main class="wrap"><section class="hero"><p class="gold eyebrow">Kostenlos · Website-Check 2.5 · Vorschau</p>
 <h1>Deine Website sieht gut aus. <span class="gold">Aber funktioniert sie auch?</span></h1>
 <p class="muted">Prüfe technische Grundlagen deiner Website mit echten Messwerten von Google PageSpeed Insights. Ohne Anmeldung, ohne geschätzten Gesamtscore.</p></section>
 <section class="card" aria-label="Website-Analyse"><form id="check"><div class="form-grid">
@@ -52,6 +63,13 @@ small{color:#aaa}.footer{padding-top:40px;padding-bottom:45px}
 </main><footer class="wrap footer"><small>© Aimpact Zürich · <a href="datenschutz.html">Datenschutz</a> · <a href="impressum.html">Impressum</a></small></footer>
 <script>
 const form=document.getElementById('check'), out=document.getElementById('results'),button=document.getElementById('go');
+const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function animateScore(node,to){
+ if(reduceMotion){node.textContent=to+'/100';return}
+ const start=performance.now(),duration=1050;
+ function frame(t){const p=Math.min(1,(t-start)/duration),ease=1-Math.pow(1-p,3);node.textContent=Math.round(to*ease)+'/100';if(p<1)requestAnimationFrame(frame)}
+ requestAnimationFrame(frame);
+}
 function el(tag,cls,txt){const n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=txt;return n}
 function showError(message){out.replaceChildren(el('p','status',message));out.hidden=false}
 function normalise(v){let s=v.trim();if(!/^https?:\/\//i.test(s))s='https://'+s;const u=new URL(s);if(!['https:','http:'].includes(u.protocol)||!u.hostname.includes('.')||u.username||u.password||u.port)throw Error('Bitte eine gültige öffentliche Website-Adresse eingeben.');return u}
@@ -61,13 +79,13 @@ function advice(data){
  return ['Bei den ausgewählten Einzelprüfungen wurden keine erheblichen Probleme festgestellt. Für eine umfassende Bewertung sollten weitere technische Prüfungen und Kontaktwege geprüft werden.'];
 }
 function render(data){
- out.replaceChildren();out.hidden=false;
+ out.replaceChildren();out.hidden=false;out.classList.remove('result-enter');void out.offsetWidth;out.classList.add('result-enter');
  const head=el('div');head.append(el('p','gold eyebrow','Google-Analyse abgeschlossen'),el('h2','', 'Deine Ergebnisse'),el('p','muted','Geprüfte Website: '+data.url));out.append(head);
  const auditLink=document.getElementById('auditLink');auditLink.href='sichtbarkeits-check.html?website='+encodeURIComponent(data.url)+'#kontakt';
  const scores=data.scores||{},grid=el('div','metrics');
  for(const name of ['Performance','SEO','Barrierefreiheit']){
   const n=scores[name],valid=typeof n==='number'&&n>=0&&n<=100;
-  const card=el('div','metric');card.append(el('span','name',name),el('span','number',valid?n+'/100':'Nicht verfügbar'));
+  const card=el('div','metric');const number=el('span','number',valid&&!reduceMotion?'0/100':valid?n+'/100':'Nicht verfügbar');card.append(el('span','name',name),number);if(valid)animateScore(number,n);
   const track=el('div','track'),fill=el('div','fill');fill.style.width=valid?n+'%':'0%';track.append(fill);card.append(track);grid.append(card)
  }out.append(grid);
  const details=el('div','details');
@@ -77,7 +95,7 @@ function render(data){
  out.append(el('p','note','Quelle: Google PageSpeed Insights, mobile Lighthouse-Prüfung. Empfehlungen beruhen auf ausgewählten, tatsächlich gelieferten Lighthouse-Einzelprüfungen. Ein fehlender Hinweis ist kein Nachweis für Fehlerfreiheit.'));
 }
 form.addEventListener('submit',async function(e){
- e.preventDefault();out.hidden=false;out.replaceChildren(el('p','status','Analyse läuft. Google prüft deine Website …'));const indicator=el('div','loading-indicator');indicator.setAttribute('aria-hidden','true');indicator.append(el('span'));out.append(indicator);
+ e.preventDefault();out.hidden=false;out.replaceChildren();const live=el('div','analysis-live');const ring=el('div','analysis-ring');ring.setAttribute('aria-hidden','true');const texts=el('div');const heading=el('div','analysis-title','Google analysiert deine Website');const sub=el('div','analysis-sub','Technische Signale werden geprüft …');texts.append(heading,sub);live.append(ring,texts);out.append(live);
  let url;try{url=normalise(document.getElementById('url').value)}catch(err){showError(err.message);return}
  button.disabled=true;button.textContent='Analyse läuft …';
  try{const response=await fetch('/api/visibility-check?url='+encodeURIComponent(url.href));let data;try{data=await response.json()}catch{throw Error('Die Serverantwort konnte nicht gelesen werden.')}

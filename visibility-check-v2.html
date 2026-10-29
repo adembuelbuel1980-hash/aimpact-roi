@@ -20,7 +20,7 @@ small{color:#aaa}.footer{padding-top:40px;padding-bottom:45px}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 </style></head>
 <body><header><div class="wrap"><div class="logo">A<span class="gold">I</span>MPACT</div><a href="index.html">Zur Startseite</a></div></header>
-<main class="wrap"><section class="hero"><p class="gold eyebrow">Kostenlos · Website-Check 2.1 · Vorschau</p>
+<main class="wrap"><section class="hero"><p class="gold eyebrow">Kostenlos · Website-Check 2.2 · Vorschau</p>
 <h1>Deine Website sieht gut aus. <span class="gold">Aber funktioniert sie auch?</span></h1>
 <p class="muted">Prüfe technische Grundlagen deiner Website mit echten Messwerten von Google PageSpeed Insights. Ohne Anmeldung, ohne geschätzten Gesamtscore.</p></section>
 <section class="card" aria-label="Website-Analyse"><form id="check"><div class="form-grid">
@@ -39,15 +39,10 @@ const form=document.getElementById('check'), out=document.getElementById('result
 function el(tag,cls,txt){const n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=txt;return n}
 function showError(message){out.replaceChildren(el('p','status',message));out.hidden=false}
 function normalise(v){let s=v.trim();if(!/^https?:\/\//i.test(s))s='https://'+s;const u=new URL(s);if(!['https:','http:'].includes(u.protocol)||!u.hostname.includes('.')||u.username||u.password||u.port)throw Error('Bitte eine gültige öffentliche Website-Adresse eingeben.');return u}
-function advice(scores,metrics){
- const items=[];
- const p=scores.Performance,s=scores.SEO,a=scores.Barrierefreiheit;
- if(p!==null&&p<90)items.push('Performance verbessern: Bilder optimieren, unnötige Skripte reduzieren und Ladezeiten auf Mobilgeräten untersuchen.');
- if(s!==null&&s<90)items.push('Technische SEO-Hinweise prüfen: Seitentitel, Indexierbarkeit und interne Verlinkung kontrollieren.');
- if(a!==null&&a<90)items.push('Barrierefreiheit verbessern: Kontraste, Beschriftungen und Tastaturbedienbarkeit prüfen.');
- if(items.length===0)items.push('Die geprüften Kategorien haben hohe Werte. Als Nächstes lokale Auffindbarkeit, Kontaktwege und Inhalte manuell analysieren.');
- items.push('Die Ergebnisse sind eine technische Momentaufnahme, keine Aussage über Google-Maps-Platzierungen oder KI-Empfehlungen.');
- return items.slice(0,3)
+function advice(data){
+ const findings=Array.isArray(data.findings)?data.findings:[];
+ if(findings.length)return findings.map(f=>f.title+': '+f.recommendation+(f.detail?' (Messhinweis: '+f.detail+')':''));
+ return ['Bei den ausgewählten Einzelprüfungen wurden keine erheblichen Probleme festgestellt. Für eine umfassende Bewertung sollten weitere technische Prüfungen und Kontaktwege geprüft werden.'];
 }
 function render(data){
  out.replaceChildren();out.hidden=false;
@@ -61,8 +56,8 @@ function render(data){
  const details=el('div','details');
  for(const [key,value] of Object.entries(data.metrics||{})){const d=el('div','detail');d.append(el('strong','',key),el('p','',String(value)));details.append(d)}out.append(details);
  const section=el('section');section.append(el('h2','', 'Was du als Nächstes prüfen solltest'));
- const ul=el('ul','recs');for(const tip of advice(scores,data.metrics))ul.append(el('li','',tip));section.append(ul);out.append(section);
- out.append(el('p','note','Quelle: Google PageSpeed Insights, mobile Lighthouse-Prüfung. Empfehlungen sind allgemeine Hinweise anhand der Kategorien, keine vollständige Einzelprüfung.'));
+ const ul=el('ul','recs');for(const tip of advice(data))ul.append(el('li','',tip));section.append(ul);out.append(section);
+ out.append(el('p','note','Quelle: Google PageSpeed Insights, mobile Lighthouse-Prüfung. Empfehlungen beruhen auf ausgewählten, tatsächlich gelieferten Lighthouse-Einzelprüfungen. Ein fehlender Hinweis ist kein Nachweis für Fehlerfreiheit.'));
 }
 form.addEventListener('submit',async function(e){
  e.preventDefault();out.hidden=false;out.replaceChildren(el('p','status','Analyse läuft. Google prüft deine Website …'));

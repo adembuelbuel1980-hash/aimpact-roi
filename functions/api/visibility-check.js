@@ -60,6 +60,26 @@ export async function onRequestGet({ request, env }) {
   const audits = data.lighthouseResult?.audits || {};
   const score = id => typeof categories[id]?.score === 'number' ? Math.round(categories[id].score * 100) : null;
   const metric = id => audits[id]?.displayValue || 'Nicht verfügbar';
+  // Only include observed Lighthouse audit signals, never invented local rankings.
+  const checks = [
+    ['render-blocking-resources','Renderblockierende Ressourcen','Nicht benötigte CSS-/JavaScript-Ressourcen reduzieren.'],
+    ['unused-javascript','Ungenutztes JavaScript','Nicht benötigte Skripte entfernen oder später laden.'],
+    ['modern-image-formats','Bildformate','Geeignete moderne Bildformate prüfen.'],
+    ['uses-optimized-images','Bildoptimierung','Bilddateien komprimieren und passend dimensionieren.'],
+    ['uses-responsive-images','Responsive Bilder','Bildgrössen für Mobilgeräte anpassen.'],
+    ['image-alt','Bildbeschreibungen','Aussagekräftige Alternativtexte ergänzen.'],
+    ['document-title','Seitentitel','Einen klaren, eindeutigen Seitentitel prüfen.'],
+    ['meta-description','Meta-Beschreibung','Eine aussagekräftige Meta-Beschreibung hinterlegen.'],
+    ['crawlable-anchors','Crawlbare Links','Links als echte, zugängliche Verweise bereitstellen.'],
+    ['color-contrast','Textkontrast','Kontraste für bessere Lesbarkeit korrigieren.'],
+    ['label','Formularbeschriftungen','Eingabefelder eindeutig beschriften.'],
+    ['tap-targets','Klickflächen','Klickflächen ausreichend gross und mit Abstand gestalten.']
+  ];
+  const findings = checks.flatMap(([id,title,recommendation])=>{
+    const a=audits[id];
+    if (!a || typeof a.score !== 'number' || a.score >= 0.9 || a.scoreDisplayMode === 'notApplicable') return [];
+    return [{ title, recommendation, score: Math.round(a.score*100), detail: String(a.displayValue||'').slice(0,120) }];
+  }).sort((a,b)=>a.score-b.score).slice(0,3);
   const output = Response.json({
     url: website.href,
     scores: { Performance: score('performance'), SEO: score('seo'), Barrierefreiheit: score('accessibility') },
@@ -68,7 +88,8 @@ export async function onRequestGet({ request, env }) {
       'Cumulative Layout Shift': metric('cumulative-layout-shift')
     },
     source: 'Google PageSpeed Insights',
-    method: 'mobile'
+    method: 'mobile',
+    findings
   }, { headers: { 'Cache-Control': 'public, max-age=300, s-maxage=86400' } });
   await cache.put(cacheKey, output.clone());
   return output;

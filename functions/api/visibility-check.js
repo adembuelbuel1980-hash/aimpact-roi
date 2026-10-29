@@ -1,21 +1,75 @@
-export async function onRequestGet({request}) {
-  const requestUrl=new URL(request.url), input=requestUrl.searchParams.get('url');
-  if(!input)return Response.json({error:'Website-Adresse fehlt.'},{status:400});
+export async function onRequestGet({ request, env }) {
+  const input = new URL(request.url).searchParams.get('url');
+  if (!input) return Response.json({ error: 'Website-Adresse fehlt.' }, { status: 400 });
   let website;
-  try{
-    website=new URL(input);
-    if(!['http:','https:'].includes(website.protocol)||website.username||website.password||!website.hostname.includes('.')||website.hostname.length>253|| /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|169\.254\.|0\.|::1)/i.test(website.hostname))throw Error();
-    if(website.port&& !['80','443'].includes(website.port))throw Error();
-  }catch{return Response.json({error:'Bitte eine gültige öffentliche Website-Adresse eingeben.'},{status:400})}
-  const endpoint='https://www.googleapis.com/pagespeedonline/v5/runPagespeed?strategy=mobile&category=PERFORMANCE&category=SEO&category=ACCESSIBILITY&url='+encodeURIComponent(website.href);
-  try{
-    const ctrl=new AbortController(), timeout=setTimeout(()=>ctrl.abort(),25000);
-    let response;
-    try{response=await fetch(endpoint,{signal:ctrl.signal,headers:{Accept:'application/json'}})}finally{clearTimeout(timeout)}
-    if(!response.ok)return Response.json({error:'Google PageSpeed Insights ist momentan nicht verfügbar (HTTP '+response.status+').'}, {status:503});
-    const data=await response.json(),categories=data.lighthouseResult?.categories||{},audits=data.lighthouseResult?.audits||{};
-    const getScore=id=>typeof categories[id]?.score==='number'?Math.round(categories[id].score*100):null;
-    const measure=id=>audits[id]?.displayValue||'Nicht verfügbar';
-    return Response.json({url:website.href,scores:{Performance:getScore('performance'),SEO:getScore('seo'),Barrierefreiheit:getScore('accessibility')},metrics:{'Largest Contentful Paint':measure('largest-contentful-paint'),'Cumulative Layout Shift':measure('cumulative-layout-shift')},source:'Google PageSpeed Insights',method:'mobile'},{headers:{'Cache-Control':'no-store','Access-Control-Allow-Origin':'https://aimpact.ch'}});
-  }catch{return Response.json({error:'Die Google-Messung konnte nicht abgeschlossen werden.'},{status:503})}
+  try {
+    website = new URL(input);
+    const host = website.hostname.toLowerCase();
+    if (!['https:', 'http:'].includes(website.protocol) ||
+        website.username || website.password || website.port ||
+        !host.includes('.') || host.length > 253 ||
+        /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|169\.254\.|0\.|::1)/i.test(host) ||
+        host.endsWith('.local') || host.endsWith('.internal')) throw Error();
+  } catch {
+    return Response.json({ error: 'Bitte eine gültige öffentliche Website-Adresse eingeben.' }, { status: 400 });
+  }
+
+  // A configured key uses the Google Cloud project's own quota.
+  // Store it as a Cloudflare Pages secret named PAGESPEED_API_KEY.
+  const key = env?.PAGESPEED_API_KEY;
+  if (!key) return Response.json({
+    error: 'Die automatische Messung ist noch nicht freigeschaltet. Ein PageSpeed-API-Schlüssel muss in Cloudflare konfiguriert werden.',
+    code: 'API_KEY_NOT_CONFIGURED'
+  }, { status: 503 });
+
+  const endpoint = new URL('https://www.googleapis.com/pagespeedonline/v5/runPagespeed');
+  endpoint.searchParams.set('strategy', 'mobile');
+  for (const c of ['PERFORMANCE', 'SEO', 'ACCESSIBILITY']) endpoint.searchParams.append('category', c);
+  endpoint.searchParams.set('url', website.href);
+  endpoint.searchParams.set('key', key);
+
+  // Cache only successful results for 24h, without storing the API key in the cache URL.
+  const cacheKey = new Request('https://aimpact-cache.invalid/psi?url=' + encodeURIComponent(website.href), { method: 'GET' });
+  const cache = caches.default;
+  const cached = await cache.match(cacheKey);
+  if (cached) return cached;
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 25000);
+  let response;
+  try {
+    response = await fetch(endpoint.toString(), { signal: controller.signal, headers: { Accept: 'application/json' } });
+  } catch {
+    return Response.json({ error: 'Google PageSpeed Insights konnte nicht erreicht werden.' }, { status: 503 });
+  } finally {
+    clearTimeout(timeout);
+  }
+
+  if (response.status === 429) {
+    return Response.json({ error: 'Google hat das API-Limit erreicht. Die Messung ist zurzeit nicht möglich; bitte später erneut versuchen.', code: 'GOOGLE_RATE_LIMIT' }, { status: 503 });
+  }
+  if (!response.ok) {
+    return Response.json({ error: 'Google konnte diese Website momentan nicht analysieren (HTTP ' + response.status + ').' }, { status: 503 });
+  }
+
+  let data;
+  try { data = await response.json(); }
+  catch { return Response.json({ error: 'Google hat eine ungültige Antwort geliefert.' }, { status: 503 }); }
+
+  const categories = data.lighthouseResult?.categories || {};
+  const audits = data.lighthouseResult?.audits || {};
+  const score = id => typeof categories[id]?.score === 'number' ? Math.round(categories[id].score * 100) : null;
+  const metric = id => audits[id]?.displayValue || 'Nicht verfügbar';
+  const output = Response.json({
+    url: website.href,
+    scores: { Performance: score('performance'), SEO: score('seo'), Barrierefreiheit: score('accessibility') },
+    metrics: {
+      'Largest Contentful Paint': metric('largest-contentful-paint'),
+      'Cumulative Layout Shift': metric('cumulative-layout-shift')
+    },
+    source: 'Google PageSpeed Insights',
+    method: 'mobile'
+  }, { headers: { 'Cache-Control': 'public, max-age=300, s-maxage=86400' } });
+  await cache.put(cacheKey, output.clone());
+  return output;
 }

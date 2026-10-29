@@ -29,7 +29,7 @@ export async function onRequestGet({ request, env }) {
   endpoint.searchParams.set('key', key);
 
   // Cache only successful results for 24h, without storing the API key in the cache URL.
-  const cacheKey = new Request('https://aimpact-cache.invalid/psi-v22?url=' + encodeURIComponent(website.href), { method: 'GET' });
+  const cacheKey = new Request('https://aimpact-cache.invalid/psi-v23?url=' + encodeURIComponent(website.href), { method: 'GET' });
   const cache = caches.default;
   const cached = await cache.match(cacheKey);
   if (cached) return cached;
@@ -78,7 +78,12 @@ export async function onRequestGet({ request, env }) {
   const findings = checks.flatMap(([id,title,recommendation])=>{
     const a=audits[id];
     if (!a || typeof a.score !== 'number' || a.score >= 0.9 || a.scoreDisplayMode === 'notApplicable') return [];
-    return [{ title, recommendation, score: Math.round(a.score*100), detail: String(a.displayValue||'').slice(0,120) }];
+    const rows=Array.isArray(a.details?.items)?a.details.items:[];
+    const examples=rows.slice(0,2).map(item=>{
+      const candidate=item.url||item.node?.snippet||item.node?.selector||item.source?.url||'';
+      return String(candidate).slice(0,180);
+    }).filter(Boolean);
+    return [{ title, recommendation, score: Math.round(a.score*100), detail: String(a.displayValue||'').slice(0,120), examples }];
   }).sort((a,b)=>a.score-b.score).slice(0,3);
   const output = Response.json({
     url: website.href,

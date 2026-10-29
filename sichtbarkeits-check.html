@@ -527,6 +527,8 @@
         const parsed = new URL(websiteFromCheck);
         if ((parsed.protocol === 'https:' || parsed.protocol === 'http:') && parsed.hostname.includes('.')) {
           document.getElementById('gepruefteWebsite').value = parsed.href;
+          document.getElementById('hiddenScore').value = '';
+          document.querySelector('input[name="source"]').value = 'Automatischer Website-Check → persönliche Sichtbarkeitsanalyse';
           document.getElementById('websiteSummaryText').textContent = parsed.hostname;
           document.getElementById('websiteSummary').style.display = 'block';
         }
@@ -535,6 +537,8 @@
     const form = document.getElementById('kontakt-form');
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (form.dataset.submitting === 'true' || form.dataset.sent === 'true') return;
+      form.dataset.submitting = 'true';
       const btn = form.querySelector('.form-submit');
       const success = document.getElementById('success');
       const original = btn.textContent;
@@ -552,16 +556,19 @@
         });
 
         if(response.ok){
+          form.dataset.sent = 'true';
           form.style.display = 'none';
           if(typeof window.gtag === 'function'){
   window.gtag('event','generate_lead',{
-    lead_source:'visibility_check',
-    form_name:'Aimpact Visibility Check'
+    lead_source: document.getElementById('gepruefteWebsite').value ? 'automated_website_check' : 'self_assessment',
+    form_name:'Kostenlose Sichtbarkeitsanalyse'
   });
 }
           success.style.display = 'block';
+          success.querySelector('strong').textContent = 'Danke! Deine Anfrage wurde übermittelt.';
           success.focus({preventScroll:true});
         }else{
+          form.dataset.submitting = 'false';
           btn.disabled = false;
           btn.textContent = original;
           errorMessage.textContent = 'Die Anfrage konnte nicht gesendet werden. Bitte versuche es erneut.';

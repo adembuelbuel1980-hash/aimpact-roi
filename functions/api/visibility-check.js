@@ -29,7 +29,7 @@ export async function onRequestGet({ request, env }) {
   endpoint.searchParams.set('key', key);
 
   // Cache only successful results for 24h, without storing the API key in the cache URL.
-  const cacheKey = new Request('https://aimpact-cache.invalid/psi?url=' + encodeURIComponent(website.href), { method: 'GET' });
+  const cacheKey = new Request('https://aimpact-cache.invalid/psi-v22?url=' + encodeURIComponent(website.href), { method: 'GET' });
   const cache = caches.default;
   const cached = await cache.match(cacheKey);
   if (cached) return cached;

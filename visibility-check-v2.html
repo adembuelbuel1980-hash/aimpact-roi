@@ -20,7 +20,7 @@ small{color:#aaa}.footer{padding-top:40px;padding-bottom:45px}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 </style></head>
 <body><header><div class="wrap"><div class="logo">A<span class="gold">I</span>MPACT</div><a href="index.html">Zur Startseite</a></div></header>
-<main class="wrap"><section class="hero"><p class="gold eyebrow">Kostenlos · Website-Check 2.2 · Vorschau</p>
+<main class="wrap"><section class="hero"><p class="gold eyebrow">Kostenlos · Website-Check 2.3 · Vorschau</p>
 <h1>Deine Website sieht gut aus. <span class="gold">Aber funktioniert sie auch?</span></h1>
 <p class="muted">Prüfe technische Grundlagen deiner Website mit echten Messwerten von Google PageSpeed Insights. Ohne Anmeldung, ohne geschätzten Gesamtscore.</p></section>
 <section class="card" aria-label="Website-Analyse"><form id="check"><div class="form-grid">
@@ -41,12 +41,13 @@ function showError(message){out.replaceChildren(el('p','status',message));out.hi
 function normalise(v){let s=v.trim();if(!/^https?:\/\//i.test(s))s='https://'+s;const u=new URL(s);if(!['https:','http:'].includes(u.protocol)||!u.hostname.includes('.')||u.username||u.password||u.port)throw Error('Bitte eine gültige öffentliche Website-Adresse eingeben.');return u}
 function advice(data){
  const findings=Array.isArray(data.findings)?data.findings:[];
- if(findings.length)return findings.map(f=>f.title+': '+f.recommendation+(f.detail?' (Messhinweis: '+f.detail+')':''));
+ if(findings.length)return findings.map(f=>f.title+': '+f.recommendation+(f.detail?' (Messhinweis: '+f.detail+')':'')+(Array.isArray(f.examples)&&f.examples.length?' Betroffene Beispiele: '+f.examples.join(' | '):''));
  return ['Bei den ausgewählten Einzelprüfungen wurden keine erheblichen Probleme festgestellt. Für eine umfassende Bewertung sollten weitere technische Prüfungen und Kontaktwege geprüft werden.'];
 }
 function render(data){
  out.replaceChildren();out.hidden=false;
  const head=el('div');head.append(el('p','gold eyebrow','Google-Analyse abgeschlossen'),el('h2','', 'Deine Ergebnisse'),el('p','muted','Geprüfte Website: '+data.url));out.append(head);
+ const auditLink=document.getElementById('auditLink');auditLink.href='sichtbarkeits-check.html?website='+encodeURIComponent(data.url)+'#kontakt';
  const scores=data.scores||{},grid=el('div','metrics');
  for(const name of ['Performance','SEO','Barrierefreiheit']){
   const n=scores[name],valid=typeof n==='number'&&n>=0&&n<=100;

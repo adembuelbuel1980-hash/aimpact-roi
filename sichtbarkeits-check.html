@@ -417,6 +417,7 @@
           <form id="kontakt-form" action="https://formspree.io/f/mqeoqqgo" method="POST">
             <input type="hidden" name="source" value="Aimpact Visibility Check">
             <input type="hidden" name="visibility_score" id="hiddenScore" value="">
+            <input type="hidden" name="gepruefte_website" id="gepruefteWebsite" value="">
             <div class="form-group">
               <label for="name">Name</label>
               <input id="name" type="text" name="name" placeholder="Dein Name" required>
@@ -519,6 +520,15 @@
     ids.forEach(id => document.getElementById(id).addEventListener('input', update));
     update();
 
+    const websiteFromCheck = new URLSearchParams(window.location.search).get('website');
+    if (websiteFromCheck) {
+      try {
+        const parsed = new URL(websiteFromCheck);
+        if ((parsed.protocol === 'https:' || parsed.protocol === 'http:') && parsed.hostname.includes('.')) {
+          document.getElementById('gepruefteWebsite').value = parsed.href;
+        }
+      } catch (error) {}
+    }
     const form = document.getElementById('kontakt-form');
     form.addEventListener('submit', async (e) => {
       e.preventDefault();

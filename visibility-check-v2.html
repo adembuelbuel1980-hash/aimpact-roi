@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="de-CH"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Aimpact | Kostenloser Website-Check – Test</title>
+<style>
+:root{color-scheme:dark;--bg:#0a0a0a;--gold:#c9a84c;--ink:#f5f2ea;--muted:#b9b4a9;--line:#49412c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
+.wrap{max-width:1050px;margin:auto;padding:26px 22px}header{border-bottom:1px solid #252525}header .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.logo{font-size:1.3rem;font-weight:900;letter-spacing:.15em}a{color:#dfbe64}a:hover{text-decoration-thickness:2px}h1{font-size:clamp(2.3rem,6vw,4rem);line-height:1.09;letter-spacing:-.03em;margin:20px 0}h2{font-size:clamp(1.4rem,3vw,2rem);line-height:1.2}.gold{color:var(--gold)}.muted,.note{color:var(--muted)}.note{font-size:.85rem}
+.hero{padding-top:58px;padding-bottom:28px}.eyebrow{font-size:.8rem;letter-spacing:.14em;font-weight:800;text-transform:uppercase}
+.card{border:1px solid var(--line);background:#16140f;border-radius:20px;padding:clamp(18px,4vw,32px)}.form-grid{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end}
+label{display:block;font-weight:700;margin-bottom:8px}input{width:100%;min-height:52px;border:1px solid #65605a;background:#222;color:white;padding:12px 15px;border-radius:12px;font:inherit}
+button,.cta{border:0;background:var(--gold);color:#12100b;padding:15px 24px;min-height:52px;border-radius:12px;font:inherit;font-weight:800;cursor:pointer;text-align:center;text-decoration:none;display:inline-block}
+button:disabled{opacity:.6;cursor:wait}button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid white;outline-offset:3px}
+#results{margin-top:28px}#results[hidden]{display:none}.status{margin:0;padding:14px;border:1px solid #807046;border-radius:10px}.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.metric{border:1px solid #49412c;border-radius:14px;padding:20px;background:#111}.metric .number{display:block;font-size:clamp(2.3rem,5vw,3.4rem);font-weight:900;line-height:1.25}.metric .name{color:#d1cec6;font-size:.9rem}.metric .track{height:7px;background:#333;border-radius:6px;overflow:hidden;margin-top:12px}.metric .fill{height:100%;background:#c9a84c}
+.details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px}.detail{background:#1b1b1b;padding:18px;border:1px solid #333;border-radius:12px}
+.recs{padding-left:22px}.recs li{margin:12px 0}.audit{background:#1a160d;border:1px solid #80672c;border-radius:18px;margin:25px 0;padding:25px}
+small{color:#aaa}.footer{padding-top:40px;padding-bottom:45px}
+@media(max-width:650px){.form-grid,.metrics,.details{grid-template-columns:1fr}.hero{padding-top:35px}.form-grid button{width:100%}.wrap{padding-left:16px;padding-right:16px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* Motion only enhances the interface; analysis uses actual API data. */
+@media(prefers-reduced-motion:no-preference){
+ .metric{animation:reveal .55s both}
+ .metric:nth-child(2){animation-delay:.12s}.metric:nth-child(3){animation-delay:.24s}
+ .metric .fill{transform-origin:left;animation:fillbar .85s ease-out both}
+ .audit .cta,button{transition:transform .18s ease,filter .18s ease}
+ .audit .cta:hover,button:not(:disabled):hover{transform:translateY(-2px);filter:brightness(1.08)}
+ .recs li{animation:reveal .45s ease both}.recs li:nth-child(2){animation-delay:.1s}.recs li:nth-child(3){animation-delay:.2s}
+ @keyframes reveal{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+ @keyframes fillbar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+}
+.loading-indicator{height:4px;overflow:hidden;background:#393323;border-radius:999px;margin:12px 0}
+.loading-indicator span{display:block;height:100%;width:32%;background:#c9a84c;border-radius:999px}
+@media(prefers-reduced-motion:no-preference){.loading-indicator span{animation:indeterminate 1.4s ease-in-out infinite}@keyframes indeterminate{0%{transform:translateX(-110%)}100%{transform:translateX(330%)}}}
+@media(prefers-reduced-motion:reduce){.loading-indicator span{width:100%}}
+
+.analysis-live{display:flex;align-items:center;gap:22px;padding:25px 10px}
+.analysis-ring{width:88px;height:88px;border-radius:50%;flex:0 0 88px;border:6px solid #39301a;border-top-color:#d9b658;border-right-color:#d9b658;animation:spin 1.2s linear infinite;display:grid;place-items:center}
+.analysis-ring::after{content:"";width:53px;height:53px;border-radius:50%;border:1px solid #7c6734}
+.analysis-title{font-size:1.15rem;font-weight:800;color:#e8c66d}
+.analysis-sub{color:#c6bfb1;font-size:.9rem}
+.result-enter{animation:resultIn .72s cubic-bezier(.2,.8,.25,1) both}
+.metric .number{font-variant-numeric:tabular-nums}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes resultIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.analysis-ring,.result-enter{animation:none!important}}
+</style></head>
+<body><header><div class="wrap"><div class="logo">A<span class="gold">I</span>MPACT</div><a href="index.html">Zur Startseite</a></div></header>
+<main class="wrap"><section class="hero"><p class="gold eyebrow">Kostenlos · Website-Check 2.5 · Vorschau</p>
+<h1>Deine Website sieht gut aus. <span class="gold">Aber funktioniert sie auch?</span></h1>
+<p class="muted">Prüfe technische Grundlagen deiner Website mit echten Messwerten von Google PageSpeed Insights. Ohne Anmeldung, ohne geschätzten Gesamtscore.</p></section>
+<section class="card" aria-label="Website-Analyse"><form id="check"><div class="form-grid">
+<div><label for="url">Welche Website sollen wir prüfen?</label><input id="url" name="url" type="text" inputmode="url" autocomplete="url" placeholder="www.dein-unternehmen.ch" required></div>
+<button id="go" type="submit">Kostenlos prüfen →</button></div></form>
+<p class="note">Mobilmessung · Performance · Technische SEO-Prüfungen · Barrierefreiheit</p>
+<div id="results" hidden aria-live="polite"></div></section>
+<section class="audit"><p class="gold eyebrow">DEIN NÄCHSTER SCHRITT</p><h2>Entdecke, wo dein Unternehmen Kunden verliert.</h2>
+<p>Wir prüfen deine Online-Sichtbarkeit persönlich und zeigen dir drei konkrete Verbesserungen, mit denen du mehr potenzielle Kunden erreichen kannst. Die Analyse erhältst du als kurzes, verständliches Video.</p>
+<a class="cta" id="auditLink" href="sichtbarkeits-check.html#kontakt">Kostenlose Sichtbarkeitsanalyse anfragen →</a>
+<p class="note">Kostenlos · Persönlich · Unverbindlich. Die technische Analyse wird nicht automatisch versendet.</p></section>
+<p class="note">Diese Testversion misst weder tatsächliche Google-Rankings noch KI-Empfehlungen. PageSpeed-Messwerte können schwanken. Der bestehende Visibility Check bleibt unverändert.</p>
+</main><footer class="wrap footer"><small>© Aimpact Zürich · <a href="datenschutz.html">Datenschutz</a> · <a href="impressum.html">Impressum</a></small></footer>
+<script>
+const form=document.getElementById('check'), out=document.getElementById('results'),button=document.getElementById('go');
+const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function animateScore(node,to){
+ if(reduceMotion){node.textContent=to+'/100';return}
+ const start=performance.now(),duration=1050;
+ function frame(t){const p=Math.min(1,(t-start)/duration),ease=1-Math.pow(1-p,3);node.textContent=Math.round(to*ease)+'/100';if(p<1)requestAnimationFrame(frame)}
+ requestAnimationFrame(frame);
+}
+function el(tag,cls,txt){const n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=txt;return n}
+function showError(message){out.replaceChildren(el('p','status',message));out.hidden=false}
+function normalise(v){let s=v.trim();if(!/^https?:\/\//i.test(s))s='https://'+s;const u=new URL(s);if(!['https:','http:'].includes(u.protocol)||!u.hostname.includes('.')||u.username||u.password||u.port)throw Error('Bitte eine gültige öffentliche Website-Adresse eingeben.');return u}
+function advice(data){
+ const findings=Array.isArray(data.findings)?data.findings:[];
+ if(findings.length)return findings.map(f=>f.title+': '+f.recommendation+(f.detail?' (Messhinweis: '+f.detail+')':'')+(Array.isArray(f.examples)&&f.examples.length?' Betroffene Beispiele: '+f.examples.join(' | '):''));
+ return ['Bei den ausgewählten Einzelprüfungen wurden keine erheblichen Probleme festgestellt. Für eine umfassende Bewertung sollten weitere technische Prüfungen und Kontaktwege geprüft werden.'];
+}
+function render(data){
+ out.replaceChildren();out.hidden=false;out.classList.remove('result-enter');void out.offsetWidth;out.classList.add('result-enter');
+ const head=el('div');head.append(el('p','gold eyebrow','Google-Analyse abgeschlossen'),el('h2','', 'Deine Ergebnisse'),el('p','muted','Geprüfte Website: '+data.url));out.append(head);
+ const auditLink=document.getElementById('auditLink');auditLink.href='sichtbarkeits-check.html?website='+encodeURIComponent(data.url)+'#kontakt';
+ const scores=data.scores||{},grid=el('div','metrics');
+ for(const name of ['Performance','SEO','Barrierefreiheit']){
+  const n=scores[name],valid=typeof n==='number'&&n>=0&&n<=100;
+  const card=el('div','metric');const number=el('span','number',valid&&!reduceMotion?'0/100':valid?n+'/100':'Nicht verfügbar');card.append(el('span','name',name),number);if(valid)animateScore(number,n);
+  const track=el('div','track'),fill=el('div','fill');fill.style.width=valid?n+'%':'0%';track.append(fill);card.append(track);grid.append(card)
+ }out.append(grid);
+ const details=el('div','details');
+ for(const [key,value] of Object.entries(data.metrics||{})){const d=el('div','detail');d.append(el('strong','',key),el('p','',String(value)));details.append(d)}out.append(details);
+ const section=el('section');section.append(el('h2','', 'Was du als Nächstes prüfen solltest'));
+ const ul=el('ul','recs');for(const tip of advice(data))ul.append(el('li','',tip));section.append(ul);out.append(section);
+ out.append(el('p','note','Quelle: Google PageSpeed Insights, mobile Lighthouse-Prüfung. Empfehlungen beruhen auf ausgewählten, tatsächlich gelieferten Lighthouse-Einzelprüfungen. Ein fehlender Hinweis ist kein Nachweis für Fehlerfreiheit.'));
+}
+form.addEventListener('submit',async function(e){
+ e.preventDefault();out.hidden=false;out.replaceChildren();const live=el('div','analysis-live');const ring=el('div','analysis-ring');ring.setAttribute('aria-hidden','true');const texts=el('div');const heading=el('div','analysis-title','Google analysiert deine Website');const sub=el('div','analysis-sub','Technische Signale werden geprüft …');texts.append(heading,sub);live.append(ring,texts);out.append(live);
+ let url;try{url=normalise(document.getElementById('url').value)}catch(err){showError(err.message);return}
+ button.disabled=true;button.textContent='Analyse läuft …';
+ try{const response=await fetch('/api/visibility-check?url='+encodeURIComponent(url.href));let data;try{data=await response.json()}catch{throw Error('Die Serverantwort konnte nicht gelesen werden.')}
+ if(!response.ok)throw Error(data.error||'Analyse derzeit nicht möglich.');render(data)
+ }catch(err){showError('Analyse nicht verfügbar: '+err.message+' Bitte versuche es später erneut. Es werden keine Schätzwerte angezeigt.')}
+ finally{button.disabled=false;button.textContent='Kostenlos prüfen →'}
+});
+</script></body></html>

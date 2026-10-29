@@ -418,6 +418,7 @@
             <input type="hidden" name="source" value="Aimpact Sichtbarkeitsanalyse">
             <input type="hidden" name="visibility_score" id="hiddenScore" value="">
             <input type="hidden" name="gepruefte_website" id="gepruefteWebsite" value="">
+            <div id="websiteSummary" style="display:none;margin-bottom:22px;padding:15px;border:1px solid rgba(201,168,76,.45);border-radius:12px;background:#171309"><span style="color:#c9a84c;font-weight:800">Bereits geprüft:</span> <span id="websiteSummaryText" style="overflow-wrap:anywhere"></span><p style="color:#aaa69e;font-size:.82rem;margin-top:5px">Diese Website übernehmen wir in deine Anfrage.</p></div>
             <div class="form-group">
               <label for="name">Name</label>
               <input id="name" type="text" name="name" placeholder="Dein Name" required>
@@ -526,6 +527,8 @@
         const parsed = new URL(websiteFromCheck);
         if ((parsed.protocol === 'https:' || parsed.protocol === 'http:') && parsed.hostname.includes('.')) {
           document.getElementById('gepruefteWebsite').value = parsed.href;
+          document.getElementById('websiteSummaryText').textContent = parsed.hostname;
+          document.getElementById('websiteSummary').style.display = 'block';
         }
       } catch (error) {}
     }

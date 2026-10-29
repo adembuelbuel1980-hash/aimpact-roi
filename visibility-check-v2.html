@@ -1,6 +1,76 @@
 <!doctype html>
-<!-- Preview redeploy after PageSpeed secret configuration; production unchanged --><html lang="de-CH"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aimpact | Visibility Check 2.0 Test</title><style>:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#0a0a0a;color:#f6f4ee;font:16px/1.6 system-ui,-apple-system,sans-serif}.wrap{max-width:800px;margin:auto;padding:48px 22px}h1{font-size:clamp(2.3rem,6vw,4rem);line-height:1.15}strong,.gold{color:#c9a84c}.panel{border:1px solid #5e502c;background:#15130d;padding:24px;border-radius:20px}label{display:block;margin-bottom:8px}input,button{width:100%;font:inherit;border-radius:12px;padding:13px 14px}input{border:1px solid #777;color:#fff;background:#222}button{margin-top:14px;border:0;background:#c9a84c;color:#111;font-weight:800;cursor:pointer}button:disabled{opacity:.6;cursor:wait}a{color:#e2bd60}#results{margin-top:25px}ul{padding-left:21px}.note{color:#bbb;font-size:.9rem} .stat{font-size:2.5rem;color:#c9a84c;font-weight:800}</style></head><body><main class="wrap"><a href="index.html">← Zur Aimpact-Startseite</a><p class="gold">AIMPACT · TESTVERSION</p><h1>Wie gut funktioniert deine <span class="gold">Website?</span></h1><p>Gib deine Website-Adresse ein. Wir fragen technische Messwerte über Google PageSpeed Insights ab. Google Maps, Rankings und KI-Empfehlungen sind nicht Bestandteil dieser Messung.</p><section class="panel"><form id="check"><label for="url">Website-Adresse</label><input id="url" type="text" inputmode="url" autocomplete="url" placeholder="www.beispiel.ch" required><button id="go" type="submit">Website kostenlos prüfen</button></form><div id="results" role="status" aria-live="polite"></div><p class="note">Keine Registrierung. Messdaten können abhängig von Google vorübergehend nicht verfügbar sein.</p></section><p class="note">Testseite: kein Ersatz für den bestehenden Visibility Check. Persönliche Beratung: <a href="sichtbarkeits-check.html#kontakt">Video-Audit anfragen</a>.</p></main><script>
-const form=document.querySelector('#check'),result=document.querySelector('#results'),button=document.querySelector('#go');
-function line(label,value){const p=document.createElement('p');const b=document.createElement('strong');b.textContent=label+': ';p.append(b,document.createTextNode(value));result.append(p)}
-form.addEventListener('submit',async e=>{e.preventDefault();result.replaceChildren();let website=form.url?.value||document.querySelector('#url').value;website=website.trim();if(!/^https?:\/\//i.test(website))website='https://'+website;let url;try{url=new URL(website);if(!['http:','https:'].includes(url.protocol)||!url.hostname.includes('.')||/^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/i.test(url.hostname))throw Error('Ungültige öffentlich erreichbare Website-Adresse.')}catch(err){line('Hinweis',err.message||'Bitte eine gültige Website eingeben.');return}button.disabled=true;button.textContent='Website wird geprüft …';try{const res=await fetch('/api/visibility-check?url='+encodeURIComponent(url.href));const data=await res.json();if(!res.ok)throw Error(data.error||'Analyse aktuell nicht möglich.');line('Geprüfte Website',data.url);if(data.scores){for(const [key,val] of Object.entries(data.scores)){line(key,val===null?'Nicht verfügbar':val+'/100')}}if(data.metrics){for(const [key,val] of Object.entries(data.metrics)){line(key,val)}}const p=document.createElement('p');p.textContent='Diese Werte messen technische Website-Signale. Sie sind kein allgemeiner Sichtbarkeits-Score.';result.append(p)}catch(err){line('Analyse nicht verfügbar',err.message);line('Hinweis','Bitte später erneut versuchen. Es werden keine Schätzwerte angezeigt.')}finally{button.disabled=false;button.textContent='Website kostenlos prüfen'}});
+<html lang="de-CH"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Aimpact | Kostenloser Website-Check – Test</title>
+<style>
+:root{color-scheme:dark;--bg:#0a0a0a;--gold:#c9a84c;--ink:#f5f2ea;--muted:#b9b4a9;--line:#49412c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
+.wrap{max-width:1050px;margin:auto;padding:26px 22px}header{border-bottom:1px solid #252525}header .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.logo{font-size:1.3rem;font-weight:900;letter-spacing:.15em}a{color:#dfbe64}a:hover{text-decoration-thickness:2px}h1{font-size:clamp(2.3rem,6vw,4rem);line-height:1.09;letter-spacing:-.03em;margin:20px 0}h2{font-size:clamp(1.4rem,3vw,2rem);line-height:1.2}.gold{color:var(--gold)}.muted,.note{color:var(--muted)}.note{font-size:.85rem}
+.hero{padding-top:58px;padding-bottom:28px}.eyebrow{font-size:.8rem;letter-spacing:.14em;font-weight:800;text-transform:uppercase}
+.card{border:1px solid var(--line);background:#16140f;border-radius:20px;padding:clamp(18px,4vw,32px)}.form-grid{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end}
+label{display:block;font-weight:700;margin-bottom:8px}input{width:100%;min-height:52px;border:1px solid #65605a;background:#222;color:white;padding:12px 15px;border-radius:12px;font:inherit}
+button,.cta{border:0;background:var(--gold);color:#12100b;padding:15px 24px;min-height:52px;border-radius:12px;font:inherit;font-weight:800;cursor:pointer;text-align:center;text-decoration:none;display:inline-block}
+button:disabled{opacity:.6;cursor:wait}button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid white;outline-offset:3px}
+#results{margin-top:28px}#results[hidden]{display:none}.status{margin:0;padding:14px;border:1px solid #807046;border-radius:10px}.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.metric{border:1px solid #49412c;border-radius:14px;padding:20px;background:#111}.metric .number{display:block;font-size:clamp(2.3rem,5vw,3.4rem);font-weight:900;line-height:1.25}.metric .name{color:#d1cec6;font-size:.9rem}.metric .track{height:7px;background:#333;border-radius:6px;overflow:hidden;margin-top:12px}.metric .fill{height:100%;background:#c9a84c}
+.details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px}.detail{background:#1b1b1b;padding:18px;border:1px solid #333;border-radius:12px}
+.recs{padding-left:22px}.recs li{margin:12px 0}.audit{background:#1a160d;border:1px solid #80672c;border-radius:18px;margin:25px 0;padding:25px}
+small{color:#aaa}.footer{padding-top:40px;padding-bottom:45px}
+@media(max-width:650px){.form-grid,.metrics,.details{grid-template-columns:1fr}.hero{padding-top:35px}.form-grid button{width:100%}.wrap{padding-left:16px;padding-right:16px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style></head>
+<body><header><div class="wrap"><div class="logo">A<span class="gold">I</span>MPACT</div><a href="index.html">Zur Startseite</a></div></header>
+<main class="wrap"><section class="hero"><p class="gold eyebrow">Kostenlos · Website-Check 2.1 · Vorschau</p>
+<h1>Deine Website sieht gut aus. <span class="gold">Aber funktioniert sie auch?</span></h1>
+<p class="muted">Prüfe technische Grundlagen deiner Website mit echten Messwerten von Google PageSpeed Insights. Ohne Anmeldung, ohne geschätzten Gesamtscore.</p></section>
+<section class="card" aria-label="Website-Analyse"><form id="check"><div class="form-grid">
+<div><label for="url">Welche Website sollen wir prüfen?</label><input id="url" name="url" type="text" inputmode="url" autocomplete="url" placeholder="www.dein-unternehmen.ch" required></div>
+<button id="go" type="submit">Kostenlos prüfen →</button></div></form>
+<p class="note">Mobilmessung · Performance · Technische SEO-Prüfungen · Barrierefreiheit</p>
+<div id="results" hidden aria-live="polite"></div></section>
+<section class="audit"><p class="gold eyebrow">Persönlich statt automatisiert</p><h2>Die Zahlen sind der Anfang. Was solltest du jetzt verbessern?</h2>
+<p>In einem kostenlosen Video-Audit zeigen wir dir drei konkrete Hebel für mehr Anfragen. Lokale Google-Maps- und KI-Sichtbarkeit prüfen wir separat.</p>
+<a class="cta" href="sichtbarkeits-check.html#kontakt">Kostenloses Video-Audit anfragen →</a>
+<p class="note">Der Link führt zur bestehenden Aimpact-Anfrage. Kein automatischer Versand des Ergebnisses.</p></section>
+<p class="note">Diese Testversion misst weder tatsächliche Google-Rankings noch KI-Empfehlungen. PageSpeed-Messwerte können schwanken. Der bestehende Visibility Check bleibt unverändert.</p>
+</main><footer class="wrap footer"><small>© Aimpact Zürich · <a href="datenschutz.html">Datenschutz</a> · <a href="impressum.html">Impressum</a></small></footer>
+<script>
+const form=document.getElementById('check'), out=document.getElementById('results'),button=document.getElementById('go');
+function el(tag,cls,txt){const n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=txt;return n}
+function showError(message){out.replaceChildren(el('p','status',message));out.hidden=false}
+function normalise(v){let s=v.trim();if(!/^https?:\/\//i.test(s))s='https://'+s;const u=new URL(s);if(!['https:','http:'].includes(u.protocol)||!u.hostname.includes('.')||u.username||u.password||u.port)throw Error('Bitte eine gültige öffentliche Website-Adresse eingeben.');return u}
+function advice(scores,metrics){
+ const items=[];
+ const p=scores.Performance,s=scores.SEO,a=scores.Barrierefreiheit;
+ if(p!==null&&p<90)items.push('Performance verbessern: Bilder optimieren, unnötige Skripte reduzieren und Ladezeiten auf Mobilgeräten untersuchen.');
+ if(s!==null&&s<90)items.push('Technische SEO-Hinweise prüfen: Seitentitel, Indexierbarkeit und interne Verlinkung kontrollieren.');
+ if(a!==null&&a<90)items.push('Barrierefreiheit verbessern: Kontraste, Beschriftungen und Tastaturbedienbarkeit prüfen.');
+ if(items.length===0)items.push('Die geprüften Kategorien haben hohe Werte. Als Nächstes lokale Auffindbarkeit, Kontaktwege und Inhalte manuell analysieren.');
+ items.push('Die Ergebnisse sind eine technische Momentaufnahme, keine Aussage über Google-Maps-Platzierungen oder KI-Empfehlungen.');
+ return items.slice(0,3)
+}
+function render(data){
+ out.replaceChildren();out.hidden=false;
+ const head=el('div');head.append(el('p','gold eyebrow','Google-Analyse abgeschlossen'),el('h2','', 'Deine Ergebnisse'),el('p','muted','Geprüfte Website: '+data.url));out.append(head);
+ const scores=data.scores||{},grid=el('div','metrics');
+ for(const name of ['Performance','SEO','Barrierefreiheit']){
+  const n=scores[name],valid=typeof n==='number'&&n>=0&&n<=100;
+  const card=el('div','metric');card.append(el('span','name',name),el('span','number',valid?n+'/100':'Nicht verfügbar'));
+  const track=el('div','track'),fill=el('div','fill');fill.style.width=valid?n+'%':'0%';track.append(fill);card.append(track);grid.append(card)
+ }out.append(grid);
+ const details=el('div','details');
+ for(const [key,value] of Object.entries(data.metrics||{})){const d=el('div','detail');d.append(el('strong','',key),el('p','',String(value)));details.append(d)}out.append(details);
+ const section=el('section');section.append(el('h2','', 'Was du als Nächstes prüfen solltest'));
+ const ul=el('ul','recs');for(const tip of advice(scores,data.metrics))ul.append(el('li','',tip));section.append(ul);out.append(section);
+ out.append(el('p','note','Quelle: Google PageSpeed Insights, mobile Lighthouse-Prüfung. Empfehlungen sind allgemeine Hinweise anhand der Kategorien, keine vollständige Einzelprüfung.'));
+}
+form.addEventListener('submit',async function(e){
+ e.preventDefault();out.hidden=false;out.replaceChildren(el('p','status','Analyse läuft. Google prüft deine Website …'));
+ let url;try{url=normalise(document.getElementById('url').value)}catch(err){showError(err.message);return}
+ button.disabled=true;button.textContent='Analyse läuft …';
+ try{const response=await fetch('/api/visibility-check?url='+encodeURIComponent(url.href));let data;try{data=await response.json()}catch{throw Error('Die Serverantwort konnte nicht gelesen werden.')}
+ if(!response.ok)throw Error(data.error||'Analyse derzeit nicht möglich.');render(data)
+ }catch(err){showError('Analyse nicht verfügbar: '+err.message+' Bitte versuche es später erneut. Es werden keine Schätzwerte angezeigt.')}
+ finally{button.disabled=false;button.textContent='Kostenlos prüfen →'}
+});
 </script></body></html>

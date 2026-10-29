@@ -575,6 +575,7 @@
           errorMessage.style.display = 'block';
         }
       }catch(err){
+        form.dataset.submitting = 'false';
         btn.disabled = false;
         btn.textContent = original;
         errorMessage.textContent = 'Die Anfrage konnte nicht gesendet werden. Prüfe deine Verbindung und versuche es erneut.';

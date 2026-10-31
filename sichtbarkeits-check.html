@@ -8,6 +8,8 @@
   <link rel="canonical" href="https://aimpact.ch/sichtbarkeits-check.html">
   <meta name="robots" content="index,follow">
   <meta name="theme-color" content="#0a0a0a">
+  <!-- Configure after deploying the Cloudflare Worker; blank keeps Formspree-only behaviour. -->
+  <meta name="aimpact-automation-endpoint" content="">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-FJJD9PCMZ3"></script>
 <script>
@@ -519,6 +521,47 @@
     ids.forEach(id => document.getElementById(id).addEventListener('input', update));
     update();
 
+    // Optional secure server-side integration. The Make webhook URL never belongs in website code.
+    function makeLeadPayload(form){
+      const fields = Object.fromEntries(new FormData(form).entries());
+      const scores = Object.fromEntries(ids.map(id => [id, Number(document.getElementById(id).value)]));
+      const recommendations = Object.entries(scores).sort((a,b) => a[1]-b[1])
+        .slice(0,3).map(([key]) => ({
+          google:'Google-Sichtbarkeit prüfen', maps:'Google-Unternehmensprofil prüfen',
+          website:'Website auf Klarheit prüfen', content:'Inhalte überprüfen',
+          ai:'KI-Sichtbarkeit prüfen', conversion:'Kontaktwege prüfen'
+        }[key]));
+      return {
+        datum:new Date().toISOString().slice(0,10),
+        unternehmen:String(fields.unternehmen || ''),
+        kontaktperson:String(fields.name || ''),
+        email:String(fields.email || ''),
+        telefon:String(fields.telefon || ''),
+        website:'',
+        score:Math.round(ids.reduce((sum,id)=>sum+scores[id]*weights[id],0)),
+        empfehlungen:recommendations.join('; ') + ' (aus Selbsteinschätzung)',
+        status:'Neu',
+        einzelwerte:scores,
+        quelle:'Aimpact Visibility Check – Selbsteinschätzung'
+      };
+    }
+
+    async function submitOptionalAutomation(form){
+      const endpoint=document.querySelector('meta[name="aimpact-automation-endpoint"]')?.content?.trim();
+      if(!endpoint) return;
+      try {
+        const res=await fetch(endpoint,{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify(makeLeadPayload(form)),
+          signal:AbortSignal.timeout(8000)
+        });
+        if(!res.ok) console.warn('Aimpact automation: request not accepted',res.status);
+      } catch(e) {
+        console.warn('Aimpact automation temporarily unavailable');
+      }
+    }
+
     const form = document.getElementById('kontakt-form');
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -539,6 +582,8 @@
         });
 
         if(response.ok){
+          // Preserve Formspree as the source of truth. Automation is supplementary.
+          void submitOptionalAutomation(form);
           form.style.display = 'none';
           if(typeof window.gtag === 'function'){
   window.gtag('event','generate_lead',{

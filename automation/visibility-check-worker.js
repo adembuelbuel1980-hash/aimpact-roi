@@ -29,10 +29,14 @@ export default {
     const email=clean(body.email,254);
     if(!clean(body.unternehmen)||!clean(body.kontaktperson)||!/^\S+@\S+\.\S+$/.test(email)||!Number.isFinite(score)||score<0||score>100)
       return json({error:'Invalid lead'},422,origin);
-    // Forward the request ID; durable deduplication is configured separately.
+    // A new UUID is created once per browser form submission. Reject legacy
+    // payloads without an ID once this version is intentionally deployed.
     const requestId=clean(body.request_id,100);
+    if(!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(requestId))
+      return json({error:'Invalid request_id'},422,origin);
+    if(!env.DB) return json({error:'Request registry not configured'},503,origin);
     const payload={
-      ...(requestId ? {request_id:requestId} : {}),
+      request_id:requestId,
       datum:new Date().toISOString().slice(0,10),
       unternehmen:clean(body.unternehmen), kontaktperson:clean(body.kontaktperson),
       email,website:clean(body.website,500),
@@ -43,12 +47,63 @@ export default {
       quelle:'Visibility Check – Selbsteinschätzung',
       einzelwerte:Object.fromEntries(['google','maps','website','content','ai','conversion'].map(k=>[k,Math.max(0,Math.min(100,Number(body.einzelwerte?.[k])||0))]))
     };
+    // The primary key makes claiming an ID atomic even for concurrent requests.
+    // A repeat submission must NEVER call Make a second time.
+    let claim;
     try {
-      const response=await fetch(env.MAKE_WEBHOOK_URL,{method:'POST',
-        headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),
-        signal:AbortSignal.timeout(8000)});
-      if(!response.ok) return json({error:'Automation unavailable'},502,origin);
-      return json({ok:true},202,origin);
-    } catch {return json({error:'Automation unavailable'},502,origin)}
+      claim=await env.DB.prepare(
+        "INSERT OR IGNORE INTO processed_requests (request_id, status) VALUES (?, 'pending')"
+      ).bind(requestId).run();
+    } catch {
+      return json({error:'Request registry unavailable'},503,origin);
+    }
+    if(claim.success !== true) return json({error:'Request registry unavailable'},503,origin);
+    if(claim.meta?.changes === 0) {
+      let previous;
+      try {
+        previous=await env.DB.prepare(
+          'SELECT status FROM processed_requests WHERE request_id = ?'
+        ).bind(requestId).first();
+      } catch {
+        return json({error:'Request registry unavailable'},503,origin);
+      }
+      if(previous?.status === 'completed') return json({ok:true,duplicate:true},200,origin);
+      if(previous?.status === 'failed') return json({error:'Previously failed; manual review required',duplicate:true},409,origin);
+      return json({ok:true,duplicate:true,pending:true},202,origin);
+    }
+    if(claim.meta?.changes !== 1) return json({error:'Request registry unavailable'},503,origin);
+
+    // A failed/uncertain delivery is held for MANUAL review. Do not
+    // automatically retry: Make may have accepted the request before timeout.
+    const markFailed=async()=>{
+      try {
+        await env.DB.prepare(
+          "UPDATE processed_requests SET status = 'failed' WHERE request_id = ? AND status = 'pending'"
+        ).bind(requestId).run();
+      } catch { /* pending lock remains; no automatic duplicate delivery */ }
+    };
+    let response;
+    try {
+      response=await fetch(env.MAKE_WEBHOOK_URL,{method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(payload),signal:AbortSignal.timeout(8000)});
+    } catch {
+      await markFailed();
+      return json({error:'Delivery not confirmed; manual review required'},502,origin);
+    }
+    if(!response.ok) {
+      await markFailed();
+      return json({error:'Automation rejected request; manual review required'},502,origin);
+    }
+    // Make's HTTP acceptance does not prove a Google Sheets row was written.
+    try {
+      const recorded=await env.DB.prepare(
+        "UPDATE processed_requests SET status = 'completed', completed_at = CURRENT_TIMESTAMP WHERE request_id = ? AND status = 'pending'"
+      ).bind(requestId).run();
+      if(recorded.success !== true || recorded.meta?.changes !== 1) throw new Error('status update failed');
+    } catch {
+      return json({error:'Forwarded, but status confirmation failed; manual review required'},502,origin);
+    }
+    return json({ok:true},202,origin);
   }
 };

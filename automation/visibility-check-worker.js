@@ -29,7 +29,10 @@ export default {
     const email=clean(body.email,254);
     if(!clean(body.unternehmen)||!clean(body.kontaktperson)||!/^\S+@\S+\.\S+$/.test(email)||!Number.isFinite(score)||score<0||score>100)
       return json({error:'Invalid lead'},422,origin);
+    // Forward the request ID; durable deduplication is configured separately.
+    const requestId=clean(body.request_id,100);
     const payload={
+      ...(requestId ? {request_id:requestId} : {}),
       datum:new Date().toISOString().slice(0,10),
       unternehmen:clean(body.unternehmen), kontaktperson:clean(body.kontaktperson),
       email,website:clean(body.website,500),

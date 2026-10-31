@@ -522,6 +522,8 @@
     update();
 
     // Optional secure server-side integration. The Make webhook URL never belongs in website code.
+    // Reuse the same ID for retries of this form submission.
+    let visibilityRequestId = crypto.randomUUID();
     function makeLeadPayload(form){
       const fields = Object.fromEntries(new FormData(form).entries());
       const scores = Object.fromEntries(ids.map(id => [id, Number(document.getElementById(id).value)]));
@@ -532,6 +534,7 @@
           ai:'KI-Sichtbarkeit prüfen', conversion:'Kontaktwege prüfen'
         }[key]));
       return {
+        request_id:visibilityRequestId,
         datum:new Date().toISOString().slice(0,10),
         unternehmen:String(fields.unternehmen || ''),
         kontaktperson:String(fields.name || ''),

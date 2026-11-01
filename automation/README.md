@@ -34,4 +34,4 @@ Spalten A–K: Datum, Unternehmen, Kontaktperson, E-Mail, Website, Visibility Sc
 - Make Freigabe: ohne Freigabe nur Suche; freigegebene Systemtest-Zeile erfolgreich in 39 Sekunden (7 Operationen); erneuter Lauf übersprang die abgeschlossene Zeile.
 - Öffentliches Formular auf https://aimpact.ch/sichtbarkeits-check.html nach Merge von PR #16 geprüft: Erfolgsmeldung und exakt eine neue Zeile 8 (Aimpact Live-Test 01.11.2026, https://example.com, Score 49, Status Neu). Keine neue Gamma-Generation durch Eingang.
 - Szenario 8287125 wurde aktiviert und der öffentliche Test automatisch verarbeitet.
-- Szenario 8307884 ist technisch geprüft und stündlich konfiguriert, aber seine Aktivierung ist noch offen: Die lokale Browserverbindung fiel vor dem Schalten aus. Nicht als vollständig aktiven Berichtsbetrieb ausgeben.
+- Szenario 8307884 wurde nach ausdrücklicher Nutzerfreigabe aktiviert. Make zeigt Active. Erster geplanter Lauf am 01.11.2026 um 17:51:12 (Europe/Zurich): Success, 1 Operation, keine freigegebene Zeile. Der stündliche Berichtsbetrieb ist aktiv; Freigabe einzelner Leads erfolgt weiterhin über Status H=Freigegeben.

@@ -32,4 +32,6 @@ Spalten A–K: Datum, Unternehmen, Kontaktperson, E-Mail, Website, Visibility Sc
 
 - Cloudflare: gleiche Test-ID einmal angenommen, danach als Duplikat erkannt.
 - Make Freigabe: ohne Freigabe nur Suche; freigegebene Systemtest-Zeile erfolgreich in 39 Sekunden (7 Operationen); erneuter Lauf übersprang die abgeschlossene Zeile.
-- Öffentliches Formular und Aktivierung werden vor Abschluss der Liveschaltung separat kontrolliert.
+- Öffentliches Formular auf https://aimpact.ch/sichtbarkeits-check.html nach Merge von PR #16 geprüft: Erfolgsmeldung und exakt eine neue Zeile 8 (Aimpact Live-Test 01.11.2026, https://example.com, Score 49, Status Neu). Keine neue Gamma-Generation durch Eingang.
+- Szenario 8287125 wurde aktiviert und der öffentliche Test automatisch verarbeitet.
+- Szenario 8307884 ist technisch geprüft und stündlich konfiguriert, aber seine Aktivierung ist noch offen: Die lokale Browserverbindung fiel vor dem Schalten aus. Nicht als vollständig aktiven Berichtsbetrieb ausgeben.

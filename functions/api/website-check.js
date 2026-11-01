@@ -1,3 +1,4 @@
+import { createAnalysisProof } from './website-check-lead.js';
 
 // Reuse recent measurements to reduce Google quota consumption.
 // Cloudflare Cache API is best-effort and local to the serving data center.
@@ -43,8 +44,12 @@ export async function onRequestGet({ request, env }) {
     "Cache-Control": "no-store"
   };
 
-  const respond = (data, status = 200) =>
-    new Response(JSON.stringify(data), { status, headers });
+  const respond = async (data, status = 200) => {
+    if(status===200 && data.analyzedUrl && data.measuredAt) {
+      data={...data,analysisToken:await createAnalysisProof(data,env.PAGESPEED_API_KEY)};
+    }
+    return new Response(JSON.stringify(data), { status, headers });
+  };
 
   try {
     const input = new URL(request.url).searchParams.get("url");

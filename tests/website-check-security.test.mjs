@@ -3,7 +3,11 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 async function importSource(path) {
-  const code = await readFile(new URL('../' + path, import.meta.url), 'utf8');
+  let code = await readFile(new URL('../' + path, import.meta.url), 'utf8');
+  if (path === 'functions/api/website-check.js') {
+    const leadCode = await readFile(new URL('../functions/api/website-check-lead.js', import.meta.url), 'utf8');
+    code = code.replace('./website-check-lead.js', 'data:text/javascript;base64,' + Buffer.from(leadCode).toString('base64'));
+  }
   return import('data:text/javascript;base64,' + Buffer.from(code).toString('base64'));
 }
 const { onRequestGet } = await importSource('functions/api/website-check.js');

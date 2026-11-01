@@ -8,8 +8,8 @@
   <link rel="canonical" href="https://aimpact.ch/sichtbarkeits-check.html">
   <meta name="robots" content="index,follow">
   <meta name="theme-color" content="#0a0a0a">
-  <!-- Configure after deploying the Cloudflare Worker; blank keeps Formspree-only behaviour. -->
-  <meta name="aimpact-automation-endpoint" content="">
+  <!-- Public intake endpoint; Make credentials stay in the Cloudflare Worker. -->
+  <meta name="aimpact-automation-endpoint" content="https://aimpact-visibility-api.adembuelbuel1980.workers.dev/">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-FJJD9PCMZ3"></script>
 <script>
@@ -432,6 +432,10 @@
               <input id="email" type="email" name="email" placeholder="name@unternehmen.ch" required>
             </div>
             <div class="form-group">
+              <label for="lead-website">Website (freiwillig)</label>
+              <input id="lead-website" type="url" name="website_url" placeholder="https://deine-website.ch" maxlength="500">
+            </div>
+            <div class="form-group">
               <label for="telefon">Telefon</label>
               <input id="telefon" type="tel" name="telefon" placeholder="+41 ...">
             </div>
@@ -522,6 +526,8 @@
     update();
 
     // Optional secure server-side integration. The Make webhook URL never belongs in website code.
+    // Reuse the same ID for retries of this form submission.
+    let visibilityRequestId = crypto.randomUUID();
     function makeLeadPayload(form){
       const fields = Object.fromEntries(new FormData(form).entries());
       const scores = Object.fromEntries(ids.map(id => [id, Number(document.getElementById(id).value)]));
@@ -532,12 +538,13 @@
           ai:'KI-Sichtbarkeit prüfen', conversion:'Kontaktwege prüfen'
         }[key]));
       return {
+        request_id:visibilityRequestId,
         datum:new Date().toISOString().slice(0,10),
         unternehmen:String(fields.unternehmen || ''),
         kontaktperson:String(fields.name || ''),
         email:String(fields.email || ''),
         telefon:String(fields.telefon || ''),
-        website:'',
+        website:String(fields.website_url || ''),
         score:Math.round(ids.reduce((sum,id)=>sum+scores[id]*weights[id],0)),
         empfehlungen:recommendations.join('; ') + ' (aus Selbsteinschätzung)',
         status:'Neu',
@@ -546,20 +553,32 @@
       };
     }
 
-    async function submitOptionalAutomation(form){
+    async function submitAutomation(form){
       const endpoint=document.querySelector('meta[name="aimpact-automation-endpoint"]')?.content?.trim();
-      if(!endpoint) return;
+      if(!endpoint) return false;
+      const response=await fetch(endpoint,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(makeLeadPayload(form)),
+        signal:AbortSignal.timeout(15000)
+      });
+      const result=await response.json().catch(()=>({}));
+      if(!response.ok || result.ok!==true || result.pending) {
+        throw new Error('Automation delivery not confirmed');
+      }
+      return true;
+    }
+
+    // Retain the existing Formspree notification after confirmed intake.
+    // Its availability must not block a lead already accepted by Make.
+    async function sendFormspreeNotification(form){
       try {
-        const res=await fetch(endpoint,{
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify(makeLeadPayload(form)),
+        await fetch(form.action,{
+          method:'POST',body:new FormData(form),
+          headers:{'Accept':'application/json'},
           signal:AbortSignal.timeout(8000)
         });
-        if(!res.ok) console.warn('Aimpact automation: request not accepted',res.status);
-      } catch(e) {
-        console.warn('Aimpact automation temporarily unavailable');
-      }
+      } catch { /* The lead remains in the primary intake workflow. */ }
     }
 
     const form = document.getElementById('kontakt-form');
@@ -575,15 +594,20 @@
       btn.textContent = 'Wird gesendet...';
 
       try{
-        const response = await fetch(form.action, {
-          method:'POST',
-          body:new FormData(form),
-          headers:{'Accept':'application/json'}
-        });
+        const automationAccepted = await submitAutomation(form);
+        let accepted = automationAccepted;
+        if(automationAccepted){
+          void sendFormspreeNotification(form);
+        }else{
+          const response = await fetch(form.action, {
+            method:'POST', body:new FormData(form),
+            headers:{'Accept':'application/json'},
+            signal:AbortSignal.timeout(15000)
+          });
+          accepted = response.ok;
+        }
 
-        if(response.ok){
-          // Preserve Formspree as the source of truth. Automation is supplementary.
-          void submitOptionalAutomation(form);
+        if(accepted){
           form.style.display = 'none';
           if(typeof window.gtag === 'function'){
   window.gtag('event','generate_lead',{

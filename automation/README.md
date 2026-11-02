@@ -160,3 +160,20 @@ Make bestätigte The scenario was saved; nach Neuladen Szenario Active und Stund
 Manuelle Klärung: Incomplete executions und Ausführungsprotokoll prüfen. Bei unklarer Antwort der Gamma-Erstellung zuerst nach vorhandenem Bericht suchen, bevor das Erstellungsmodul manuell wiederholt oder H erneut freigegeben wird. Sonst kann ein zweiter Bericht entstehen. Beim Abrufen/Speichern möglichst den bestehenden Auftrag am fehlgeschlagenen Schritt fortsetzen und Generation-ID/URL prüfen.
 
 Noch offen: kontrollierter Fehlerfall zum Speichernachweis, aktive Benachrichtigung und Behandlung einer erfolgreichen Gamma-Abfrage mit noch nicht fertigem Status. Dieser letzte Fall ist kein Modulfehler und wird weiterhin vom Fertig-Filter gestoppt; die orange Tabellenwarnung unterstützt dort die manuelle Kontrolle. Keine vollständige automatische Wiederaufnahme behauptet. Danach Funnel-Tracking und vorhandene KV-Nachweise.
+
+
+## Persönlicher Maps-Check: manueller Eingang per E-Mail
+
+Seit 2. November ist der Haupt-CTA der Startseite ein persönlicher Gratis Maps-Check per mailto:info@aimpact.ch. Der Link öffnet lediglich das E-Mail-Programm mit vorausgefüllter Anfrage; erst das Absenden durch den Interessenten erzeugt eine E-Mail. Kein automatisches Lead-Ereignis, kein automatischer Maps-Bericht und keine Übernahme in Make/Sheets behauptet. Der technische Website-Check bleibt als zweite Option unverändert erreichbar.
+
+Öffentliches Serviceversprechen: persönliche Rückmeldung innert24Stunden. Adem muss das vorhandene Postfach täglich auch am Wochenende kontrollieren; eine automatische Überwachung oder Erinnerung ist nicht eingerichtet. Bei unvollständigen Angaben innerhalb dieser Frist nachfragen und fehlende Prüfdaten klar nennen. Nicht vorgaukeln, der Bericht sei bereits automatisch erstellt.
+
+Prüfroutine für jede Anfrage:
+1. Eingang und Frist im vorhandenen Lead-Tabellenblatt dokumentieren, ohne neue Tabelle anzulegen. Restaurant, Standort, Website und eindeutiges Google-Profil zuordnen; bei Unklarheit nachfragen.
+2. Drei relevante Suchbegriffe mit lokalem Bezug festlegen. Für jeden Begriff Zeitpunkt, Suchstandort, Suchoberfläche und beobachtete Position dokumentieren. Kein Treffer als nicht im geprüften Bereich gefunden ausweisen; keine allgemeingültige Position oder Umsatzeinbusse behaupten.
+3. Drei relevante lokale Mitbewerber vergleichen: Profilvollständigkeit, Kategorien, Öffnungszeiten, Website-/Reservationslink und sichtbare Bewertungen. Keine Bewertungen oder Positionen erfinden.
+4. Eigenes Profil des Restaurants auf Stammdaten, Kategorien, Öffnungszeiten, Kontakt-/Reservationswege, Fotos und Bewertungsantworten prüfen. Angaben ohne Zugriff als öffentlich beobachtet kennzeichnen.
+5. Drei konkrete Prioritäten auswählen; Beleg, Nutzen und nächste Handlung nennen. Rückmeldung per E-Mail, optional kurzes Bildschirm-/Sprachvideo. WhatsApp erst mit separater Geschäftsnummer.
+6. Tatsächliche Bearbeitungszeit und Versand in der vorhandenen Tabelle dokumentieren; Kundenversand erfolgt manuell nach Inhaltsprüfung.
+
+Technische Messwerte aus PageSpeed sind davon getrennt. Rankings sind standort-/zeitabhängige Momentaufnahmen. 24Stunden ist ein menschliches Serviceversprechen, keine fertige Automation. Der Chat-Launcher steht nun im normalen Seitenfluss statt über dem Inhalt; das Chatfenster selbst bleibt ein auf Wunsch geöffnetes Dialogfenster.

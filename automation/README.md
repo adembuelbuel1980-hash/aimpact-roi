@@ -32,16 +32,28 @@ Tab `Tabellenblatt1`, A–K: Datum, Unternehmen, Kontaktperson, E-Mail, Website,
 
 Für neue technische Leads ist F ausschliesslich der Performance-Wert, kein Sichtbarkeitsscore. G beginnt exakt mit `Technischer Website-Check |` und enthält Quelle, Messzeit, vier Kategorien, fünf Messwerte und bis zu drei Befunde. Bestehende Spalten und Make-Mappings bleiben erhalten. Alte Selbsteinschätzungswerte werden nicht umgedeutet.
 
-Gamma-Modul 7 unterscheidet anhand dieses Präfixes technische Berichte und frühere Selbsteinschätzungen. Nur B/E/F/G werden übergeben; keine Kontaktperson/E-Mail/Telefonnummer. Unternehmen und untersuchte Website müssen exakt erhalten bleiben. Aimpact/aimpact.ch ist nur die Autorenangabe. Private Entwürfe, externe Freigabe deaktiviert, Indexierung aus, keine Nachrichten.
+Gamma-Modul 7 unterscheidet anhand dieses Präfixes technische Berichte und frühere Selbsteinschätzungen. Vollständige ISO-Messzeit inklusive Sekunden/Millisekunden/Z unverändert übernehmen. Image source = No images; keine künstlichen Dashboard-Zahlen. Die Messwertkarte heisst Technische Labormesswerte; FCP/TBT/Speed Index nicht als Core Web Vitals ausgeben. Nur B/E/F/G werden übergeben; keine Kontaktperson/E-Mail/Telefonnummer. Unternehmen und untersuchte Website müssen exakt erhalten bleiben. Aimpact/aimpact.ch ist nur die Autorenangabe. Private Entwürfe, externe Freigabe deaktiviert, Indexierung aus, keine Nachrichten.
 
 ## Nachweise am 2. November 2026
 
 - Reale Prüfung von https://aimpact.ch/: Messzeit `2026-11-02T06:28:08.074Z`, mobile; Performance 100, Barrierefreiheit 95, Best Practices 100, technisches SEO 100. FCP/LCP/Speed Index 0.8 s, TBT 10 ms, CLS 0. Momentaufnahme, kein Rankingnachweis.
 - Öffentliche Eingabe und Formularversand erfolgreich. Genau eine neue Testzeile 9 `Aimpact Technik-Test 02.11.2026` mit signierten Messdaten, zunächst `Neu`. Keine Überschreibung alter Testzeilen.
 - Nur Zeile 9 freigegeben. Make erzeugte nach 39 Sekunden den privaten Link https://gamma.app/docs/nx8pdi3q2h21rz5, Start 07:29:53, Abschluss 07:30:32.
-- **Offen: Inhaltliche und visuelle Endkontrolle dieses Gamma-Berichts.** Der Link und Tabellenabschluss sind bestätigt; daraus folgt keine Bestätigung der Berichtszahlen oder Darstellung. Browser-Verbindung brach nach Start ab; separater Zugriff verlangt Anmeldung. Bericht nicht an Kunden versenden, bevor Quelle, URL, Kategorien, Messzeit und Befunde manuell abgeglichen sind.
+- Erster Gamma-Testbericht nach Wiederherstellung der Browser-Verbindung geprüft: URL, Kategorien, fünf Messwerte und Befunde stimmen. Dabei fiel eine verkürzte Zeitangabe und ein dekoratives Dashboard-Bild mit künstlichen Zahlen auf. Deshalb wurde die Vorlage anschliessend verschärft; diesen ersten Testbericht nicht als Kundenvorlage verwenden.
 - 24 lokale Tests bestanden: echter Analyseaufruf/Anzeige, signierter Versand, Schutz vor Wiederholung und alten Ergebnissen, fehlende/manipulierte/abgelaufene Nachweise, fehlerhafte Google-Antworten, Quotenfehler, optionale Turnstile-Prüfung.
 - Bestehende CI-Workflows korrigiert: echte Route `/website-check` statt alter Meta-Weiterleitungsdatei; aktuelle Datenschutzerklärung; alle drei Testsuiten. Commit `1af92c22eac852ab0fcc7094c8ab569a6d83d343`: Cloudflare Pages, beide Deployment-Smokes und Security-Tests erfolgreich.
+
+## Zweiter vollständiger Test und abschliessende Prüfung
+
+- Zweite öffentlich analysierte Website: https://example.com/, mobile, `2026-11-02T06:44:36.370Z`. Tatsächliche Kategorien: Performance 100, Barrierefreiheit 96, Best Practices 100, technisches SEO 80. FCP/LCP/Speed Index 0.8 s; TBT 0 ms; CLS 0.
+- Neues synthetisches Formular `Aimpact Test Zweite Website 02.11.2026` kam genau einmal als Zeile 10 mit H=Neu an. Nur diese Zeile wurde anschliessend freigegeben. Alte Zeilen blieben erhalten.
+- Automatischer Bericht nach Vorlagekorrektur: https://gamma.app/docs/r59ru82abaxix45. Start 07:46:32, Abschluss 07:47:14 (Europe/Zurich).
+- Bericht im angemeldeten Gamma geöffnet: exakt https://example.com/ als untersuchte Website, alle vier Kategorien und fünf Messwerte stimmen, vollständige ISO-Messzeit exakt erhalten, fünf Karten, TESTBERICHT, private interne Freigabe, keine künstliche Dashboard-Illustration. Rankings/Maps/KI-Sichtbarkeit explizit Nicht geprüft.
+- Erneuter Make-Lauf um 07:48 übersprang abgeschlossene Zeilen: nur Search Rows, Filter blockiert, keine weitere Gamma-Generation.
+- Hauptwebsite öffentlich kontrolliert: fünf primäre Check-Links führen zur echten Analyse. Alte URL https://aimpact.ch/sichtbarkeits-check.html leitet tatsächlich weiter. Beschreibung der sechs Selbsteinschätzungsfragen auf Hauptseite, Gastronomie-Seite und im Assistenten ersetzt. Assistent im Browser nach neuer Asset-Version geprüft: Website-Adresse, vier technische Kategorien und richtiger Link.
+- Datenschutzhinweise zu Pages, PageSpeed, signierten Messwerten und freiwilligem Kontaktversand in den vorhandenen Dateien aktualisiert.
+- Commit `831ba441e5543526cfe5b36cd30ff38e21b1e31a`: alle technischen Deployment-/Sicherheitstests erfolgreich. Commit `69f65770c63a930bfd63a2365110a29c7435b93e`: Hauptseiten-Veröffentlichung erfolgreich.
+- Messzeit auf der Check-Seite jetzt mit expliziter Zeitzone Europe/Zurich. Browser-Zeitzonen dürfen den Messtag nicht missverständlich verschieben.
 
 ## Freigabe- und Fehlerregeln
 
@@ -58,9 +70,9 @@ Die Termine sind Arbeitsziele, keine zusätzlichen Schulvorgaben.
 
 | Priorität | Zieltermin | Aufgabe | Fertig, wenn |
 |---|---|---|---|
-| P0 | nächste Arbeitssitzung | Gamma-Testbericht inhaltlich und visuell abgleichen | Exakte URL, alle Zahlen/Einheiten, Messzeit, Quelle, tatsächliche Befunde und TESTBERICHT stimmen; keine erfundenen Ranking-Aussagen |
+| Erledigt | 2. November | Gamma-Testbericht abgleichen | Zweite Website, vier Kategorien, fünf Messwerte, exakte ISO-Zeit, Quelle und TESTBERICHT bestätigt; Vorlage ohne künstliche Zahlenbilder |
 | P0 | vor breiter Bewerbung | Turnstile und dauerhaftes globales Quoten-/Missbrauchslimit prüfen und fertigstellen | Nachweis gegen ungültige Tokens und verteilte Überlastung; Google- und Make-Kosten begrenzt |
-| P1 | 6. November | Zweite reale Website als Pilot testen, mit zulässigen Testdaten | Unterschiedliche Messwerte landen korrekt im bestehenden Sheet und privaten Bericht |
+| Erledigt | 2. November | Zweite reale Website mit synthetischem Kontakt testen | example.com mit abweichenden Kategorien korrekt in Zeile 10 und privatem Bericht; Doppellauf übersprungen |
 | P1 | 13. November | Bestehende KV-Unterlagen mit Ziel, Ausgangslage, Architektur, Testprotokollen und Eigenleistung ergänzen | Nachweise und klare Grenzen der technischen Messung dokumentiert |
 | P1 | 20. November | Betrieb und Nutzen auswerten | Reale Fälle, Bearbeitungszeit, Fehlerquote und Creditverbrauch nachvollziehbar; keine erfundenen Conversion-Zahlen |
 | P1 | 30. November | Vollständigen Entwurf der Abschlussarbeit prüfen | Schulvorgaben anhand der vorhandenen Aufgabenstellung abgeglichen; Quellen, Datenschutz, Reflexion und Anhänge vollständig |

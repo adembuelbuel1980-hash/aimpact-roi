@@ -61,7 +61,7 @@ export default {
         const reservation=await env.DB.prepare(`INSERT INTO abuse_limits(bucket,count,expires_at) VALUES (?,1,?)
 ON CONFLICT(bucket) DO UPDATE SET count=abuse_limits.count+1 WHERE abuse_limits.count < ?`).bind(scope+':'+end,end,maximum).run();
         if(reservation.success!==true||![0,1].includes(reservation.meta?.changes)) throw new Error('Quota confirmation failed');
-        if(reservation.meta.changes===0) return new Response(JSON.stringify({error:'Das Anfragelimit ist erreicht. Bitte später erneut versuchen.'}),{status:429,headers:{...headersFor(origin),'Retry-After':String(Math.max(1,end-epoch))}});
+        if(reservation.meta.changes===0) return new Response(JSON.stringify({error:'Das Anfragelimit ist erreicht. Bitte später erneut versuchen.'}),{status:429,headers:{...headersFor(origin),'Retry-After':String(Math.max(1,Number(end)-epoch))}});
       }
     } catch { return json({error:'Anfragen momentan nicht verfügbar. Bitte später erneut versuchen.'},503,origin); }
     // The primary key makes claiming an ID atomic even for concurrent requests.

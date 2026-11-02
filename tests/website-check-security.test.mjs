@@ -409,3 +409,36 @@ test('quota database failure never forwards a lead to Make',async()=>{
 
 
  test("direct forged-Origin request cannot reach Make",async()=>{const DB=testDB();const r=await worker.fetch(leadRequest(),{DB,MAKE_WEBHOOK_URL:"https://make.invalid/test"});assert.equal(r.status,403);assert.equal(DB.sqlite.prepare("SELECT count(*) n FROM processed_requests").get().n,0);});
+
+test('signed website intake authorizes exact data end to end; retries never forward twice',async()=>{
+ const DB=testDB(), old=globalThis.fetch;
+ const {onRequestPost,createAnalysisProof}=await importSource('functions/api/website-check-lead.js');
+ const secret='synthetic-bridge-secret';let forwards=0;
+ const measured={analyzedUrl:'https://example.com/',measuredAt:new Date().toISOString(),performance:.42,accessibility:.85,bestPractices:1,seo:.91,metrics:{fcp:'1 s',lcp:'2 s',tbt:'30 ms',cls:'0',speedIndex:'1 s'},audits:{}};
+ const body={request_id:'c1112026-1101-4000-8000-000000000999',unternehmen:'Bridge test',kontaktperson:'Testperson',email:'test@example.com',analysis_token:await createAnalysisProof(measured,secret),recommendation_ids:[]};
+ globalThis.fetch=async(url,options)=>{
+  if(String(url).includes('aimpact-visibility-api.'))return worker.fetch(new Request(url,options),{DB,MAKE_WEBHOOK_URL:'https://make.invalid/test'});
+  forwards++;return new Response('accepted');
+ };
+ try{
+  for(let i=0;i<2;i++){
+   const response=await onRequestPost({request:new Request('https://check.aimpact.ch/api/website-check-lead',{method:'POST',body:JSON.stringify(body)}),env:{DB,PAGESPEED_API_KEY:secret}});
+   assert.equal(response.status,200);assert.equal((await response.json()).ok,true);
+  }
+  assert.equal(forwards,1);
+  assert.equal(DB.sqlite.prepare('SELECT status FROM processed_requests').get().status,'completed');
+ }finally{globalThis.fetch=old;}
+});
+
+test('altered or expired authorization cannot reach Make',async()=>{
+ const DB=testDB(),old=globalThis.fetch;let forwards=0;
+ globalThis.fetch=async()=>{forwards++;return new Response('accepted');};
+ try{
+  const request=await authorizedRequest(DB);
+  DB.sqlite.exec('UPDATE intake_authorizations SET payload_hash=\'altered\'');
+  assert.equal((await worker.fetch(request.clone(),{DB,MAKE_WEBHOOK_URL:'https://make.invalid/test'})).status,403);
+  await authorizedRequest(DB);DB.sqlite.exec('UPDATE intake_authorizations SET expires_at=0');
+  assert.equal((await worker.fetch(request.clone(),{DB,MAKE_WEBHOOK_URL:'https://make.invalid/test'})).status,403);
+  assert.equal(forwards,0);
+ }finally{globalThis.fetch=old;}
+});

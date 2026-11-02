@@ -39,7 +39,7 @@
     <form id="check-form">
       <label for="website-url">Website-Adresse</label>
       <div class="form-row">
-        <input id="website-url" name="url" type="url" value="https://aimpact.ch" placeholder="https://beispiel.ch" autocomplete="url" required>
+        <input id="website-url" name="url" type="text" inputmode="url" placeholder="deine-website.ch" autocomplete="url" maxlength="2048" required>
         <button id="check-button" type="submit">Website prüfen</button>
       </div>
     </form>
@@ -54,8 +54,8 @@
     <section class="panel"><h2>Weitere Prüfungen</h2><div id="checks"></div></section>
     <section class="panel" id="lead-section" aria-labelledby="lead-heading">
       <p class="eyebrow">Nächster Schritt</p>
-      <h2 id="lead-heading">Drei konkrete Verbesserungen für deine Website</h2>
-      <p>Du möchtest wissen, welche Massnahmen für dein Unternehmen wirklich sinnvoll sind? Frage ein kostenloses, persönliches Video-Audit an. Wir prüfen, ob deine Website zu unserem Angebot passt.</p>
+      <h2 id="lead-heading">Deine Ergebnisse persönlich einordnen lassen</h2>
+      <p>Sende uns deine gemessenen Prüfergebnisse. Wir prüfen die Befunde und melden uns persönlich mit den nächsten Schritten bei dir.</p>
       <form id="lead-form" action="https://formspree.io/f/mqeoqqgo" method="POST">
         <input type="hidden" name="source" value="Aimpact Website-Check">
         <input type="hidden" id="lead-website" name="website" value="">
@@ -66,17 +66,21 @@
           <div><label for="lead-company">Unternehmen</label><input id="lead-company" name="unternehmen" autocomplete="organization" required maxlength="160"></div>
           <div><label for="lead-email">E-Mail</label><input id="lead-email" name="email" type="email" autocomplete="email" required maxlength="254"></div>
         </div>
-        <label class="lead-consent" for="lead-consent"><input id="lead-consent" type="checkbox" required>Ich bin damit einverstanden, dass Aimpact meine Angaben zur Bearbeitung dieser Anfrage verwendet. <a href="/datenschutz.html" target="_blank" rel="noopener noreferrer">Datenschutz</a></label>
-        <button type="submit" id="lead-button">Kostenloses Video-Audit anfragen</button>
+        <label class="lead-consent" for="lead-consent"><input id="lead-consent" type="checkbox" required>Ich bin damit einverstanden, dass Aimpact meine Angaben zur Bearbeitung dieser Anfrage verwendet. <a href="https://aimpact.ch/datenschutz.html" target="_blank" rel="noopener noreferrer">Datenschutz</a></label>
+        <button type="submit" id="lead-button">Prüfergebnisse zur persönlichen Prüfung senden</button>
         <p id="lead-status" role="status" aria-live="polite" class="muted"></p>
       </form>
     </section>
   </div>
-  <p><a href="https://aimpact.ch/sichtbarkeits-check.html">Zum bisherigen Visibility Check</a></p>
+  <p><a href="https://aimpact.ch/">← Zur Aimpact-Startseite</a></p>
 </main>
 <script>
 'use strict';
 const byId = id => document.getElementById(id);
+let latestAnalysis = null;
+let recommendationIds = [];
+let leadRequestId = crypto.randomUUID();
+let leadSubmitted = false;
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));
 const categories = [
   ['performance','Performance'],['accessibility','Barrierefreiheit'],
@@ -177,6 +181,12 @@ function item(title, description, state = 'unknown') {
   return `<article class="item"><h3 class="${state}">${escapeHtml(title)}</h3><p>${escapeHtml(description)}</p></article>`;
 }
 function render(data, requestedUrl) {
+  latestAnalysis = data;
+  leadRequestId = crypto.randomUUID();
+  leadSubmitted = false;
+  byId('lead-form').reset();
+  byId('lead-button').disabled = false;
+  byId('lead-status').textContent = '';
   const analyzedUrl = data.analyzedUrl || requestedUrl;
   const timestamp = data.measuredAt ? new Date(data.measuredAt) : null;
   const dateText = timestamp && !Number.isNaN(timestamp.getTime()) ? timestamp.toLocaleString('de-CH') : 'Zeitpunkt nicht verfügbar';
@@ -259,6 +269,7 @@ function render(data, requestedUrl) {
       return unique;
     },new Map()).values()];
   const primary = actionable.slice(0,3);
+  recommendationIds = primary.map(f=>f.id);
   const secondary = actionable.slice(3,8);
   byId('recommendations').innerHTML = primary.length
     ? primary.map((f,i) =>
@@ -299,24 +310,34 @@ function render(data, requestedUrl) {
 }
 byId('lead-form').addEventListener('submit', async event => {
   event.preventDefault();
+  if(leadSubmitted) return;
   const form = event.currentTarget;
   const button = byId('lead-button');
   const status = byId('lead-status');
   button.disabled = true;
-  status.textContent = 'Anfrage wird gesendet …';
+  status.textContent = 'Prüfergebnisse werden übermittelt …';
   try {
-    const response = await fetch(form.action, {
-      method:'POST',
-      body:new FormData(form),
-      headers:{Accept:'application/json'}
+    if(!latestAnalysis?.analysisToken) throw new Error('Bitte die Website zuerst erneut prüfen.');
+    const fields=Object.fromEntries(new FormData(form).entries());
+    const response=await fetch('/api/website-check-lead',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        request_id:leadRequestId,unternehmen:fields.unternehmen,kontaktperson:fields.name,
+        email:fields.email,website:latestAnalysis.analyzedUrl,
+        score:scoreNumber(latestAnalysis.performance),
+        analysis_token:latestAnalysis.analysisToken,recommendation_ids:recommendationIds
+      }),signal:AbortSignal.timeout(20000)
     });
-    if (!response.ok) throw new Error('Die Anfrage konnte nicht gesendet werden.');
-    form.reset();
-    status.textContent = 'Danke! Deine Anfrage wurde übermittelt. Wir melden uns bei dir.';
-    if (typeof window.gtag === 'function') window.gtag('event','generate_lead',{lead_source:'website_check_v3'});
+    const result=await response.json().catch(()=>({}));
+    if(!response.ok||result.ok!==true||result.pending) throw new Error(result.error||'Die Übermittlung wurde noch nicht bestätigt.');
+    leadSubmitted = true;
+    status.textContent = 'Danke! Deine Anfrage mit den gemessenen Prüfergebnissen ist angekommen. Wir melden uns persönlich bei dir.';
+    // Preserve the existing notification; primary storage is already confirmed.
+    void fetch(form.action,{method:'POST',body:new FormData(form),headers:{Accept:'application/json'},signal:AbortSignal.timeout(8000)}).catch(()=>{});
+    if (typeof window.gtag === 'function') window.gtag('event','generate_lead',{lead_source:'technical_website_check'});
   } catch (error) {
-    status.textContent = error.message + ' Bitte später erneut versuchen.';
-  } finally {button.disabled = false;}
+    status.textContent = error.message + ' Bitte erneut versuchen.';
+  } finally {button.disabled = leadSubmitted;}
 });
 let securityReady = false;
 let turnstileRequired = false;
@@ -365,12 +386,15 @@ byId('check-form').addEventListener('submit',async event => {
   const status = byId('status');
   const button = byId('check-button');
   byId('results').hidden = true;
+  latestAnalysis = null;
+  recommendationIds = [];
   try {
     if (!securityReady) throw new Error('Sicherheitsprüfung ist noch nicht bereit.');
     if (turnstileRequired && !turnstileToken) throw new Error('Bitte zuerst die Sicherheitsprüfung abschliessen.');
     const tokenForRequest = turnstileToken;
     const input = byId('website-url').value.trim();
-    const url = new URL(input);
+    const address = /^[a-z][a-z0-9+.-]*:/i.test(input) ? input : 'https://' + input;
+    const url = new URL(address);
     if (!['https:','http:'].includes(url.protocol)) throw new Error('Bitte eine HTTP- oder HTTPS-Adresse eingeben.');
     button.disabled = true;
     status.textContent = 'Website wird geprüft. Das kann bis zu einer Minute dauern …';
@@ -397,3 +421,4 @@ byId('check-form').addEventListener('submit',async event => {
 </script>
 </body>
 </html>
+

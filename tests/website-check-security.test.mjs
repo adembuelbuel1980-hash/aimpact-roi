@@ -7,6 +7,7 @@ function testDB() {
   const sqlite = new DatabaseSync(':memory:');
   sqlite.exec('CREATE TABLE abuse_limits(bucket TEXT PRIMARY KEY,count INTEGER NOT NULL,expires_at INTEGER NOT NULL)');
   sqlite.exec('CREATE TABLE processed_requests(request_id TEXT PRIMARY KEY,status TEXT NOT NULL,completed_at TEXT)');
+  sqlite.exec('CREATE TABLE intake_authorizations(request_id TEXT PRIMARY KEY,payload_hash TEXT NOT NULL,expires_at INTEGER NOT NULL)');
   return { prepare(sql) { return { bind(...args) { return { async first() {return sqlite.prepare(sql).get(...args)||null;},async run() {
     const result = sqlite.prepare(sql).run(...args);
     return { success:true,meta:{changes:Number(result.changes)} };
@@ -365,13 +366,15 @@ function leadRequest(id=1){return new Request('https://intake.example/',{method:
   request_id:'b1112026-1101-4000-8000-'+String(id).padStart(12,'0'),unternehmen:'Synthetic test',kontaktperson:'Test',email:'test@example.com',score:50,website:'https://example.com/'
 })});}
 
+async function authorizedRequest(DB,id=1){const request=leadRequest(id),b=await request.clone().json();const hash=Buffer.from(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(JSON.stringify([b.request_id,b.unternehmen,b.kontaktperson,b.email,b.website,b.score,b.empfehlungen])))).toString('hex');DB.sqlite.prepare('INSERT OR REPLACE INTO intake_authorizations VALUES(?,?,?)').run(b.request_id,hash,Math.floor(Date.now()/1000)+300);return request;}
+
 test('Make intake budget survives independent Worker instances; duplicate does not spend allowance',async()=>{
   const DB=testDB(),e={DB,MAKE_WEBHOOK_URL:'https://make.invalid/test'};
   const old=globalThis.fetch;let calls=0;
   globalThis.fetch=async()=>{calls++;return new Response('accepted');};
   try{
     for(let id=1;id<=4;id++){
-      const response=await worker.fetch(leadRequest(id),e);
+      const response=await worker.fetch(await authorizedRequest(DB,id),e);
       assert.equal(response.status,id<=3?202:429);
       if(id===4)assert(response.headers.has('Retry-After'));
     }
@@ -389,7 +392,7 @@ test('daily and monthly Make budget each stop forwarding before claim or network
     const DB=testDB(), now=new Date(),epoch=now.getTime()/1000;
     const end=scope.endsWith('month')?Date.UTC(now.getUTCFullYear(),now.getUTCMonth()+1,1)/1000:(Math.floor(epoch/86400)+1)*86400;
     DB.sqlite.prepare('INSERT INTO abuse_limits VALUES(?,?,?)').run(scope+':'+end,max,end);
-    const response=await worker.fetch(leadRequest(),{DB,MAKE_WEBHOOK_URL:'https://make.invalid/test'});
+    const response=await worker.fetch(await authorizedRequest(DB),{DB,MAKE_WEBHOOK_URL:'https://make.invalid/test'});
     assert.equal(response.status,429);
     assert.equal(DB.sqlite.prepare('SELECT count(*) n FROM processed_requests').get().n,0);
   }}finally{globalThis.fetch=old;}
@@ -399,8 +402,10 @@ test('quota database failure never forwards a lead to Make',async()=>{
   const old=globalThis.fetch;let calls=0;globalThis.fetch=async()=>{calls++;return new Response('accepted');};
   try{
     const DB=testDB();DB.sqlite.exec('DROP TABLE abuse_limits');
-    assert.equal((await worker.fetch(leadRequest(),{DB,MAKE_WEBHOOK_URL:'https://make.invalid/test'})).status,503);
+    assert.equal((await worker.fetch(await authorizedRequest(DB),{DB,MAKE_WEBHOOK_URL:'https://make.invalid/test'})).status,503);
     assert.equal(calls,0);
   }finally{globalThis.fetch=old;}
 });
 
+
+ test("direct forged-Origin request cannot reach Make",async()=>{const DB=testDB();const r=await worker.fetch(leadRequest(),{DB,MAKE_WEBHOOK_URL:"https://make.invalid/test"});assert.equal(r.status,403);assert.equal(DB.sqlite.prepare("SELECT count(*) n FROM processed_requests").get().n,0);});

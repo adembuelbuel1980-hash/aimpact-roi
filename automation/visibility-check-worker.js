@@ -54,6 +54,11 @@ export default {
       if(previous?.status==='completed') return json({ok:true,duplicate:true},200,origin);
       if(previous?.status==='pending') return json({ok:true,duplicate:true,pending:true},202,origin);
       if(previous?.status==='failed') return json({error:'Previously failed; manual review required',duplicate:true},409,origin);
+      const authorization=await env.DB.prepare('SELECT payload_hash,expires_at FROM intake_authorizations WHERE request_id = ?').bind(requestId).first();
+      const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(JSON.stringify([body.request_id,body.unternehmen,body.kontaktperson,body.email,body.website,body.score,body.empfehlungen])));
+      const hash=Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');
+      if(!authorization||authorization.expires_at<Math.floor(Date.now()/1000)||authorization.payload_hash!==hash)
+        return json({error:'Unauthorized intake'},403,origin);
       const now=new Date(), epoch=Math.floor(now.getTime()/1000);
       const monthEnd=Date.UTC(now.getUTCFullYear(),now.getUTCMonth()+1,1)/1000;
       const limits=[['lead:global:month',20,monthEnd],['lead:global:day',10,(Math.floor(epoch/86400)+1)*86400],['lead:global:minute',3,(Math.floor(epoch/60)+1)*60]];

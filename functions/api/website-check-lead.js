@@ -132,6 +132,13 @@ export async function onRequestPost({request,env}) {
   let summary;
   try {summary=summarizeAnalysis(data,body.recommendation_ids);} catch {return reply({error:'Prüfbefunde stimmen nicht mit der Messung überein. Bitte Website erneut prüfen.'},422);}
   try {
+    const authorizedPayload={request_id:requestId,unternehmen:clean(body.unternehmen,160),kontaktperson:clean(body.kontaktperson,120),email,website:data.analyzedUrl,score:Math.round(data.performance*100),empfehlungen:summary};
+    const digest=await crypto.subtle.digest('SHA-256',encoder.encode(JSON.stringify(Object.values(authorizedPayload))));
+    const hash=Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');
+    if(!env.DB) return reply({error:'Übermittlung momentan nicht verfügbar.'},503);
+    const authorization=await env.DB.prepare('INSERT OR IGNORE INTO intake_authorizations(request_id,payload_hash,expires_at) VALUES(?,?,?)').bind(requestId,hash,Math.floor(Date.now()/1000)+300).run();
+    if(authorization.success!==true) return reply({error:'Übermittlung momentan nicht verfügbar.'},503);
+    await env.DB.prepare('DELETE FROM intake_authorizations WHERE request_id IN (SELECT request_id FROM intake_authorizations WHERE expires_at < ? LIMIT 100)').bind(Math.floor(Date.now()/1000)-172800).run();
     const response=await fetch('https://aimpact-visibility-api.adembuelbuel1980.workers.dev/',{
       method:'POST',headers:{'Content-Type':'application/json','Origin':'https://aimpact.ch'},
       body:JSON.stringify({request_id:requestId,unternehmen:clean(body.unternehmen,160),

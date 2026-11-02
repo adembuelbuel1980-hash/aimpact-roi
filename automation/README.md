@@ -1,34 +1,73 @@
-# Aimpact Visibility Check – bestehender Betrieb
+# Aimpact Website-Check – bestehender Betrieb
 
-## Datenfluss
+Stand: 2. November 2026. Abgabe KV-Abschlussarbeit: 9. Dezember 2026.
 
-Das öffentliche Formular in `sichtbarkeits-check.html` übermittelt über den Cloudflare Worker an Make. Eine bestätigte Annahme am Eingang ist Voraussetzung für die Erfolgsmeldung. Formspree bleibt danach als zusätzliche Benachrichtigung erhalten; ein Formspree-Ausfall verwirft keinen bereits angenommenen Lead.
+## Öffentlicher Kundenablauf
 
-- Worker: `https://aimpact-visibility-api.adembuelbuel1980.workers.dev/`
-- Geheimnis `MAKE_WEBHOOK_URL` bleibt ausschliesslich im Worker.
-- D1-Binding `DB`: bestehende Datenbank `aimpact-visibility-leads`, Tabelle `processed_requests`.
-- Pro Formularversuch wird eine UUID v4 erzeugt und für Wiederholungen beibehalten. D1 verhindert erneutes Weiterleiten derselben ID.
-- Unklare oder fehlgeschlagene Weiterleitung bleibt für manuelle Prüfung gesperrt. Make-HTTP-Annahme allein beweist noch keinen Tabelleneintrag.
+1. Startseite https://aimpact.ch/ verlinkt auf https://check.aimpact.ch/website-check. Der bisherige Pfad `sichtbarkeits-check.html` leitet dorthin weiter. Historische Selbsteinschätzungen bleiben im Versionsverlauf und in bestehenden Leads erhalten.
+2. Kunde gibt seine Website-Adresse ein. Cloudflare Pages fragt Google PageSpeed Insights / Lighthouse ab. Ergebnis: Performance, Barrierefreiheit, Best Practices, technisches SEO, fünf technische Messwerte und ausgewählte tatsächliche Befunde.
+3. Ergebnisse werden unmittelbar angezeigt. Google-Rankings, Google Maps, Unternehmensprofile und KI-Sichtbarkeit werden dabei nicht gemessen.
+4. Optional sendet der Kunde Name, Unternehmen, E-Mail und die gemessenen Ergebnisse zur persönlichen Prüfung. Kein automatischer Versand eines Kundenberichts.
 
-## Bestehende Make-Szenarien
+## Technischer Datenfluss
 
-1. **8287125 – Aimpact – Visibility Check:** Webhook → bestehende Google-Sheets-Tabelle. Der Worker erzwingt Status `Neu`; neue Anfragen erzeugen keinen Gamma-Bericht.
-2. **8307884 – Aimpact – Freigabe & Bericht:** stündlich höchstens eine Zeile mit H=`Freigegeben` und leerem I. Leere Suchergebnisse werden vor der Verarbeitung gestoppt. Dieselbe Zeile wird auf `In Erstellung` gesetzt; nach abgeschlossener Gamma-Erstellung folgen Link, `Bericht erstellt` und Abschlusszeit. Beide Zeitstempel verwenden Europe/Zurich. Läufe erfolgen nacheinander.
+Bestehendes Cloudflare-Pages-Projekt `aimpact-v2-test`, Produktionsbranch `feature/visibility-check-v2-20261010`. Die Hauptwebsite bleibt im bestehenden GitHub-Pages-Branch `main`. GitHub Pages führt keine Pages Functions aus; deshalb kein pauschaler Merge des alten grossen Feature-PRs.
+
+`functions/api/website-check.js` liefert echte Messwerte mit einem signierten Nachweis. Signaturschlüssel wird zweckgebunden aus dem bestehenden `PAGESPEED_API_KEY` abgeleitet und niemals ausgegeben. Messnachweis gültig zwei Stunden, Messwert-Cache zehn Minuten. `functions/api/website-check-lead.js` prüft Signatur, Gültigkeit, URL, Scores und bekannte Befunde. Vom Browser behauptete URLs/Scores ersetzen die signierten Werte nicht.
+
+Die Pages-Funktion leitet die bestätigten Daten an den vorhandenen Worker weiter:
+- Worker: https://aimpact-visibility-api.adembuelbuel1980.workers.dev/
+- Vorhandenes Geheimnis `MAKE_WEBHOOK_URL`; D1-Binding `DB` auf `aimpact-visibility-leads`, Tabelle `processed_requests`.
+- Eine UUID v4 bleibt für Wiederholungen erhalten. D1 verhindert erneutes Weiterleiten derselben ID. Unklare Annahmen bleiben zur manuellen Prüfung gesperrt.
+- Status am Eingang immer `Neu`. Erst bestätigte Annahme zeigt Erfolg im Formular. Formspree bleibt eine zusätzliche Benachrichtigung nach Annahme.
+- Kein neuer Worker und keine zusätzliche Tabelle angelegt.
+
+## Make und Google Sheets
+
+1. **8287125 – Aimpact – Visibility Check:** aktiver Webhook → bestehende Lead-Tabelle. Kein Gamma-Bericht durch eine neue Anfrage.
+2. **8307884 – Aimpact – Freigabe & Bericht:** aktiv, stündlich höchstens eine Zeile mit H=`Freigegeben` und leerem I. Leere Suchergebnisse werden vor Verarbeitung gestoppt. Dieselbe Zeile wird `In Erstellung`; nur bei abgeschlossener Gamma-Generation mit URL folgen `Bericht erstellt` und Abschlusszeit. Beide Zeitstempel Europe/Zurich, Läufe nacheinander.
 
 Tabelle: https://docs.google.com/spreadsheets/d/1IzZFdXgveHyX7mgAuBN-oj0-VYj-CB3BscmxuowpFeU/edit
+Tab `Tabellenblatt1`, A–K: Datum, Unternehmen, Kontaktperson, E-Mail, Website, Visibility Score, Empfehlungen, Status, Berichtslink, Erstellung gestartet, Bericht erstellt am.
 
-Spalten A–K: Datum, Unternehmen, Kontaktperson, E-Mail, Website, Visibility Score, Empfehlungen, Status, Berichtslink, Erstellung gestartet, Bericht erstellt am. Telefonnummer/Einzelwerte werden am Eingang mitgesendet, aber nicht in diesen Spalten gespeichert. Kontaktangaben gehen nicht an Gamma.
+Für neue technische Leads ist F ausschliesslich der Performance-Wert, kein Sichtbarkeitsscore. G beginnt exakt mit `Technischer Website-Check |` und enthält Quelle, Messzeit, vier Kategorien, fünf Messwerte und bis zu drei Befunde. Bestehende Spalten und Make-Mappings bleiben erhalten. Alte Selbsteinschätzungswerte werden nicht umgedeutet.
 
-## Bedienung und Fehler
+Gamma-Modul 7 unterscheidet anhand dieses Präfixes technische Berichte und frühere Selbsteinschätzungen. Nur B/E/F/G werden übergeben; keine Kontaktperson/E-Mail/Telefonnummer. Unternehmen und untersuchte Website müssen exakt erhalten bleiben. Aimpact/aimpact.ch ist nur die Autorenangabe. Private Entwürfe, externe Freigabe deaktiviert, Indexierung aus, keine Nachrichten.
 
-- Vorhandenen Lead prüfen; nur bei gewünschtem Bericht H auf `Freigegeben` setzen.
-- Der Bericht ist ein privater Entwurf aus Selbsteinschätzung, keine echte Ranking- oder KI-Sichtbarkeitsmessung. Vor Weitergabe fachlich prüfen.
-- Bei `In Erstellung` ohne Link zuerst Ausführungsprotokoll und vorhandene Gamma-Generation prüfen. Nicht blind neu freigeben oder Generation wiederholen.
-- Keine automatische Kunden-E-Mail und keine öffentliche Gamma-Freigabe.
-- Ein Suchlauf pro Stunde braucht etwa 720–744 Credits pro Monat, zusätzlich zu Leads/Berichten. Make-Free-Kontingent im Blick behalten.
-- CORS/Origin-Prüfung ist kein Bot-Schutz. Ein separater verifizierter Turnstile-/Rate-Limit-Schutz ist in diesem Worker nicht eingerichtet.
+## Nachweise am 2. November 2026
 
-## Nachweise am 1. November 2026
+- Reale Prüfung von https://aimpact.ch/: Messzeit `2026-11-02T06:28:08.074Z`, mobile; Performance 100, Barrierefreiheit 95, Best Practices 100, technisches SEO 100. FCP/LCP/Speed Index 0.8 s, TBT 10 ms, CLS 0. Momentaufnahme, kein Rankingnachweis.
+- Öffentliche Eingabe und Formularversand erfolgreich. Genau eine neue Testzeile 9 `Aimpact Technik-Test 02.11.2026` mit signierten Messdaten, zunächst `Neu`. Keine Überschreibung alter Testzeilen.
+- Nur Zeile 9 freigegeben. Make erzeugte nach 39 Sekunden den privaten Link https://gamma.app/docs/nx8pdi3q2h21rz5, Start 07:29:53, Abschluss 07:30:32.
+- **Offen: Inhaltliche und visuelle Endkontrolle dieses Gamma-Berichts.** Der Link und Tabellenabschluss sind bestätigt; daraus folgt keine Bestätigung der Berichtszahlen oder Darstellung. Browser-Verbindung brach nach Start ab; separater Zugriff verlangt Anmeldung. Bericht nicht an Kunden versenden, bevor Quelle, URL, Kategorien, Messzeit und Befunde manuell abgeglichen sind.
+- 24 lokale Tests bestanden: echter Analyseaufruf/Anzeige, signierter Versand, Schutz vor Wiederholung und alten Ergebnissen, fehlende/manipulierte/abgelaufene Nachweise, fehlerhafte Google-Antworten, Quotenfehler, optionale Turnstile-Prüfung.
+- Bestehende CI-Workflows korrigiert: echte Route `/website-check` statt alter Meta-Weiterleitungsdatei; aktuelle Datenschutzerklärung; alle drei Testsuiten. Commit `1af92c22eac852ab0fcc7094c8ab569a6d83d343`: Cloudflare Pages, beide Deployment-Smokes und Security-Tests erfolgreich.
+
+## Freigabe- und Fehlerregeln
+
+- H=`Freigegeben` nur nach Prüfung des gewünschten Leads setzen.
+- `In Erstellung` ohne Link: zuerst Make-Protokoll und vorhandene Gamma-Generation prüfen. Nicht blind neu freigeben, keine automatische Doppelgeneration.
+- Abgeschlossene Zeilen mit vorhandenem I werden übersprungen. Bestehende Doppelschutztests vom 1. November bleiben gültig.
+- "Live" nur für nachweislich bereitgestellte und öffentlich getestete Schritte verwenden. Konfiguration, Veröffentlichung, Datenankunft und Berichtsinhalt separat nachweisen.
+- Kein vollständiger globaler Missbrauchsschutz bestätigt: das derzeitige Limit gilt pro Ausführungsinstanz, Origin/CORS ist kein Bot-Schutz. Optionaler Turnstile-Code ist vorhanden; Aktivierung und globales Limit sind separat zu prüfen.
+- Suchlauf pro Stunde braucht etwa 720–744 Make-Credits pro Monat plus Leads/Berichte. Bestehendes Free-Kontingent überwachen.
+
+## Priorisierte Fertigstellung bis zur KV-Abgabe
+
+Die Termine sind Arbeitsziele, keine zusätzlichen Schulvorgaben.
+
+| Priorität | Zieltermin | Aufgabe | Fertig, wenn |
+|---|---|---|---|
+| P0 | nächste Arbeitssitzung | Gamma-Testbericht inhaltlich und visuell abgleichen | Exakte URL, alle Zahlen/Einheiten, Messzeit, Quelle, tatsächliche Befunde und TESTBERICHT stimmen; keine erfundenen Ranking-Aussagen |
+| P0 | vor breiter Bewerbung | Turnstile und dauerhaftes globales Quoten-/Missbrauchslimit prüfen und fertigstellen | Nachweis gegen ungültige Tokens und verteilte Überlastung; Google- und Make-Kosten begrenzt |
+| P1 | 6. November | Zweite reale Website als Pilot testen, mit zulässigen Testdaten | Unterschiedliche Messwerte landen korrekt im bestehenden Sheet und privaten Bericht |
+| P1 | 13. November | Bestehende KV-Unterlagen mit Ziel, Ausgangslage, Architektur, Testprotokollen und Eigenleistung ergänzen | Nachweise und klare Grenzen der technischen Messung dokumentiert |
+| P1 | 20. November | Betrieb und Nutzen auswerten | Reale Fälle, Bearbeitungszeit, Fehlerquote und Creditverbrauch nachvollziehbar; keine erfundenen Conversion-Zahlen |
+| P1 | 30. November | Vollständigen Entwurf der Abschlussarbeit prüfen | Schulvorgaben anhand der vorhandenen Aufgabenstellung abgeglichen; Quellen, Datenschutz, Reflexion und Anhänge vollständig |
+| P2 | 5. Dezember | Abgabeversion kontrollieren und sichern | Text, Abbildungen, Verweise und Dateien überprüft; funktionierender Stand dokumentiert |
+| Termin | 9. Dezember 2026 | KV-Abschlussarbeit abgeben | Abgabe bestätigt |
+
+## Historische Nachweise am 1. November 2026
 
 - Cloudflare: gleiche Test-ID einmal angenommen, danach als Duplikat erkannt.
 - Make Freigabe: ohne Freigabe nur Suche; freigegebene Systemtest-Zeile erfolgreich in 39 Sekunden (7 Operationen); erneuter Lauf übersprang die abgeschlossene Zeile.

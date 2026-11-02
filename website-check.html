@@ -27,6 +27,7 @@
     .lead-consent{display:flex;align-items:flex-start;gap:10px;font-size:.9rem;font-weight:400;margin:12px 0 20px}
     .lead-consent input{flex:0 0 auto;min-width:0;width:18px;height:18px;margin-top:4px}
     #lead-section[hidden]{display:none}
+    .maps-cta{display:inline-flex;align-items:center;min-height:48px;padding:12px 18px;border-radius:9px;background:var(--gold);color:#18130a;font-weight:800;text-decoration:none}
     @media(max-width:600px){main{padding-top:32px}.panel{padding:18px}.form-row button{width:100%}}
   </style>
 </head>
@@ -48,6 +49,14 @@
   </section>
   <div id="results" hidden>
     <section class="panel"><h2>Prüfergebnisse</h2><p id="scope" class="muted"></p><div id="scores" class="grid"></div><p class="notice muted">Die Werte sind technische Momentaufnahmen von Google PageSpeed Insights (Mobilgerät). SEO 100/100 bedeutet nicht, dass eine Website bei Google auf Platz 1 steht.</p></section>
+    <section class="panel" id="maps-bridge" aria-labelledby="maps-bridge-heading">
+      <p class="eyebrow">Dein nächster Schritt</p>
+      <h2 id="maps-bridge-heading"></h2>
+      <p id="maps-bridge-copy"></p>
+      <p>Beim kostenlosen persönlichen Maps-Check prüfe ich dein Google-Profil, drei lokale Suchbegriffe und drei Mitbewerber. Du erhältst drei Prioritäten für deinen Betrieb.</p>
+      <p><a id="maps-bridge-link" class="maps-cta" href="mailto:info@aimpact.ch">Gratis Maps-Check bei Adem anfragen</a></p>
+      <p class="muted"><small>Die Anfrage öffnet dein E-Mail-Programm. Erst wenn du die E-Mail absendest, wird sie verschickt. Der Maps-Check erfolgt persönlich, nicht automatisch.</small></p>
+    </section>
     <section class="panel"><h2>Messwerte</h2><div id="metrics" class="grid"></div></section>
     <section class="panel"><h2>Die wichtigsten Massnahmen</h2><p class="muted">Bis zu drei erste Ansatzpunkte. Kritische technische Fehler, relevante Ladezeitpotenziale und Barrierefreiheit werden berücksichtigt. Kleine Einsparungen haben eine niedrigere Priorität. Geschätzte Einsparungen sind keine Garantie.</p><div id="recommendations"></div><div id="additional-recommendations"></div></section>
     <section class="panel" id="technical-findings-section" hidden><h2>Weitere technische Prüfergebnisse</h2><p class="muted">Diese technischen Prüfungen wurden nicht als konkrete Handlungsempfehlung eingeordnet. Die Kennungen dienen zur Vertiefung im vollständigen Analysebericht; sie sind nicht automatisch Fehler.</p><div id="technical-findings"></div></section>
@@ -180,6 +189,23 @@ function tile(label, value, metric = false) {
 function item(title, description, state = 'unknown') {
   return `<article class="item"><h3 class="${state}">${escapeHtml(title)}</h3><p>${escapeHtml(description)}</p></article>`;
 }
+
+function mapsBridgeMessage(data) {
+  const scores = ['performance','accessibility','bestPractices','seo'].map(key => scoreNumber(data[key]));
+  if (scores.some(score => score === null)) return {
+    heading: 'Technische Prüfung ergänzen – lokale Sichtbarkeit persönlich prüfen',
+    copy: 'Einige technische Werte fehlen. Ob Gäste deinen Betrieb auf Google Maps finden, lässt sich aus diesem Ergebnis nicht ableiten.'
+  };
+  if (scores.every(score => score >= 90)) return {
+    heading: 'Gute Technikwerte. Finden Gäste auch deinen Betrieb?',
+    copy: 'Alle vier technischen Prüfbereiche liegen bei mindestens 90 von 100 Punkten. Das ist eine gute technische Grundlage, aber kein Nachweis für lokale Auffindbarkeit oder mehr Reservationen.'
+  };
+  return {
+    heading: 'Technik verbessern und die lokale Auffindbarkeit prüfen',
+    copy: 'Mindestens ein technischer Prüfbereich liegt unter 90 von 100 Punkten. Die Hinweise oben helfen bei der technischen Verbesserung. Ob Gäste deinen Betrieb auf Google Maps finden, prüfe ich separat.'
+  };
+}
+
 function render(data, requestedUrl) {
   latestAnalysis = data;
   leadRequestId = crypto.randomUUID();
@@ -306,6 +332,11 @@ function render(data, requestedUrl) {
   byId('lead-website').value = analyzedUrl;
   byId('lead-performance').value = scoreNumber(data.performance) ?? '';
   byId('lead-seo').value = scoreNumber(data.seo) ?? '';
+  const mapsMessage = mapsBridgeMessage(data);
+  byId('maps-bridge-heading').textContent = mapsMessage.heading;
+  byId('maps-bridge-copy').textContent = mapsMessage.copy;
+  const mapsBody = 'Hallo Adem,\n\nich möchte den kostenlosen persönlichen Maps-Check anfragen.\nGeprüfte Website: ' + analyzedUrl + '\nRestaurant / Betrieb: \nStandort: \nGoogle-Profil-Link (falls vorhanden): \n\nFreundliche Grüsse';
+  byId('maps-bridge-link').href = 'mailto:info@aimpact.ch?subject=' + encodeURIComponent('Gratis Maps-Check nach Website-Check') + '&body=' + encodeURIComponent(mapsBody);
   byId('results').hidden = false;
 }
 byId('lead-form').addEventListener('submit', async event => {

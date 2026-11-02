@@ -134,3 +134,16 @@ Offen bleiben ausschliesslich der normale Formularversand nach Aktivierung der N
 - Danach A12:K15 erneut gelesen: ausschliesslich der reguläre Abschlusstest vorhanden, kein zusätzlicher Direkter-Sperrtest-Eintrag.
 - Damit sind die früher ausdrücklich als offen dokumentierten Formular-/Sperrtests abgeschlossen. Gemeinsam mit dem vorher bestandenen echten Kontingenttest und 37 automatisierten Tests sind die beauftragten Schutzänderungen live verifiziert. Historische Zwischenstände bleiben als Verlauf erhalten; diese Abschlussbestätigung ist massgeblich.
 - Limits bleiben vorsichtige feste UTC-Kontingente (Google50/Tag,4/Minute,3/Client je10Minuten; Make20/Monat,10/Tag,3/Minute). Reservierungen können bei späterer Ablehnung verbraucht werden. Kein Versprechen vollständiger Unangreifbarkeit oder kostenloser Gesamtnutzung. Nächste Projektaufgaben: Fehlerüberwachung, Funnel-Tracking und vorhandene KV-Unterlagen ergänzen.
+
+
+## Betriebskontrolle am 2. November 2026: sichtbare Warnungen ergänzt
+
+Im vorhandenen Tabellenblatt1 wurden ausschliesslich zwei bedingte Formatierungsregeln für H2:K1011 und Hinweise an H1/J1 ergänzt. Keine neue Datei, Spalte oder Tabelle; keine Statuswerte, Kontakte, Messdaten, Freigaben oder Berichtslinks geändert.
+
+- Rot: H=Fehler oder H=Bericht erstellt bei leerem I.
+- Orange: H=In Erstellung bei leerem I und fehlender/unlesbarer Startzeit J oder mindestens 30 Minuten seit Start. Numerische Datumseinträge und lesbare Datumstexte werden berücksichtigt.
+- Zeitbasis: bestehende Tabellenzeitzone Europe/Zurich. Neuberechnung bleibt ON_CHANGE; die Farbe ist keine garantierte zeitgesteuerte Alarmierung und keine Nachricht. Regeln gelten für die aktuelle Rastergrösse bis Zeile1011; bei Erweiterung kontrollieren.
+- Hinweise erklären: zuerst Make-Ausführungsprotokoll und vorhandene Gamma-Generation prüfen; nicht blind erneut freigeben. Warnung allein löst keine neue Generation aus.
+- Nach dem Speichern Regeln, Hinweise, Statuswerte und Dropdowns über die Sheets-Schnittstelle erneut gelesen. In den kontrollierten Zeilen2–12 kein Status In Erstellung/Fehler und keine als abgeschlossen markierte Zeile ohne Link.
+- Make-Szenario8307884 im Browser Active bestätigt. Sichtbare stündliche Läufe bis 02.11.2026 12:51:12 als Success mit jeweils einer Operation; kein gerade laufender Auftrag. Dies belegt planmässige Suchläufe, keinen künstlich ausgelösten Gamma-Fehler.
+- Noch offen: aktive Fehlerbehandlung/Benachrichtigung im Make-Szenario und Wiederaufnahme einer bereits gestarteten, noch nicht fertigen Gamma-Generation ohne Doppelgenerierung. Die Tabellenfarben ersetzen diese nicht. Danach Funnel-Tracking und vorhandene KV-Unterlagen mit den echten Nachweisen ergänzen.

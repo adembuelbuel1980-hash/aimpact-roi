@@ -8,15 +8,15 @@
   const topics = {
     local: {
       title: 'Local SEO',
-      text: 'Local SEO hilft deinem Unternehmen, bei lokalen Google-Suchen besser gefunden zu werden. Aimpact optimiert dafür unter anderem Google Business Profile, lokale Suchbegriffe, Bewertungen, Standortsignale und relevante Inhalte.'
+      text: 'Local SEO hilft deinem Unternehmen, bei lokalen Google-Suchen besser gefunden zu werden. Aimpact optimiert dafür unter anderem Google-Profil, lokale Suchbegriffe, Bewertungen, Standortsignale und relevante Inhalte.'
     },
     maps: {
       title: 'Google Maps',
       text: 'Google Maps ist besonders wichtig, wenn potenzielle Kunden nach Angeboten in ihrer Nähe suchen. Aimpact optimiert Profil, Leistungen, Kategorien, Inhalte und lokale Relevanzsignale, damit dein Unternehmen besser auffindbar wird.'
     },
     ai: {
-      title: 'AI Visibility',
-      text: 'AI Visibility beschreibt, wie gut dein Unternehmen und deine Inhalte von KI-Systemen verstanden und eingeordnet werden können. Aimpact verbessert dafür strukturierte Inhalte, FAQ, thematische Relevanz und klare Unternehmenssignale. Eine bestimmte Empfehlung in KI-Systemen kann seriös nicht garantiert werden.'
+      title: 'KI-Sichtbarkeit',
+      text: 'KI-Sichtbarkeit beschreibt, wie gut dein Unternehmen und deine Inhalte von KI-Systemen verstanden und eingeordnet werden können. Aimpact verbessert dafür strukturierte Inhalte, FAQ, thematische Relevanz und klare Unternehmenssignale. Eine bestimmte Empfehlung in KI-Systemen kann seriös nicht garantiert werden.'
     },
     conversion: {
       title: 'Website & Conversion',
@@ -32,12 +32,13 @@
       position:relative;z-index:2147483000;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
     }
     #aa-launcher{
-  position:fixed;
+  position:relative;
+  margin:22px 22px 22px auto;
   z-index:2147483001;
   pointer-events:auto;
   touch-action:manipulation;
-  right:22px;
-  bottom:22px;
+  right:auto;
+  bottom:auto;
   height:52px;
   padding:0 18px;
   border-radius:999px;
@@ -94,7 +95,7 @@
     .aa-note{font-size:10px;color:#77736c;line-height:1.4;margin-top:9px}
     .aa-foot{padding:10px 14px;border-top:1px solid var(--aa-line);font-size:10px;color:#69665f;text-align:center;background:#0d0d0d}
     @media(max-width:600px){
-      #aa-launcher{right:16px;bottom:calc(16px + env(safe-area-inset-bottom, 0px));width:52px;height:52px;padding:0;justify-content:center;font-size:0;gap:0}
+      #aa-launcher{right:auto;bottom:auto;margin:16px 16px calc(16px + env(safe-area-inset-bottom, 0px)) auto;width:52px;height:52px;padding:0;justify-content:center;font-size:0;gap:0}
       #aa-launcher::before{content:"💬";font-size:23px;line-height:1}
       #aa-window{left:14px;right:14px;bottom:calc(84px + env(safe-area-inset-bottom, 0px));width:auto;height:min(650px,calc(100vh - 106px - env(safe-area-inset-bottom, 0px)))}
     }
@@ -143,7 +144,7 @@
     const opts = [
       ['Local SEO','local'],
       ['Google Maps','maps'],
-      ['AI Visibility','ai'],
+      ['KI-Sichtbarkeit','ai'],
       ['Website & Conversion','conversion'],
       ['Website-Check','check'],
       ['Technischer Website-Check','techcheck'],
@@ -206,7 +207,7 @@
           <option value="">Bitte auswählen</option>
           <option>Google Sichtbarkeit</option>
           <option>Google Maps</option>
-          <option>AI Visibility</option>
+          <option>KI-Sichtbarkeit</option>
           <option>Website & Conversion</option>
           <option>Content</option>
           <option>Mehr Anfragen</option>
@@ -260,7 +261,7 @@
     launcher.setAttribute('aria-expanded','true');
     if(!initialized){
       initialized=true;
-      addMessage('Willkommen bei Aimpact. Wobei kann ich dir helfen? Du kannst mehr über Local SEO, Google Maps, AI Visibility oder Website & Conversion erfahren – oder direkt deine Sichtbarkeit prüfen.');
+      addMessage('Willkommen bei Aimpact. Wobei kann ich dir helfen? Du kannst mehr über Local SEO, Google Maps, KI-Sichtbarkeit oder Website & Conversion erfahren – oder direkt deine Sichtbarkeit prüfen.');
       addOptions();
     }
   }

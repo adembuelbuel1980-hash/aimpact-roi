@@ -118,3 +118,11 @@ Worker-Editor mit dem geprüften 8019-Zeichen-Quelltext ersetzt, vollständig pe
 37 lokale Tests bestanden: zusätzlich vollständiger Durchlauf des Pages-Handlers über die echte SQL-Bestätigung zum Worker, erneutem Versuch ohne doppelte Weiterleitung, sowie Ablehnung manipulierter und abgelaufener Bestätigungen. Testcode in 9887ccaf3f6f9de87986a4ad7ccd3f8dbc08f421 gesichert.
 
 Noch abzuschliessen: neue aktive Worker-Version im bestehenden Dashboard bestätigen, genau eine normale öffentliche Testanfrage mit Tabellenankunft prüfen und einen direkten unbestätigten Test im Cloudflare-HTTP-Tester abweisen lassen. Erst danach die zusätzliche Absicherung als vollständig live-verifiziert ausgeben. Bestehende Turnstile- und Kontingentfunktionen sowie deren vorheriger Live-Grenznachweis bleiben davon getrennt bestätigt.
+
+## Abschlusskontrolle: aktive Worker-Version bestätigt
+
+Am 2. November wurde im Cloudflare-Editor Version 87b8aa4d als Active/Latest abgelesen. Der Editor enthält 8019 Zeichen und meldet keine Probleme. Damit ist die zuvor offene Worker-Veröffentlichung bestätigt; main/automation/visibility-check-worker.js wurde mit der produktiven Quelle abgeglichen.
+
+Die öffentliche Analyse von aimpact.ch wurde nach der Umstellung erneut abgeschlossen. Die letzte Formularprüfung wurde vor Eingabe der Testkontaktdaten automatisch gesperrt: Der dafür geöffnete Browser-Tab war inzwischen auf YouTube navigiert. Diese Seite gehört nicht zum autorisierten Auftrag und wurde nicht weiter bedient. Die Browser-Sicherheitsprüfung hat den Zugriff ausdrücklich automatisch abgelehnt. Kein neuer Formularerfolg und keine Tabellenankunft werden für diesen letzten Versuch behauptet.
+
+Offen bleiben ausschliesslich der normale Formularversand nach Aktivierung der Nutzdatenbestätigung sowie ein aussagekräftiger direkter Negativtest im Cloudflare-HTTP-Tester. Dessen bisherige 403-Ausgabe ohne korrekt getrennte Header/Body ist kein Nachweis von Unauthorized intake. Die 37 automatisierten Tests einschliesslich des echten Handler-Durchlaufs und die vorherigen Live-Kontingenttests bleiben gültig. Für die nächsten UI-Schritte den Aimpact-Test-Tab reserviert lassen und nicht für andere Webseiten verwenden.

@@ -34,7 +34,7 @@
 <main>
   <p class="eyebrow">Aimpact · Kostenloser Website-Check</p>
   <h1>Kostenloser <span>Website-Check</span></h1>
-  <p class="muted">Vier Lighthouse-Kategorien, technische Messwerte und konkrete Verbesserungshinweise. Keine Aussage über Google-Rankings oder KI-Sichtbarkeit.</p>
+  <p class="muted">Vier technische Prüfbereiche, technische Messwerte und konkrete Verbesserungshinweise. Keine Aussage über Google-Rankings oder KI-Sichtbarkeit.</p>
   <section class="panel" aria-label="Website prüfen">
     <form id="check-form">
       <label for="website-url">Website-Adresse</label>
@@ -47,10 +47,10 @@
     <p id="status" class="muted" role="status" aria-live="polite"></p>
   </section>
   <div id="results" hidden>
-    <section class="panel"><h2>Prüfergebnisse</h2><p id="scope" class="muted"></p><div id="scores" class="grid"></div><p class="notice muted">Die Werte sind technische Momentaufnahmen von Google Lighthouse (Mobilgerät). SEO 100/100 bedeutet nicht, dass eine Website bei Google auf Platz 1 steht.</p></section>
+    <section class="panel"><h2>Prüfergebnisse</h2><p id="scope" class="muted"></p><div id="scores" class="grid"></div><p class="notice muted">Die Werte sind technische Momentaufnahmen von Google PageSpeed Insights (Mobilgerät). SEO 100/100 bedeutet nicht, dass eine Website bei Google auf Platz 1 steht.</p></section>
     <section class="panel"><h2>Messwerte</h2><div id="metrics" class="grid"></div></section>
-    <section class="panel"><h2>Die wichtigsten Massnahmen</h2><p class="muted">Bis zu drei erste Ansatzpunkte. Kritische technische Fehler, relevante Ladezeitpotenziale und Barrierefreiheit werden berücksichtigt. Kleine Einsparungen haben eine niedrigere Priorität. Lighthouse-Schätzungen sind keine Garantie.</p><div id="recommendations"></div><div id="additional-recommendations"></div></section>
-    <section class="panel" id="technical-findings-section" hidden><h2>Weitere Lighthouse-Diagnosen</h2><p class="muted">Diese technischen Prüfungen wurden nicht als konkrete Handlungsempfehlung eingeordnet. Die Kennungen dienen zur Vertiefung im vollständigen Lighthouse-Bericht; sie sind nicht automatisch Fehler.</p><div id="technical-findings"></div></section>
+    <section class="panel"><h2>Die wichtigsten Massnahmen</h2><p class="muted">Bis zu drei erste Ansatzpunkte. Kritische technische Fehler, relevante Ladezeitpotenziale und Barrierefreiheit werden berücksichtigt. Kleine Einsparungen haben eine niedrigere Priorität. Geschätzte Einsparungen sind keine Garantie.</p><div id="recommendations"></div><div id="additional-recommendations"></div></section>
+    <section class="panel" id="technical-findings-section" hidden><h2>Weitere technische Prüfergebnisse</h2><p class="muted">Diese technischen Prüfungen wurden nicht als konkrete Handlungsempfehlung eingeordnet. Die Kennungen dienen zur Vertiefung im vollständigen Analysebericht; sie sind nicht automatisch Fehler.</p><div id="technical-findings"></div></section>
     <section class="panel"><h2>Weitere Prüfungen</h2><div id="checks"></div></section>
     <section class="panel" id="lead-section" aria-labelledby="lead-heading">
       <p class="eyebrow">Nächster Schritt</p>
@@ -222,9 +222,9 @@ function render(data, requestedUrl) {
     const preferBytes = ['unused-css-rules','unused-javascript'].includes(f.id);
     const fmt = n => new Intl.NumberFormat('de-CH', {maximumFractionDigits:0}).format(n);
     const bytes = f.savingsBytes !== null && f.savingsBytes >= 1024
-      ? 'Lighthouse schätzt ein Datenpotenzial von rund ' + fmt(f.savingsBytes / 1024) + ' KiB.' : '';
+      ? 'Die Analyse schätzt ein Datenpotenzial von rund ' + fmt(f.savingsBytes / 1024) + ' KiB.' : '';
     const ms = f.savingsMs !== null && f.savingsMs >= 1
-      ? 'Lighthouse schätzt ein Zeitpotenzial von rund ' + fmt(f.savingsMs) + ' ms.' : '';
+      ? 'Die Analyse schätzt ein Zeitpotenzial von rund ' + fmt(f.savingsMs) + ' ms.' : '';
     return preferBytes ? (bytes || ms) : (ms || bytes);
   };
   // Erst kritische technische Fehler, dann relevante Einsparungen und

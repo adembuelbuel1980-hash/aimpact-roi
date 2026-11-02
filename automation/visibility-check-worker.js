@@ -2,7 +2,7 @@
  * Aimpact Visibility Check -> Make proxy (Cloudflare Worker)
  * Required secret: MAKE_WEBHOOK_URL (set with wrangler secret put MAKE_WEBHOOK_URL).
  * Optional ALLOWED_ORIGIN defaults to https://aimpact.ch.
- * Set Cloudflare rate limiting / Turnstile before production use.
+ * Shared D1 cost limits protect forwarding independently of spoofable Origin.
  */
 const headersFor = origin => ({
   'Access-Control-Allow-Origin': origin,
@@ -47,6 +47,23 @@ export default {
       quelle:'Visibility Check – Selbsteinschätzung',
       einzelwerte:Object.fromEntries(['google','maps','website','content','ai','conversion'].map(k=>[k,Math.max(0,Math.min(100,Number(body.einzelwerte?.[k])||0))]))
     };
+    // Completed retries remain successful even when the current budget is full.
+    // No row is claimed until budget is reserved, so a 429 can be retried later.
+    try {
+      const previous=await env.DB.prepare('SELECT status FROM processed_requests WHERE request_id = ?').bind(requestId).first();
+      if(previous?.status==='completed') return json({ok:true,duplicate:true},200,origin);
+      if(previous?.status==='pending') return json({ok:true,duplicate:true,pending:true},202,origin);
+      if(previous?.status==='failed') return json({error:'Previously failed; manual review required',duplicate:true},409,origin);
+      const now=new Date(), epoch=Math.floor(now.getTime()/1000);
+      const monthEnd=Date.UTC(now.getUTCFullYear(),now.getUTCMonth()+1,1)/1000;
+      const limits=[['lead:global:month',20,monthEnd],['lead:global:day',10,(Math.floor(epoch/86400)+1)*86400],['lead:global:minute',3,(Math.floor(epoch/60)+1)*60]];
+      for(const [scope,maximum,end] of limits){
+        const reservation=await env.DB.prepare(`INSERT INTO abuse_limits(bucket,count,expires_at) VALUES (?,1,?)
+ON CONFLICT(bucket) DO UPDATE SET count=abuse_limits.count+1 WHERE abuse_limits.count < ?`).bind(scope+':'+end,end,maximum).run();
+        if(reservation.success!==true||![0,1].includes(reservation.meta?.changes)) throw new Error('Quota confirmation failed');
+        if(reservation.meta.changes===0) return new Response(JSON.stringify({error:'Das Anfragelimit ist erreicht. Bitte später erneut versuchen.'}),{status:429,headers:{...headersFor(origin),'Retry-After':String(Math.max(1,Number(end)-epoch))}});
+      }
+    } catch { return json({error:'Anfragen momentan nicht verfügbar. Bitte später erneut versuchen.'},503,origin); }
     // The primary key makes claiming an ID atomic even for concurrent requests.
     // A repeat submission must NEVER call Make a second time.
     let claim;

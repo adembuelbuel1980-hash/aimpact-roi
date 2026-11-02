@@ -15,13 +15,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          BASE="https://aimpact-v2-test.pages.dev"
-          echo "Checking test page (not a production release)"
-          curl --fail --show-error --silent --location --retry 3 --retry-delay 3 --max-time 25 \
-            "$BASE/website-check-v3-neu.html" -o /tmp/website-check-v3.html
+          BASE="https://check.aimpact.ch"
+          echo "Checking deployed technical website check"
+          curl --fail --show-error --silent --location --retry 6 --retry-all-errors --retry-delay 10 --max-time 25 \
+            "$BASE/website-check" -o /tmp/website-check-v3.html
           test "$(wc -c < /tmp/website-check-v3.html)" -gt 1000
           grep -qi 'website.check\|website-check\|PageSpeed\|Lighthouse' /tmp/website-check-v3.html
-          echo "Test page reachable and nonempty"
+          grep -q '/api/website-check-lead' /tmp/website-check-v3.html
+          echo "Technical check and measurement intake form reachable"
           echo "Checking public API config (no Google scan or quota usage)"
           curl --fail --show-error --silent --retry 3 --retry-delay 3 --max-time 25 \
             "$BASE/api/website-check-config" -o /tmp/website-check-config.json

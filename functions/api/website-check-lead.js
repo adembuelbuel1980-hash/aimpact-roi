@@ -126,13 +126,14 @@ export async function onRequestPost({request,env}) {
   } catch {return reply({error:'Messdaten fehlen, wurden verändert oder sind abgelaufen. Bitte Website erneut prüfen.'},422);}
   const clean=(value,max)=>String(value??'').trim().slice(0,max);
   const requestId=clean(body.request_id,100),email=clean(body.email,254);
+  const company=clean(body.unternehmen,160)||(body.request_type==='maps_check'?'Website: '+new URL(data.analyzedUrl).hostname:'');
   if(!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(requestId)||
-    !clean(body.unternehmen,160)||!clean(body.kontaktperson,120)||!/^\S+@\S+\.\S+$/.test(email))
+    !company||!clean(body.kontaktperson,120)||!/^\S+@\S+\.\S+$/.test(email))
     return reply({error:'Bitte Name, Unternehmen und gültige E-Mail-Adresse angeben.'},422);
   let summary;
-  try {summary=summarizeAnalysis(data,body.recommendation_ids);} catch {return reply({error:'Prüfbefunde stimmen nicht mit der Messung überein. Bitte Website erneut prüfen.'},422);}
+  try {summary=summarizeAnalysis(data,body.recommendation_ids);if(body.request_type==='maps_check') summary=summary.slice(0,540)+' | Anfrage: persönlicher Maps-Check.';} catch {return reply({error:'Prüfbefunde stimmen nicht mit der Messung überein. Bitte Website erneut prüfen.'},422);}
   try {
-    const authorizedPayload={request_id:requestId,unternehmen:clean(body.unternehmen,160),kontaktperson:clean(body.kontaktperson,120),email,website:data.analyzedUrl,score:Math.round(data.performance*100),empfehlungen:summary};
+    const authorizedPayload={request_id:requestId,unternehmen:company,kontaktperson:clean(body.kontaktperson,120),email,website:data.analyzedUrl,score:Math.round(data.performance*100),empfehlungen:summary};
     const digest=await crypto.subtle.digest('SHA-256',encoder.encode(JSON.stringify(Object.values(authorizedPayload))));
     const hash=Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');
     if(!env.DB) return reply({error:'Übermittlung momentan nicht verfügbar.'},503);
@@ -141,7 +142,7 @@ export async function onRequestPost({request,env}) {
     await env.DB.prepare('DELETE FROM intake_authorizations WHERE request_id IN (SELECT request_id FROM intake_authorizations WHERE expires_at < ? LIMIT 100)').bind(Math.floor(Date.now()/1000)-172800).run();
     const response=await fetch('https://aimpact-visibility-api.adembuelbuel1980.workers.dev/',{
       method:'POST',headers:{'Content-Type':'application/json','Origin':'https://aimpact.ch'},
-      body:JSON.stringify({request_id:requestId,unternehmen:clean(body.unternehmen,160),
+      body:JSON.stringify({request_id:requestId,unternehmen:company,
         kontaktperson:clean(body.kontaktperson,120),email,website:data.analyzedUrl,
         score:Math.round(data.performance*100),empfehlungen:summary,status:'Neu',
         quelle:'Technischer Website-Check – Google Lighthouse'}),

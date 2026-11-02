@@ -8,7 +8,7 @@ function harness(){
  const nodes={},calls=[];let fail=false;
  const node=id=>nodes[id]??={id,value:'',textContent:'',innerHTML:'',hidden:false,disabled:false,handlers:{},addEventListener(k,f){this.handlers[k]=f},reset(){}};
  const analysis={analyzedUrl:'https://example.com/',measuredAt:'2026-11-02T06:00:00Z',strategy:'mobile',performance:.42,accessibility:.85,bestPractices:1,seo:.91,metrics:{fcp:'2.1 s',lcp:'4.3 s',tbt:'210 ms',cls:'0.1',speedIndex:'3.1 s'},audits:{'color-contrast':{score:0}},checks:[],analysisToken:'synthetic-signed-result'};
- const scope={console,URL,AbortController,AbortSignal,setTimeout,clearTimeout,Intl,Date,Math,Map,Set,String,Number,Object,Array,crypto:{randomUUID:()=> 'c1112026-1102-4000-8000-000000000001'},window:{},document:{getElementById:node},FormData:class{entries(){return Object.entries({name:'Testperson',unternehmen:'Website Test',email:'test@example.com'})}},fetch:async(url,options)=>{calls.push({url,options});if(url.includes('config'))return {ok:true,json:async()=>({turnstileEnabled:false})};if(url.includes('/api/website-check?'))return {ok:!fail,status:fail?502:200,json:async()=>fail?{error:'Google unavailable'}:analysis};if(url==='/api/website-check-lead')return {ok:true,json:async()=>({ok:true})};return {ok:false};}};
+ const scope={console,URL,AbortController,AbortSignal,setTimeout,clearTimeout,Intl,Date,Math,Map,Set,String,Number,Object,Array,crypto:{randomUUID:()=> 'c1112026-1102-4000-8000-000000000001'},window:{},document:{getElementById:node},FormData:class{entries(){return Object.entries({name:'Testperson',email:'test@example.com'})}},fetch:async(url,options)=>{calls.push({url,options});if(url.includes('config'))return {ok:true,json:async()=>({turnstileEnabled:false})};if(url.includes('/api/website-check?'))return {ok:!fail,status:fail?502:200,json:async()=>fail?{error:'Google unavailable'}:analysis};if(url==='/api/website-check-lead')return {ok:true,json:async()=>({ok:true})};return {ok:false};}};
  vm.createContext(scope);vm.runInContext(code,scope);
  const submit=id=>node(id).handlers.submit({preventDefault(){},currentTarget:node(id)});
  return {node,nodes,calls,submit,analysis,setFail:()=>{fail=true}};
@@ -35,9 +35,6 @@ test('good technical results invite a separate Maps check without claiming ranki
  h.node('website-url').value='example.com';await h.submit('check-form');
  assert.match(h.node('maps-bridge-heading').textContent,/Gute Technikwerte/);
  assert.match(h.node('maps-bridge-copy').textContent,/kein Nachweis/);
- assert.match(h.node('maps-bridge-link').href,/^mailto:info@aimpact.ch\?/);
- const body=new URL(h.node('maps-bridge-link').href).searchParams.get('body');
- assert.match(body,/https:\/\/example.com\//);
  assert.equal(h.calls.filter(c=>c.url==='/api/website-check-lead').length,0);
 });
 test('weaker results keep technical improvements separate from Maps visibility',async()=>{
@@ -50,4 +47,16 @@ test('missing technical score never produces a good-results invitation',async()=
  h.node('website-url').value='example.com';await h.submit('check-form');
  assert.match(h.node('maps-bridge-copy').textContent,/Werte fehlen/);
  assert.doesNotMatch(h.node('maps-bridge-heading').textContent,/Gute Technikwerte/);
+});
+
+test('single Maps form sends intent and signed website without requiring a company field',async()=>{
+ const h=harness();await new Promise(setImmediate);h.node('website-url').value='example.com';
+ await h.submit('check-form');await h.submit('lead-form');
+ const body=JSON.parse(h.calls.find(c=>c.url==='/api/website-check-lead').options.body);
+ assert.equal(body.request_type,'maps_check');assert.equal(body.unternehmen,undefined);
+ assert.equal(body.website,'https://example.com/');
+ assert.equal((html.match(/id="lead-form"/g)||[]).length,1);
+ assert(!html.includes('id="lead-section"'));assert(!html.includes('id="lead-company"'));
+ assert(html.indexOf('id="lead-form"')>html.indexOf('id="maps-bridge"'));
+ assert(html.indexOf('id="lead-form"')<html.indexOf('<h2>Messwerte</h2>'));
 });

@@ -63,3 +63,13 @@ test('intake quota rejection preserves status and retry information',async()=>{
  }finally{globalThis.fetch=old;}
 });
 
+
+test('Maps request derives a website identifier from signed data when company is omitted',async()=>{
+ const old=globalThis.fetch;let sent;globalThis.fetch=async(url,options)=>{sent=JSON.parse(options.body);return Response.json({ok:true});};
+ try{const p=await payload();delete p.unternehmen;p.request_type='maps_check';
+ const response=await onRequestPost({request:request(p),env:{PAGESPEED_API_KEY:secret,DB}});
+ assert.equal(response.status,200);assert.equal(sent.unternehmen,'Website: example.com');
+ assert.equal(sent.website,'https://example.com/');assert.equal(sent.status,'Neu');
+ assert.match(sent.empfehlungen,/Anfrage: persönlicher Maps-Check/);
+ }finally{globalThis.fetch=old;}
+});

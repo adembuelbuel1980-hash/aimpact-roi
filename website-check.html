@@ -34,8 +34,8 @@
 <body>
 <main>
   <p class="eyebrow">Aimpact · Kostenloser Website-Check</p>
-  <h1>Kostenloser <span>Website-Check</span></h1>
-  <p class="muted">Vier technische Prüfbereiche, technische Messwerte und konkrete Verbesserungshinweise. Keine Aussage über Google-Rankings oder KI-Sichtbarkeit.</p>
+  <h1>Wie gut funktioniert deine Website <span>für Gäste?</span></h1>
+  <p class="muted">Prüfe Ladezeit, Lesbarkeit und technische Grundlagen. Du erhältst Messwerte und konkrete Hinweise für deine Website.</p>
   <section class="panel" aria-label="Website prüfen">
     <form id="check-form">
       <label for="website-url">Website-Adresse</label>
@@ -54,32 +54,25 @@
       <h2 id="maps-bridge-heading"></h2>
       <p id="maps-bridge-copy"></p>
       <p>Beim kostenlosen persönlichen Maps-Check prüfe ich dein Google-Profil, drei lokale Suchbegriffe und drei Mitbewerber. Du erhältst drei Prioritäten für deinen Betrieb.</p>
-      <p><a id="maps-bridge-link" class="maps-cta" href="mailto:info@aimpact.ch">Gratis Maps-Check bei Adem anfragen</a></p>
-      <p class="muted"><small>Die Anfrage öffnet dein E-Mail-Programm. Erst wenn du die E-Mail absendest, wird sie verschickt. Der Maps-Check erfolgt persönlich, nicht automatisch.</small></p>
-    </section>
-    <section class="panel"><h2>Messwerte</h2><div id="metrics" class="grid"></div></section>
-    <section class="panel"><h2>Die wichtigsten Massnahmen</h2><p class="muted">Bis zu drei erste Ansatzpunkte. Kritische technische Fehler, relevante Ladezeitpotenziale und Barrierefreiheit werden berücksichtigt. Kleine Einsparungen haben eine niedrigere Priorität. Geschätzte Einsparungen sind keine Garantie.</p><div id="recommendations"></div><div id="additional-recommendations"></div></section>
-    <section class="panel" id="technical-findings-section" hidden><h2>Weitere technische Prüfergebnisse</h2><p class="muted">Diese technischen Prüfungen wurden nicht als konkrete Handlungsempfehlung eingeordnet. Die Kennungen dienen zur Vertiefung im vollständigen Analysebericht; sie sind nicht automatisch Fehler.</p><div id="technical-findings"></div></section>
-    <section class="panel"><h2>Weitere Prüfungen</h2><div id="checks"></div></section>
-    <section class="panel" id="lead-section" aria-labelledby="lead-heading">
-      <p class="eyebrow">Nächster Schritt</p>
-      <h2 id="lead-heading">Deine Ergebnisse persönlich einordnen lassen</h2>
-      <p>Sende uns deine gemessenen Prüfergebnisse. Wir prüfen die Befunde und melden uns persönlich mit den nächsten Schritten bei dir.</p>
       <form id="lead-form" action="https://formspree.io/f/mqeoqqgo" method="POST">
-        <input type="hidden" name="source" value="Aimpact Website-Check">
+        <input type="hidden" name="source" value="Aimpact Maps-Check mit technischen Ausgangswerten">
         <input type="hidden" id="lead-website" name="website" value="">
         <input type="hidden" id="lead-performance" name="performance_score" value="">
         <input type="hidden" id="lead-seo" name="seo_score" value="">
         <div class="lead-fields">
           <div><label for="lead-name">Name</label><input id="lead-name" name="name" autocomplete="name" required maxlength="120"></div>
-          <div><label for="lead-company">Unternehmen</label><input id="lead-company" name="unternehmen" autocomplete="organization" required maxlength="160"></div>
           <div><label for="lead-email">E-Mail</label><input id="lead-email" name="email" type="email" autocomplete="email" required maxlength="254"></div>
         </div>
         <label class="lead-consent" for="lead-consent"><input id="lead-consent" type="checkbox" required>Ich bin damit einverstanden, dass Aimpact meine Angaben zur Bearbeitung dieser Anfrage verwendet. <a href="https://aimpact.ch/datenschutz.html" target="_blank" rel="noopener noreferrer">Datenschutz</a></label>
-        <button type="submit" id="lead-button">Prüfergebnisse zur persönlichen Prüfung senden</button>
+        <button type="submit" id="lead-button">Gratis Maps-Check anfragen</button>
         <p id="lead-status" role="status" aria-live="polite" class="muted"></p>
       </form>
     </section>
+    <section class="panel"><h2>Messwerte</h2><div id="metrics" class="grid"></div></section>
+    <section class="panel"><h2>Die wichtigsten Massnahmen</h2><p class="muted">Bis zu drei erste Ansatzpunkte. Kritische technische Fehler, relevante Ladezeitpotenziale und Barrierefreiheit werden berücksichtigt. Kleine Einsparungen haben eine niedrigere Priorität. Geschätzte Einsparungen sind keine Garantie.</p><div id="recommendations"></div><div id="additional-recommendations"></div></section>
+    <section class="panel" id="technical-findings-section" hidden><h2>Weitere technische Prüfergebnisse</h2><p class="muted">Diese technischen Prüfungen wurden nicht als konkrete Handlungsempfehlung eingeordnet. Die Kennungen dienen zur Vertiefung im vollständigen Analysebericht; sie sind nicht automatisch Fehler.</p><div id="technical-findings"></div></section>
+    <section class="panel"><h2>Weitere Prüfungen</h2><div id="checks"></div></section>
+
   </div>
   <p><a href="https://aimpact.ch/">← Zur Aimpact-Startseite</a></p>
 </main>
@@ -335,8 +328,6 @@ function render(data, requestedUrl) {
   const mapsMessage = mapsBridgeMessage(data);
   byId('maps-bridge-heading').textContent = mapsMessage.heading;
   byId('maps-bridge-copy').textContent = mapsMessage.copy;
-  const mapsBody = 'Hallo Adem,\n\nich möchte den kostenlosen persönlichen Maps-Check anfragen.\nGeprüfte Website: ' + analyzedUrl + '\nRestaurant / Betrieb: \nStandort: \nGoogle-Profil-Link (falls vorhanden): \n\nFreundliche Grüsse';
-  byId('maps-bridge-link').href = 'mailto:info@aimpact.ch?subject=' + encodeURIComponent('Gratis Maps-Check nach Website-Check') + '&body=' + encodeURIComponent(mapsBody);
   byId('results').hidden = false;
 }
 byId('lead-form').addEventListener('submit', async event => {
@@ -353,7 +344,7 @@ byId('lead-form').addEventListener('submit', async event => {
     const response=await fetch('/api/website-check-lead',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        request_id:leadRequestId,unternehmen:fields.unternehmen,kontaktperson:fields.name,
+        request_id:leadRequestId,request_type:'maps_check',kontaktperson:fields.name,
         email:fields.email,website:latestAnalysis.analyzedUrl,
         score:scoreNumber(latestAnalysis.performance),
         analysis_token:latestAnalysis.analysisToken,recommendation_ids:recommendationIds
@@ -362,7 +353,7 @@ byId('lead-form').addEventListener('submit', async event => {
     const result=await response.json().catch(()=>({}));
     if(!response.ok||result.ok!==true||result.pending) throw new Error(result.error||'Die Übermittlung wurde noch nicht bestätigt.');
     leadSubmitted = true;
-    status.textContent = 'Danke! Deine Anfrage mit den gemessenen Prüfergebnissen ist angekommen. Wir melden uns persönlich bei dir.';
+    status.textContent = 'Danke! Deine Maps-Check-Anfrage mit der geprüften Website ist angekommen. Ich melde mich persönlich bei dir.';
     // Preserve the existing notification; primary storage is already confirmed.
     void fetch(form.action,{method:'POST',body:new FormData(form),headers:{Accept:'application/json'},signal:AbortSignal.timeout(8000)}).catch(()=>{});
     if (typeof window.gtag === 'function') window.gtag('event','generate_lead',{lead_source:'technical_website_check'});

@@ -291,6 +291,15 @@
     .hero-email{display:inline-block;margin-top:16px;color:#d1cec6;text-underline-offset:5px}
     @media(max-width:899px){.hero-inner{grid-template-columns:minmax(0,1fr);gap:28px}.hero{padding:40px 0 48px}.founder-card{display:flex;text-align:left;align-items:center;gap:16px;padding:16px}.founder-card img{width:72px;height:72px;margin:0;flex:none}.hero-actions{align-items:center}.hero h1{overflow-wrap:normal}}
 
+  
+    .maps-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:24px 0}
+    .maps-form-grid label{display:block;font-weight:700;margin-bottom:6px}
+    .maps-form-grid input{width:100%;min-width:0;padding:13px;border:1px solid #777;border-radius:9px;background:#202020;color:var(--white)}
+    .maps-consent{display:flex;gap:10px;align-items:flex-start;margin:20px 0;color:#d1cec6}
+    .maps-consent input{flex:none;width:20px;height:20px;margin-top:4px}
+    #maps-request-status{min-height:1.7em;margin-top:16px;color:#e3d7ae}
+    @media(max-width:600px){.maps-form-grid{grid-template-columns:minmax(0,1fr)}#maps-request-form .btn{width:100%;white-space:normal}}
+
   </style>
 </head>
 
@@ -317,7 +326,7 @@
           <h1>Mehr Gäste über <span>Google Maps.</span></h1>
           <p class="lead">Ich prüfe gratis dein Google-Profil, drei lokale Suchbegriffe und drei Mitbewerber. Persönlich, mit Rückmeldung innert 24 Stunden.</p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="mailto:info@aimpact.ch?subject=Gratis%20Maps-Check%20anfragen&amp;body=Hallo%20Adem%0A%0AIch%20m%C3%B6chte%20den%20Gratis%20Maps-Check%20anfragen.%0ARestaurant%3A%0AAdresse%3A%0AWebsite%3A%0AGoogle-Profil-Link%20(falls%20vorhanden)%3A%0A%0AFreundliche%20Gr%C3%BCsse">Gratis Maps-Check anfragen</a>
+            <a class="btn btn-primary" href="#maps-anfrage">Gratis Maps-Check anfragen</a>
             <a class="hero-how" href="https://check.aimpact.ch/website-check">Oder: technischen Website-Check starten</a>
           </div>
           <p class="muted" style="margin-top:16px;font-size:.88rem">Kostenlos · Unverbindlich · Direkt von Adem</p>
@@ -512,8 +521,35 @@
             <p style="margin-top:12px;color:#d1cec6">Bis Tag 30 stehen dein optimiertes Google-Profil, der Bewertungsprozess und das vereinbarte Tracking. Liegt die Verzögerung bei mir, erhältst du einen zusätzlichen Betreuungsmonat ohne Zusatzkosten. Voraussetzung sind rechtzeitig bereitgestellte Zugänge, Inhalte und Freigaben.</p>
             <p style="margin-top:16px;font-size:.9rem;color:#bdb9b0">Umfang, Mitwirkung, verbindlicher Gesamtpreis inklusive MWST-Angabe und Bedingungen stehen vorab in deiner schriftlichen Offerte; bestimmte Platzierungen oder Gästezahlen sind nicht garantiert.</p>
           </div>
-          <a class="btn btn-primary" style="margin-top:24px" href="mailto:info@aimpact.ch?subject=Gratis%20Maps-Check%20und%20Offerte&amp;body=Hallo%20Adem%0A%0AIch%20m%C3%B6chte%20einen%20Gratis%20Maps-Check%20und%20eine%20Offerte%20f%C3%BCr%20die%2090-Tage-Umsetzung.%0ARestaurant%3A%0AStandort%3A%0AWebsite%3A%0AGoogle-Profil%3A%0AMein%20wichtigstes%20Ziel%3A%0A%0AFreundliche%20Gr%C3%BCsse">Gratis Maps-Check und Offerte anfragen</a>
+          <a class="btn btn-primary" style="margin-top:24px" href="#maps-anfrage">Gratis Maps-Check und Offerte anfragen</a>
         </article>
+      </div>
+    </section>
+
+
+    <section id="maps-anfrage" aria-labelledby="maps-request-heading">
+      <div class="wrap" style="max-width:800px">
+        <p class="eyebrow">Persönlich von Adem</p>
+        <h2 id="maps-request-heading">Deinen Gratis Maps-Check anfragen.</h2>
+        <p class="lead" style="margin-top:20px">Ich prüfe dein Google-Profil, drei lokale Suchbegriffe und drei Mitbewerber. Du erhältst drei Prioritäten für dein Restaurant. Kostenlos und unverbindlich.</p>
+        <form id="maps-request-form" action="https://formspree.io/f/mqeoqqgo" method="POST">
+          <input type="hidden" name="source" value="Aimpact Startseite – persönlicher Maps-Check und Offerte">
+          <input type="hidden" name="_subject" value="Aimpact: Gratis Maps-Check angefragt">
+          <div style="display:none" aria-hidden="true"><label>Dieses Feld leer lassen<input name="_gotcha" tabindex="-1" autocomplete="off"></label></div>
+          <div class="maps-form-grid">
+            <div><label for="maps-name">Name *</label><input id="maps-name" name="name" autocomplete="name" required maxlength="120"></div>
+            <div><label for="maps-restaurant">Restaurant / Betrieb *</label><input id="maps-restaurant" name="unternehmen" autocomplete="organization" required maxlength="160"></div>
+            <div><label for="maps-email">E-Mail</label><input id="maps-email" name="email" type="email" autocomplete="email" maxlength="254" required aria-describedby="maps-contact-note"></div>
+            <div><label for="maps-phone">Telefon</label><input id="maps-phone" name="telefon" type="tel" autocomplete="tel" maxlength="40" aria-describedby="maps-contact-note"></div>
+            <div><label for="maps-location">Ort / Adresse *</label><input id="maps-location" name="standort" autocomplete="street-address" required maxlength="240"></div>
+            <div><label for="maps-website">Website oder Google-Profil (optional)</label><input id="maps-website" name="website_oder_google_profil" type="text" inputmode="url" maxlength="2048"></div>
+          </div>
+          <p id="maps-contact-note" class="muted">Bitte gib mindestens eine Kontaktmöglichkeit an: E-Mail oder Telefon.</p>
+          <label class="maps-consent"><input type="checkbox" name="datenschutz" value="Einverstanden" required><span>Ich bin damit einverstanden, dass Aimpact meine Angaben für diese Anfrage verwendet. <a href="datenschutz.html">Datenschutz</a></span></label>
+          <button class="btn btn-primary" id="maps-request-button" type="submit">Gratis Maps-Check anfragen</button>
+          <p id="maps-request-status" role="status" aria-live="polite"></p>
+          <noscript><p>Ohne JavaScript benötige ich deine E-Mail-Adresse. Nach dem Absenden öffnet sich die Bestätigungsseite des Formulardiensts.</p></noscript>
+        </form>
       </div>
     </section>
 
@@ -572,7 +608,7 @@
         <p class="eyebrow">Der nächste Schritt</p>
         <h2>Mach Gästen den Weg zur Anfrage leichter.</h2>
         <p class="lead">Lass dein Google-Profil persönlich prüfen. Du erhältst drei Prioritäten für deinen nächsten Schritt.</p>
-        <a class="btn btn-primary" href="mailto:info@aimpact.ch?subject=Gratis%20Maps-Check%20anfragen&amp;body=Hallo%20Adem%0A%0AIch%20m%C3%B6chte%20den%20Gratis%20Maps-Check%20anfragen.%0ARestaurant%3A%0AAdresse%3A%0AWebsite%3A%0AGoogle-Profil-Link%20(falls%20vorhanden)%3A%0A%0AFreundliche%20Gr%C3%BCsse">Gratis Maps-Check anfragen</a>
+        <a class="btn btn-primary" href="#maps-anfrage">Gratis Maps-Check anfragen</a>
       </div>
     </section>
   </main>
@@ -611,5 +647,48 @@
     document.getElementById('year').textContent = new Date().getFullYear();
   </script>
   <script src="aimpact-assistant.js?v=20261102-ohne-overlay" defer></script>
+
+  <script id="maps-request-script">
+  (() => {
+    const form = document.getElementById('maps-request-form');
+    const email = document.getElementById('maps-email');
+    const phone = document.getElementById('maps-phone');
+    const button = document.getElementById('maps-request-button');
+    const status = document.getElementById('maps-request-status');
+    let pending = false, submitted = false;
+    email.required = false;
+    const validContact = () => {
+      const telephone = phone.value.trim();
+      if (!email.value.trim() && !/^[+()\d\s.-]{6,40}$/.test(telephone)) {
+        email.setCustomValidity('Bitte eine E-Mail-Adresse oder gültige Telefonnummer angeben.');
+        return false;
+      }
+      email.setCustomValidity('');
+      return true;
+    };
+    email.addEventListener('input', () => email.setCustomValidity(''));
+    phone.addEventListener('input', () => email.setCustomValidity(''));
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      if (pending || submitted) return;
+      if (!validContact() || !form.reportValidity()) { email.reportValidity(); return; }
+      pending = true; button.disabled = true;
+      status.textContent = 'Deine Anfrage wird gesendet …';
+      try {
+        const response = await fetch(form.action, {
+          method:'POST', body:new FormData(form), headers:{Accept:'application/json'},
+          signal:AbortSignal.timeout(20000)
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || data.ok !== true) throw new Error('not-confirmed');
+        submitted = true;
+        status.textContent = 'Danke! Deine Maps-Check-Anfrage ist angekommen. Ich melde mich persönlich bei dir.';
+      } catch {
+        status.textContent = 'Der Versand konnte nicht bestätigt werden. Deine Angaben bleiben erhalten. Bitte versuche es später erneut.';
+      } finally { pending = false; button.disabled = submitted; }
+    });
+  })();
+  </script>
+
 </body>
 </html>

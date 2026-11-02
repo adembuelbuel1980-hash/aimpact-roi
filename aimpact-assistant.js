@@ -2,7 +2,7 @@
   'use strict';
 
   const FORM_ENDPOINT = 'https://formspree.io/f/mqeoqqgo';
-  const CHECK_URL = 'https://aimpact.ch/sichtbarkeits-check.html';
+  const CHECK_URL = 'https://check.aimpact.ch/website-check';
   const TECH_CHECK_URL = 'https://check.aimpact.ch/website-check';
 
   const topics = {
@@ -145,7 +145,7 @@
       ['Google Maps','maps'],
       ['AI Visibility','ai'],
       ['Website & Conversion','conversion'],
-      ['Visibility Check','check'],
+      ['Website-Check','check'],
       ['Technischer Website-Check','techcheck'],
       ['Kostenlose Analyse','lead']
     ];
@@ -170,7 +170,7 @@
     }
     if(key==='check'){
       addMessage(
-        `Mit dem kostenlosen Aimpact Visibility Check erhältst du eine erste Einschätzung deiner Sichtbarkeit bei Google, Maps, Website, Content, AI Visibility und Conversion.<br><a class="aa-primary" href="${CHECK_URL}">Visibility Check starten →</a>`,
+        `Gib deine Website-Adresse ein. Der kostenlose Aimpact Website-Check liefert Messwerte zu Performance, Barrierefreiheit, Best Practices und technischem SEO von Google Lighthouse. Rankings, Google Maps und KI-Sichtbarkeit werden dabei nicht gemessen.<br><a class="aa-primary" href="${CHECK_URL}">Website-Check starten →</a>`,
         'bot', true
       );
       addOptions();
@@ -248,7 +248,7 @@
       }catch(err){
         btn.disabled=false;
         btn.textContent='Erneut versuchen';
-        addMessage('Die Anfrage konnte gerade nicht gesendet werden. Bitte versuche es erneut oder nutze den Visibility Check.', 'bot');
+        addMessage('Die Anfrage konnte gerade nicht gesendet werden. Bitte versuche es erneut oder nutze den Website-Check.', 'bot');
       }
     });
   }

@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="de-CH"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Aimpact | Website-Check V2 – Prototyp</title><meta name="robots" content="noindex,nofollow">
+<style>:root{color-scheme:dark;--gold:#c9a84c}*{box-sizing:border-box}body{margin:0;background:#0a0a0a;color:#f6f4ee;font:16px/1.6 system-ui,sans-serif}.wrap{max-width:850px;margin:auto;padding:48px 20px}h1{font-size:clamp(2rem,5vw,3.7rem);line-height:1.12}h1 span,.eyebrow{color:var(--gold)}.eyebrow{font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700}.muted{color:#b5b1a7}.panel{background:#141414;border:1px solid #393124;border-radius:18px;padding:24px;margin:24px 0}form{display:flex;gap:10px;flex-wrap:wrap}input{flex:1;min-width:220px;padding:14px;border-radius:9px;border:1px solid #666;background:#222;color:white;font:inherit}button{background:var(--gold);color:#111;border:0;border-radius:9px;padding:14px 22px;font:inherit;font-weight:750;cursor:pointer}button:disabled{opacity:.55;cursor:wait}.item{padding:15px 0;border-top:1px solid #393124}.item h3{margin:0 0 4px;font-size:1.05rem}.ok{color:#82d6a3}.bad{color:#ffb28c}.unknown{color:#d2c9b2}a{color:var(--gold)}small{color:#bbb}</style></head>
+<body><main class="wrap"><p class="eyebrow">Aimpact · Entwicklungsversion</p><h1>Technischer <span>Website-Check</span></h1>
+<p class="muted">Wir prüfen öffentlich messbare Merkmale deiner Website mit Google PageSpeed Insights. Das ist <strong>kein</strong> Google-Ranking- oder KI-Sichtbarkeitsnachweis.</p>
+<section class="panel"><form id="form"><label for="url" style="width:100%">Website-Adresse</label><input id="url" type="url" required placeholder="https://beispiel.ch" autocomplete="url"><button id="go" type="submit">Website prüfen</button></form><p id="status" role="status" aria-live="polite" class="muted">Noch keine Prüfung durchgeführt.</p></section>
+<section id="results" class="panel" hidden><h2>Prüfergebnisse</h2><p id="scope" class="muted"></p><div id="checks"></div><h2>Drei nächste Schritte</h2><ol id="actions"></ol><p class="muted"><small>Die Bewertung berücksichtigt ausschliesslich von Google zurückgegebene Prüfdaten. Nicht verfügbare Prüfungen gelten nicht als Fehler. Die Ergebnisse können je nach Abrufzeitpunkt variieren.</small></p></section>
+<p><a href="https://aimpact.ch/sichtbarkeits-check.html">Zum bisherigen Visibility Check</a></p></main>
+<script>
+
+const $ = id => document.getElementById(id);
+
+const rules = [
+  {
+    id: "document-title",
+    name: "Seitentitel",
+    tip: "Seitentitel prüfen und verbessern."
+  },
+  {
+    id: "meta-description",
+    name: "Meta-Beschreibung",
+    tip: "Eine aussagekräftige Meta-Beschreibung ergänzen."
+  },
+  {
+    id: "canonical",
+    name: "Canonical-URL",
+    tip: "Die kanonische URL überprüfen."
+  },
+  {
+    id: "is-crawlable",
+    name: "Indexierbarkeit",
+    tip: "Robots- und Indexierungsanweisungen prüfen."
+  },
+  {
+    id: "heading-order",
+    name: "Überschriftenstruktur",
+    tip: "Die Überschriftenhierarchie verbessern."
+  },
+  {
+    id: "viewport",
+    name: "Mobile Darstellung",
+    tip: "Die mobile Viewport-Konfiguration prüfen."
+  },
+  {
+    id: "link-text",
+    name: "Linktexte",
+    tip: "Aussagekräftige Linktexte verwenden."
+  }
+];
+
+$("form").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  $("results").hidden = true;
+  $("go").disabled = true;
+  $("status").textContent =
+    "Website wird analysiert. Bitte warten.";
+
+  try {
+    const url = new URL($("url").value.trim());
+
+    if (!["https:", "http:"].includes(url.protocol)) {
+      throw new Error(
+        "Bitte eine gültige Website-Adresse eingeben."
+      );
+    }
+
+    const endpoint =
+      "/api/website-check?url=" +
+      encodeURIComponent(url.href);
+
+    const response = await fetch(endpoint);
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.error || "Analyse fehlgeschlagen."
+      );
+    }
+
+    const checks = $("checks");
+    const actions = $("actions");
+
+    checks.replaceChildren();
+    actions.replaceChildren();
+
+    const available = (data.checks || []).filter(
+      item => typeof item.score === "number"
+    );
+
+    const failed = [];
+
+    for (const item of available) {
+      const rule = rules.find(
+        r => r.id === item.id
+      );
+
+      const pass = item.score >= 0.9;
+
+      if (!pass) {
+        failed.push(rule || item);
+      }
+
+      const div = document.createElement("div");
+      div.className = "item";
+
+      const title = document.createElement("h3");
+      title.className = pass ? "ok" : "bad";
+      title.textContent =
+        (pass ? "✓ " : "! ") + item.name;
+
+      const detail = document.createElement("p");
+      detail.className = "muted";
+      detail.textContent = pass
+        ? "Prüfung bestanden."
+        : "Verbesserung empfohlen.";
+
+      div.append(title, detail);
+      checks.append(div);
+    }
+
+    if (!available.length) {
+      const p = document.createElement("p");
+      p.textContent =
+        "Keine Einzelprüfungen mit auswertbarem Ergebnis.";
+      checks.append(p);
+    }
+
+    $("scope").textContent =
+      "Geprüfte URL: " +
+      (data.analyzedUrl || url.href) +
+      " · Mobil · " +
+      available.length +
+      " auswertbare Kriterien" +
+      (typeof data.seo === "number"
+        ? " · Lighthouse SEO: " +
+          Math.round(data.seo * 100) + "/100"
+        : "");
+
+    for (const item of failed.slice(0, 3)) {
+      const li = document.createElement("li");
+      li.textContent =
+        item.tip ||
+        "Dieses Kriterium überprüfen.";
+      actions.append(li);
+    }
+
+    if (!failed.length) {
+      const li = document.createElement("li");
+      li.textContent =
+        "Keine Auffälligkeiten in den auswertbaren " +
+        "Kriterien. Für Rankings und KI-Sichtbarkeit " +
+        "sind weitere Analysen nötig.";
+      actions.append(li);
+    }
+
+    $("results").hidden = false;
+
+    $("status").textContent =
+      "Analyse abgeschlossen: " +
+      failed.length +
+      " Auffälligkeiten bei " +
+      available.length +
+      " auswertbaren Kriterien.";
+
+  } catch (error) {
+    $("status").textContent =
+      "Analyse nicht möglich: " +
+      error.message;
+  } finally {
+    $("go").disabled = false;
+  }
+});
+
+</script></body></html>

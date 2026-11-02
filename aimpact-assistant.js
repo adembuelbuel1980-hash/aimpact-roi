@@ -170,7 +170,7 @@
     }
     if(key==='check'){
       addMessage(
-        `Gib deine Website-Adresse ein. Der kostenlose Aimpact Website-Check liefert Messwerte zu Performance, Barrierefreiheit, Best Practices und technischem SEO von Google Lighthouse. Rankings, Google Maps und KI-Sichtbarkeit werden dabei nicht gemessen.<br><a class="aa-primary" href="${CHECK_URL}">Website-Check starten →</a>`,
+        `Gib deine Website-Adresse ein. Der kostenlose Aimpact Website-Check liefert Messwerte zu Performance, Barrierefreiheit, Best Practices und technischem SEO von Google PageSpeed Insights. Rankings, Google Maps und KI-Sichtbarkeit werden dabei nicht gemessen.<br><a class="aa-primary" href="${CHECK_URL}">Website-Check starten →</a>`,
         'bot', true
       );
       addOptions();
@@ -178,7 +178,7 @@
     }
     if(key==='techcheck'){
       addMessage(
-        `Prüfe deine Website automatisch mit Google Lighthouse auf Ladezeit, Barrierefreiheit, technische Best Practices und grundlegende SEO-Kriterien.<br><a class="aa-primary" href="${TECH_CHECK_URL}">Technischen Website-Check starten →</a>`,
+        `Prüfe deine Website automatisch mit Google PageSpeed Insights auf Ladezeit, Barrierefreiheit, technische Best Practices und grundlegende SEO-Kriterien.<br><a class="aa-primary" href="${TECH_CHECK_URL}">Technischen Website-Check starten →</a>`,
         'bot', true
       );
       addOptions();

@@ -11,7 +11,7 @@ function harness(){
  const scope={console,URL,AbortController,AbortSignal,setTimeout,clearTimeout,Intl,Date,Math,Map,Set,String,Number,Object,Array,crypto:{randomUUID:()=> 'c1112026-1102-4000-8000-000000000001'},window:{},document:{getElementById:node},FormData:class{entries(){return Object.entries({name:'Testperson',unternehmen:'Website Test',email:'test@example.com'})}},fetch:async(url,options)=>{calls.push({url,options});if(url.includes('config'))return {ok:true,json:async()=>({turnstileEnabled:false})};if(url.includes('/api/website-check?'))return {ok:!fail,status:fail?502:200,json:async()=>fail?{error:'Google unavailable'}:analysis};if(url==='/api/website-check-lead')return {ok:true,json:async()=>({ok:true})};return {ok:false};}};
  vm.createContext(scope);vm.runInContext(code,scope);
  const submit=id=>node(id).handlers.submit({preventDefault(){},currentTarget:node(id)});
- return {node,nodes,calls,submit,setFail:()=>{fail=true}};
+ return {node,nodes,calls,submit,analysis,setFail:()=>{fail=true}};
 }
 test('domain input triggers a real analysis request and renders supplied technical scores',async()=>{
  const h=harness();await new Promise(setImmediate);h.node('website-url').value='example.com';await h.submit('check-form');
@@ -27,4 +27,27 @@ test('lead carries signed analysis and observed findings; repeated submit does n
 test('failed new scan clears old analysis and cannot submit stale results',async()=>{
  const h=harness();await new Promise(setImmediate);h.node('website-url').value='example.com';await h.submit('check-form');h.setFail();await h.submit('check-form');await h.submit('lead-form');
  assert.equal(h.node('results').hidden,true);assert.equal(h.calls.filter(c=>c.url==='/api/website-check-lead').length,0);assert.match(h.node('lead-status').textContent,/zuerst erneut prüfen/);
+});
+
+test('good technical results invite a separate Maps check without claiming rankings',async()=>{
+ const h=harness();await new Promise(setImmediate);
+ Object.assign(h.analysis,{performance:1,accessibility:.95,bestPractices:1,seo:1});
+ h.node('website-url').value='example.com';await h.submit('check-form');
+ assert.match(h.node('maps-bridge-heading').textContent,/Gute Technikwerte/);
+ assert.match(h.node('maps-bridge-copy').textContent,/kein Nachweis/);
+ assert.match(h.node('maps-bridge-link').href,/^mailto:info@aimpact.ch\?/);
+ const body=new URL(h.node('maps-bridge-link').href).searchParams.get('body');
+ assert.match(body,/https:\/\/example.com\//);
+ assert.equal(h.calls.filter(c=>c.url==='/api/website-check-lead').length,0);
+});
+test('weaker results keep technical improvements separate from Maps visibility',async()=>{
+ const h=harness();await new Promise(setImmediate);h.node('website-url').value='example.com';await h.submit('check-form');
+ assert.match(h.node('maps-bridge-heading').textContent,/Technik verbessern/);
+ assert.match(h.node('maps-bridge-copy').textContent,/separat/);
+});
+test('missing technical score never produces a good-results invitation',async()=>{
+ const h=harness();await new Promise(setImmediate);h.analysis.seo=null;
+ h.node('website-url').value='example.com';await h.submit('check-form');
+ assert.match(h.node('maps-bridge-copy').textContent,/Werte fehlen/);
+ assert.doesNotMatch(h.node('maps-bridge-heading').textContent,/Gute Technikwerte/);
 });

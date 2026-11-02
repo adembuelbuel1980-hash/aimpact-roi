@@ -61,7 +61,7 @@ Gamma-Modul 7 unterscheidet anhand dieses Präfixes technische Berichte und frü
 - `In Erstellung` ohne Link: zuerst Make-Protokoll und vorhandene Gamma-Generation prüfen. Nicht blind neu freigeben, keine automatische Doppelgeneration.
 - Abgeschlossene Zeilen mit vorhandenem I werden übersprungen. Bestehende Doppelschutztests vom 1. November bleiben gültig.
 - "Live" nur für nachweislich bereitgestellte und öffentlich getestete Schritte verwenden. Konfiguration, Veröffentlichung, Datenankunft und Berichtsinhalt separat nachweisen.
-- Kein vollständiger globaler Missbrauchsschutz bestätigt: das derzeitige Limit gilt pro Ausführungsinstanz, Origin/CORS ist kein Bot-Schutz. Optionaler Turnstile-Code ist vorhanden; Aktivierung und globales Limit sind separat zu prüfen.
+- Cloudflare Turnstile und gemeinsame D1-Kontingente sind seit 2. November aktiv. Origin/CORS bleibt keine Absenderauthentifizierung; die Make-Eingangsgrenzen gelten auch bei gefälschter Origin. Kein vollständiger Schutz vor jeder Form von Missbrauch zugesichert.
 - Suchlauf pro Stunde braucht etwa 720–744 Make-Credits pro Monat plus Leads/Berichte. Bestehendes Free-Kontingent überwachen.
 
 ## Priorisierte Fertigstellung bis zur KV-Abgabe
@@ -71,7 +71,7 @@ Die Termine sind Arbeitsziele, keine zusätzlichen Schulvorgaben.
 | Priorität | Zieltermin | Aufgabe | Fertig, wenn |
 |---|---|---|---|
 | Erledigt | 2. November | Gamma-Testbericht abgleichen | Zweite Website, vier Kategorien, fünf Messwerte, exakte ISO-Zeit, Quelle und TESTBERICHT bestätigt; Vorlage ohne künstliche Zahlenbilder |
-| P0 | vor breiter Bewerbung | Turnstile und dauerhaftes globales Quoten-/Missbrauchslimit prüfen und fertigstellen | Nachweis gegen ungültige Tokens und verteilte Überlastung; Google- und Make-Kosten begrenzt |
+| P0 | nächste technische Kontrolle | Live-Grenztest abschliessen und direkte Worker-Weiterleitung zusätzlich authentifizieren | Vollständiger Sperrnachweis bei erschöpftem Clientkontingent; direkte Fremdaufrufe werden nicht als Website-Check-Anfragen angenommen |
 | Erledigt | 2. November | Zweite reale Website mit synthetischem Kontakt testen | example.com mit abweichenden Kategorien korrekt in Zeile 10 und privatem Bericht; Doppellauf übersprungen |
 | P1 | 13. November | Bestehende KV-Unterlagen mit Ziel, Ausgangslage, Architektur, Testprotokollen und Eigenleistung ergänzen | Nachweise und klare Grenzen der technischen Messung dokumentiert |
 | P1 | 20. November | Betrieb und Nutzen auswerten | Reale Fälle, Bearbeitungszeit, Fehlerquote und Creditverbrauch nachvollziehbar; keine erfundenen Conversion-Zahlen |
@@ -87,27 +87,16 @@ Die Termine sind Arbeitsziele, keine zusätzlichen Schulvorgaben.
 - Szenario 8287125 wurde aktiviert und der öffentliche Test automatisch verarbeitet.
 - Szenario 8307884 wurde nach ausdrücklicher Nutzerfreigabe aktiviert. Make zeigt Active. Erster geplanter Lauf am 01.11.2026 um 17:51:12 (Europe/Zurich): Success, 1 Operation, keine freigegebene Zeile. Der stündliche Berichtsbetrieb ist aktiv; Freigabe einzelner Leads erfolgt weiterhin über Status H=Freigegeben.
 
-## Vorbereitet am 2. November: dauerhafter Missbrauchs- und Kostenschutz (NOCH NICHT LIVE)
+## Aktivierter Schutz am 2. November 2026
 
-Status: 34 lokale Tests bestanden. Cloudflare-Browserverbindung ist während der Einrichtung abgebrochen; es wurde noch keine D1-Bindung gespeichert und kein neuer Worker veröffentlicht. Bestehende Produktionsbranches wurden für diese Änderung nicht verändert.
-
-Geprüfter Entwurf:
-- Bestehende D1-Datenbank aimpact-visibility-leads wiederverwenden. Additives Schema in automation/abuse-limits.sql, bestehende processed_requests bleiben unberührt.
-- PageSpeed: höchstens 50 reservierte neue Prüfungen pro UTC-Tag, vier pro UTC-Minute und drei pro Client in einem festen Zehn-Minuten-Fenster. Cache-Treffer und bereits laufende identische Prüfungen benötigen keine zusätzliche Google-Reservierung.
-- Make-Eingang: höchstens 20 neue Reservierungen pro Kalendermonat UTC, zehn pro UTC-Tag, drei pro UTC-Minute. Die vorsichtige Pilotgrenze schützt das Make-Free-Kontingent; stündliche Suche, manuell freigegebene Gamma-Berichte und andere Szenarien verbrauchen separat Credits. Keine Garantie für kostenlose Gesamtnutzung.
-- Zähler sind atomare bedingte SQL-Schreibvorgänge. Regionen und Neustarts teilen denselben D1-Zustand. Bei fehlender Bindung oder ungeklärtem Schreibresultat werden Google/Make nicht aufgerufen.
-- Reservierungen erfolgen vorsichtig nacheinander: auch abgelehnte Versuche und spätere Upstream-Fehler können bereits reservierte übergeordnete Kontingente verbrauchen. Es gibt keine automatischen Rückerstattungen. Die Grenzen sind Obergrenzen, keine zugesicherte Anzahl erfolgreicher Prüfungen.
-- Erfolgreich gespeicherte Lead-Duplikate bleiben auch bei vollem Budget erfolgreich, ohne Make erneut aufzurufen. Bei 429 wird kein neuer Lead gesperrt; Retry-After wird bis zum Formular-Endpunkt weitergegeben.
-- Keine rohen IP-Adressen in D1. Clientkennung ist täglich wechselnd und mit bestehendem Geheimnis gesalzen. Bei erfolgreichen neuen Analysen werden höchstens 100 seit über 48 Stunden abgelaufene technische Zähler aufgeräumt; Lead-Registry bleibt erhalten.
-- Der bereits vorhandene Turnstile-Code bleibt bestehen. Die Produktivkonfiguration muss noch eingerichtet und getestet werden. Eine Origin-Prüfung allein ist keine Absenderauthentifizierung. Die festen Make-Grenzen gelten deshalb auch bei gefälschter Origin.
-
-Verbleibende Aktivierung im bestehenden Projekt:
-1. Cloudflare-Verbindung wiederherstellen. Im offenen Dialog nur die Bindung DB zur bestehenden aimpact-visibility-leads speichern (Production), keine neue Datenbank.
-2. automation/abuse-limits.sql in dieser Datenbank ausführen und Tabelle/Index prüfen.
-3. Bestehendes Turnstile-Widget prüfen oder konfigurieren; richtige Hostnamen/action website_check, Produktionsvariablen TURNSTILE_SITE_KEY und TURNSTILE_SECRET_KEY, Geheimnis niemals veröffentlichen.
-4. Datenschutz um pseudonyme Schutzkennung und deren Aufräumregel ergänzen; nur tatsächlich aktivierte Verarbeitung beschreiben.
-5. Erst bei vorhandener Bindung und Tabelle den getesteten Pages-Code auf den bestehenden Produktionsbranch übernehmen. Bestehenden Worker aus automation/visibility-check-worker.js im gleichen Worker aimpact-visibility-api veröffentlichen; vorhandene DB und MAKE_WEBHOOK_URL erhalten. Keine neue Automation.
-6. Normale öffentliche Analyse und genau eine synthetische Lead-Anfrage prüfen. Zähler im vorhandenen D1 kontrollieren. Gezielter Grenztest mit isolierten technischen Testzählern; echte Tages-/Monatskontingente nicht mit künstlichen Lasttests ausschöpfen.
-7. Erst nach öffentlichem Nachweis als live markieren. Kein pauschaler Merge von Feature-Branches in main.
-
-Validierung: 34 Tests mit echtem lokalem SQLite, unter anderem parallele SQL-Reservierungen, getrennte Servermodule mit gemeinsamem Zähler, globale Grenze bei wechselnden Clients, Zeitfensterwechsel, Datenbankausfall, Make-Tages-/Monatsgrenze, Duplikate und Weitergabe der Wartezeit. Noch keine Live- oder Lasttest-Bestätigung.
+- Production Pages: DB-Bindung zur bestehenden Datenbank aimpact-visibility-leads gespeichert; additive Tabelle abuse_limits samt Ablaufindex erfolgreich eingerichtet. Bestehende processed_requests bleiben erhalten.
+- Neues Turnstile-Widget Aimpact Website-Check, Managed, ausschliesslich check.aimpact.ch, ohne Pre-Clearance. Öffentlicher Site-Key und verschlüsseltes Secret in Production hinterlegt; Geheimnis nicht in Git.
+- Pages-Produktion auf a867aca2a290e03a12c1bc09417a972e8e1515f1 veröffentlicht. Cloudflare Pages, Security-Tests und beide Smoke-Prüfungen erfolgreich. 34 Tests bestehen; SQL wird mit echtem lokalem SQLite geprüft.
+- Bestehender Worker aimpact-visibility-api mit getestetem Quelltext veröffentlicht. Editorinhalt vor Veröffentlichung vollständig mit Git-Quelle verglichen. Explizite numerische Zeitrechnung beseitigt die Typprüfmeldung; Cloudflare-Editor meldet anschliessend keine Probleme. Keine neue Automation.
+- Verbindliche Obergrenzen: neue Google-Reservierungen 50/UTC-Tag, 4/UTC-Minute, 3/Client pro festem Zehn-Minuten-Fenster. Make-Reservierungen 20/UTC-Kalendermonat, 10/UTC-Tag, 3/UTC-Minute. Übergeordnete Reservierungen können auch bei später abgelehnten Versuchen oder externen Fehlern verbraucht werden. Keine automatische Rückerstattung; Cache-Treffer brauchen keine neue Google-Reservierung.
+- Datenschutz in beiden bestehenden Bereitstellungen um Sicherheitsprüfung und pseudonyme Clientkennung ergänzt. Keine rohen Client-IP-Adressen in den Kontingentzählern; Aufräumen seit über 48 Stunden abgelaufener Zähler bei erfolgreichen neuen Prüfungen.
+- Öffentlicher Positivtest im angemeldeten Browser: Sicherheitsprüfung automatisch erfolgreich; Analyse von https://aimpact.ch/ vollständig. Messzeit 2026-11-02T07:55:55.901Z (08:55:55 Europe/Zurich). D1 zeigte je eine Tages-, Minuten- und Clientreservierung.
+- Testformular Aimpact Schutztest 02.11.2026 genau einmal in Tabellenblatt1, Zeile 11, eingetroffen; H=Neu, Berichtslink leer. Vier Kategorien 100/95/100/100, TBT20ms, übrige Messwerte korrekt. Kein Gamma-Bericht durch Eingang ausgelöst.
+- Zweiter öffentlicher Negativtest: ohne abgeschlossene Sicherheitsprüfung zeigt das Formular „Bitte zuerst die Sicherheitsprüfung abschliessen“. Keine CAPTCHA-Herausforderung automatisch gelöst.
+- Noch offen: vollständiger öffentlicher 429-Grenztest. Nur der eigene technische Clientzähler wurde hierfür versuchsweise vorbereitet (Fensterende 2026-11-02T08:00:00Z); die Browserverbindung stockte danach. Das zeitlich begrenzte Testfenster ist inzwischen abgelaufen. Kein allgemeines Tages-/Monatskontingent zurückgesetzt oder künstlich ausgeschöpft. Die Dauerhaftigkeit und Grenzen sind durch Quelltext, 34 Tests, erfolgreiche D1-Reservierungen und produktive Datenankunft belegt; dieser zusätzliche Live-Sperrnachweis wird nicht als erledigt ausgegeben.
+- Nächster Sicherheitsschritt: Pages-zu-Worker-Weiterleitung zusätzlich authentifizieren. Origin allein verhindert keine direkten Fremdaufrufe; die bereits aktiven harten Make-Kontingente begrenzen deren Weiterleitung.

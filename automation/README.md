@@ -177,3 +177,10 @@ Prüfroutine für jede Anfrage:
 6. Tatsächliche Bearbeitungszeit und Versand in der vorhandenen Tabelle dokumentieren; Kundenversand erfolgt manuell nach Inhaltsprüfung.
 
 Technische Messwerte aus PageSpeed sind davon getrennt. Rankings sind standort-/zeitabhängige Momentaufnahmen. 24Stunden ist ein menschliches Serviceversprechen, keine fertige Automation. Der Chat-Launcher steht nun im normalen Seitenfluss statt über dem Inhalt; das Chatfenster selbst bleibt ein auf Wunsch geöffnetes Dialogfenster.
+
+
+## Angebotsdarstellung aktualisiert
+
+Auf Nutzerwunsch wurde die öffentliche Angebotssektion auf Kundennutzen gekürzt. Am 2. November ausdrücklich vorgeschlagene neue Ratenoption:3×CHF830=CHF2490. Diese öffentliche Ratenoption ersetzt die frühere PDF-Option3×CHF890 für neu zu erstellende Offerten; keine bestehenden Kundenverträge geändert. Die ältere Produktdefinition bleibt als historisches Dokument erhalten. EinmalbetragCHF2490 unverändert. MWST-Behandlung ist noch zu klären und vor Beauftragung im verbindlichen Gesamtpreis auszuweisen; kein steuerlicher Status behauptet.
+
+Detailgrenzen aus der Produktdefinition bleiben für die schriftliche Offerte massgeblich (insbesondere maximal zwei Website-Anpassungen pro Monat à30Minuten, Korrekturrunden, Ausschlüsse und Mitwirkungsfristen). Sie wurden aus der öffentlichen Liste entfernt, nicht als unbegrenzte Leistungen freigegeben. Die veröffentlichte Garantie bleibt der zuvor definierte zusätzliche Betreuungsmonat bei selbstverschuldeter Verzögerung der Grundlagen bisTag30 und rechtzeitiger Kundenmitwirkung; keine unbegrenzte Nacharbeit. Kein Umsatzbeispiel ohne reale Kundenannahmen und keine garantierten Gästezahlen veröffentlicht.

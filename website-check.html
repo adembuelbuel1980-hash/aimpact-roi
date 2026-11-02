@@ -189,7 +189,7 @@ function render(data, requestedUrl) {
   byId('lead-status').textContent = '';
   const analyzedUrl = data.analyzedUrl || requestedUrl;
   const timestamp = data.measuredAt ? new Date(data.measuredAt) : null;
-  const dateText = timestamp && !Number.isNaN(timestamp.getTime()) ? timestamp.toLocaleString('de-CH') : 'Zeitpunkt nicht verfügbar';
+  const dateText = timestamp && !Number.isNaN(timestamp.getTime()) ? timestamp.toLocaleString('de-CH', { timeZone: 'Europe/Zurich' }) + ' (Europe/Zurich)' : 'Zeitpunkt nicht verfügbar';
   byId('scope').textContent = `Geprüfte URL: ${analyzedUrl} · ${data.strategy || 'mobile'} · ${dateText}`;
   byId('scores').innerHTML = categories.map(([key,label]) => tile(label,data[key])).join('');
   byId('metrics').innerHTML = metricLabels.map(([key,label]) => tile(label,data.metrics?.[key],true)).join('');

@@ -147,3 +147,16 @@ Im vorhandenen Tabellenblatt1 wurden ausschliesslich zwei bedingte Formatierungs
 - Nach dem Speichern Regeln, Hinweise, Statuswerte und Dropdowns über die Sheets-Schnittstelle erneut gelesen. In den kontrollierten Zeilen2–12 kein Status In Erstellung/Fehler und keine als abgeschlossen markierte Zeile ohne Link.
 - Make-Szenario8307884 im Browser Active bestätigt. Sichtbare stündliche Läufe bis 02.11.2026 12:51:12 als Success mit jeweils einer Operation; kein gerade laufender Auftrag. Dies belegt planmässige Suchläufe, keinen künstlich ausgelösten Gamma-Fehler.
 - Noch offen: aktive Fehlerbehandlung/Benachrichtigung im Make-Szenario und Wiederaufnahme einer bereits gestarteten, noch nicht fertigen Gamma-Generation ohne Doppelgenerierung. Die Tabellenfarben ersetzen diese nicht. Danach Funnel-Tracking und vorhandene KV-Unterlagen mit den echten Nachweisen ergänzen.
+
+
+## Make-Fehlerwege gespeichert am 2. November 2026
+
+Im bestehenden aktiven Szenario8307884 drei zusätzliche Fehlerwege ergänzt: Gamma Bericht7 → Retry12, Gamma URL8 → Retry13, Save Bericht9 → Retry14. Bei allen drei Retry-Modulen Retry automatically=No; nach Speichern und vollständigem Neuladen jedes Modul erneut geöffnet und No bestätigt. Keine automatische Wiederholung dieser drei Fehlerwege.
+
+Store incomplete executions jetzt Yes. Process data in order bleibt Yes: Ein ungelöster gespeicherter Fehler blockiert folgende Berichtsläufe bis zur Klärung. Discard data if storage is full bleibt No. Keine zusätzlichen Empfänger, E-Mails oder externen Benachrichtigungen eingerichtet. Bestehende Erfolgsfilter und Mappings unverändert, keine Freigaben oder Zeilen geändert.
+
+Make bestätigte The scenario was saved; nach Neuladen Szenario Active und Stundentakt erhalten. Vor manuellem Leerlauftest H2:K1011 gelesen: keine Freigegeben-Zeile. Lauf um13:36Europe/Zurich erfolgreich abgeschlossen: Search Rows einmal, Freigabefilter0, keine Gamma-Verarbeitung. Konfigurationskontrolle und Leerlauftest bestanden. Kein absichtlich ausgelöster Fehlerfall; dessen tatsächliche Speicherung wird nicht als live getestet behauptet. Abschliessender Screenshotversuch blieb wegen Browser-Verbindungsstillstand ohne Ergebnis.
+
+Manuelle Klärung: Incomplete executions und Ausführungsprotokoll prüfen. Bei unklarer Antwort der Gamma-Erstellung zuerst nach vorhandenem Bericht suchen, bevor das Erstellungsmodul manuell wiederholt oder H erneut freigegeben wird. Sonst kann ein zweiter Bericht entstehen. Beim Abrufen/Speichern möglichst den bestehenden Auftrag am fehlgeschlagenen Schritt fortsetzen und Generation-ID/URL prüfen.
+
+Noch offen: kontrollierter Fehlerfall zum Speichernachweis, aktive Benachrichtigung und Behandlung einer erfolgreichen Gamma-Abfrage mit noch nicht fertigem Status. Dieser letzte Fall ist kein Modulfehler und wird weiterhin vom Fertig-Filter gestoppt; die orange Tabellenwarnung unterstützt dort die manuelle Kontrolle. Keine vollständige automatische Wiederaufnahme behauptet. Danach Funnel-Tracking und vorhandene KV-Nachweise.

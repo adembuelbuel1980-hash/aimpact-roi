@@ -51,3 +51,14 @@ test('upstream rejection or uncertainty is not shown as success',async()=>{
  globalThis.fetch=async()=>Response.json(result);const response=await onRequestPost({request:request(await payload()),env:{PAGESPEED_API_KEY:secret}});assert.equal(response.status,502);
  }}finally{globalThis.fetch=old;}
 });
+
+test('intake quota rejection preserves status and retry information',async()=>{
+ const old=globalThis.fetch;
+ globalThis.fetch=async()=>Response.json({error:'quota reached'},{status:429,headers:{'Retry-After':'120'}});
+ try{
+  const response=await onRequestPost({request:request(await payload()),env:{PAGESPEED_API_KEY:secret}});
+  assert.equal(response.status,429);assert.equal(response.headers.get('Retry-After'),'120');
+  assert.match((await response.json()).error,/Anfragelimit/);
+ }finally{globalThis.fetch=old;}
+});
+

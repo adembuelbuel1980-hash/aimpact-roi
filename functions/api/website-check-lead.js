@@ -1,5 +1,34 @@
 // Server-signed measurement proof. The API key never leaves Cloudflare.
 const encoder = new TextEncoder();
+// Shared D1 counters: every reservation is a single atomic conditional write.
+// Limits are fixed UTC windows. Failed upstream calls still consume a slot.
+export const LIMIT_SCHEMA = `CREATE TABLE IF NOT EXISTS abuse_limits (
+  bucket TEXT PRIMARY KEY, count INTEGER NOT NULL CHECK(count >= 1), expires_at INTEGER NOT NULL
+)`;
+export const RESERVE_LIMIT = `INSERT INTO abuse_limits(bucket,count,expires_at) VALUES (?,1,?)
+ON CONFLICT(bucket) DO UPDATE SET count=abuse_limits.count+1 WHERE abuse_limits.count < ?`;
+export async function reserveLimit(db, scope, maximum, seconds, now = Date.now()) {
+  if (!db) throw new Error('Shared quota storage unavailable');
+  const end = (Math.floor(now / 1000 / seconds) + 1) * seconds;
+  const bucket = scope + ':' + end;
+  const result = await db.prepare(RESERVE_LIMIT).bind(bucket,end,maximum).run();
+  if (result.success !== true || ![0,1].includes(result.meta?.changes)) throw new Error('Shared quota write failed');
+  return { allowed: result.meta.changes === 1, retryAfter: Math.max(1,end-Math.floor(now/1000)) };
+}
+export async function reserveScan(request, env) {
+  const ip = request.headers.get('CF-Connecting-IP');
+  if (!ip || !env.PAGESPEED_API_KEY) throw new Error('Trusted client identity unavailable');
+  // Daily, secret-salted hash; raw IP addresses are never stored in D1.
+  const day = new Date().toISOString().slice(0,10);
+  const digest = await crypto.subtle.digest('SHA-256',encoder.encode(env.PAGESPEED_API_KEY+'\0scan-client\0'+day+'\0'+ip));
+  const client = Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');
+  for (const [scope,max,seconds] of [['scan:global:day',50,86400],['scan:global:minute',4,60],['scan:client:'+client,3,600]]) {
+    const result = await reserveLimit(env.DB,scope,max,seconds);
+    if (!result.allowed) return result;
+  }
+  await env.DB.prepare('DELETE FROM abuse_limits WHERE bucket IN (SELECT bucket FROM abuse_limits WHERE expires_at < ? LIMIT 100)').bind(Math.floor(Date.now()/1000)-172800).run();
+  return { allowed:true };
+}
 const b64 = bytes => btoa(String.fromCharCode(...bytes)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 const unb64 = value => Uint8Array.from(atob(value.replace(/-/g,'+').replace(/_/g,'/')), c=>c.charCodeAt(0));
 const scoreKeys = ['performance','accessibility','bestPractices','seo'];
@@ -86,7 +115,7 @@ export function summarizeAnalysis(data, selectedIds=[]) {
     ' | Befunde: '+findings+' | Keine Ranking- oder KI-Sichtbarkeitsmessung.').slice(0,600);
 }
 export async function onRequestPost({request,env}) {
-  const reply=(data,status=200)=>new Response(JSON.stringify(data),{status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}});
+  const reply=(data,status=200,extra={})=>new Response(JSON.stringify(data),{status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store',...extra}});
   if(!env.PAGESPEED_API_KEY) return reply({error:'Messdatenprüfung nicht konfiguriert.'},503);
   let body,data;
   try {
@@ -112,8 +141,12 @@ export async function onRequestPost({request,env}) {
       signal:AbortSignal.timeout(15000)
     });
     const result=await response.json().catch(()=>({}));
+    if(response.status===429) return reply({error:'Das Anfragelimit ist erreicht. Bitte später erneut versuchen.'},429,{
+      'Retry-After':String(Math.max(1,Math.min(2678400,Number(response.headers.get('Retry-After'))||60)))
+    });
     if(!response.ok||result.ok!==true||result.pending)
       return reply({error:'Die Übermittlung wurde noch nicht bestätigt. Bitte erneut versuchen.'},502);
     return reply({ok:true,duplicate:result.duplicate===true});
   } catch {return reply({error:'Die Übermittlung ist momentan nicht bestätigt. Bitte erneut versuchen.'},503);}
 }
+

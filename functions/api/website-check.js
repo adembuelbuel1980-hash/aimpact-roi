@@ -1,4 +1,4 @@
-import { createAnalysisProof } from './website-check-lead.js';
+import { createAnalysisProof, reserveScan } from './website-check-lead.js';
 
 // Reuse recent measurements to reduce Google quota consumption.
 // Cloudflare Cache API is best-effort and local to the serving data center.
@@ -6,37 +6,6 @@ import { createAnalysisProof } from './website-check-lead.js';
 const inflight = new Map();
 const CACHE_SECONDS = 600;
 const CACHE_PATH = "/__internal_cache/website-check-v3?url=";
-
-// Additional best-effort per-client throttling within a single Worker isolate.
-// Cloudflare runs many isolates globally, so this is NOT a distributed rate limit.
-const clientWindows = new Map();
-const CLIENT_WINDOW_MS = 10 * 60 * 1000;
-const CLIENT_MAX_SCANS = 3;
-const MAX_TRACKED_CLIENTS = 1024;
-
-function allowClientScan(request) {
-  const ip = request.headers.get("CF-Connecting-IP");
-  // No trusted Cloudflare IP header in local tests; do not trust user-supplied
-  // forwarding headers as an identity substitute.
-  if (!ip) return true;
-  const now = Date.now();
-  const existing = clientWindows.get(ip);
-  if (existing && now - existing.startedAt < CLIENT_WINDOW_MS) {
-    if (existing.count >= CLIENT_MAX_SCANS) return false;
-    existing.count += 1;
-    return true;
-  }
-  if (clientWindows.size >= MAX_TRACKED_CLIENTS) {
-    for (const [key, value] of clientWindows) {
-      if (now - value.startedAt >= CLIENT_WINDOW_MS) clientWindows.delete(key);
-    }
-    if (clientWindows.size >= MAX_TRACKED_CLIENTS) {
-      clientWindows.delete(clientWindows.keys().next().value);
-    }
-  }
-  clientWindows.set(ip, { startedAt: now, count: 1 });
-  return true;
-}
 
 export async function onRequestGet({ request, env }) {
   const headers = {
@@ -172,13 +141,14 @@ export async function onRequestGet({ request, env }) {
       return shared.clone();
     }
 
-    // Count only scans that actually need an upstream Google request.
-    // Cached responses are served without consuming this local allowance.
-    if (!allowClientScan(request)) {
-      return respond({
-        error: "Zu viele Prüfungen. Bitte in etwa zehn Minuten erneut versuchen."
-      }, 429);
-    }
+    // Shared durable limits apply before an upstream request in every region.
+    // A missing binding / failed counter must never fall back to Google.
+    let sharedLimit;
+    try { sharedLimit = await reserveScan(request,env); }
+    catch { return respond({error:'Die Website-Prüfung ist vorübergehend nicht verfügbar. Bitte später erneut versuchen.'},503); }
+    if (!sharedLimit.allowed) return new Response(JSON.stringify({
+      error:'Das Anfragelimit ist erreicht. Bitte später erneut versuchen.'
+    }),{status:429,headers:{...headers,'Retry-After':String(sharedLimit.retryAfter)}});
 
     const run = async () => {
     const api = new URL(
@@ -339,3 +309,4 @@ const payload = {
     }, 503);
   }
 }
+

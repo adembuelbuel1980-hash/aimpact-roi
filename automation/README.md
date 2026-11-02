@@ -71,7 +71,7 @@ Die Termine sind Arbeitsziele, keine zusätzlichen Schulvorgaben.
 | Priorität | Zieltermin | Aufgabe | Fertig, wenn |
 |---|---|---|---|
 | Erledigt | 2. November | Gamma-Testbericht abgleichen | Zweite Website, vier Kategorien, fünf Messwerte, exakte ISO-Zeit, Quelle und TESTBERICHT bestätigt; Vorlage ohne künstliche Zahlenbilder |
-| P0 | nächste technische Kontrolle | Live-Grenztest abschliessen und direkte Worker-Weiterleitung zusätzlich authentifizieren | Vollständiger Sperrnachweis bei erschöpftem Clientkontingent; direkte Fremdaufrufe werden nicht als Website-Check-Anfragen angenommen |
+| Erledigt | 2. November | Kontingentsperre und bestätigte Worker-Weiterleitung fertigstellen | Live-Grenztest bestanden; bestätigter Formularversand erfolgreich; direkter Aufruf trotz Aimpact-Origin mit 403 Unauthorized intake gestoppt |
 | Erledigt | 2. November | Zweite reale Website mit synthetischem Kontakt testen | example.com mit abweichenden Kategorien korrekt in Zeile 10 und privatem Bericht; Doppellauf übersprungen |
 | P1 | 13. November | Bestehende KV-Unterlagen mit Ziel, Ausgangslage, Architektur, Testprotokollen und Eigenleistung ergänzen | Nachweise und klare Grenzen der technischen Messung dokumentiert |
 | P1 | 20. November | Betrieb und Nutzen auswerten | Reale Fälle, Bearbeitungszeit, Fehlerquote und Creditverbrauch nachvollziehbar; keine erfundenen Conversion-Zahlen |
@@ -100,3 +100,37 @@ Die Termine sind Arbeitsziele, keine zusätzlichen Schulvorgaben.
 - Zweiter öffentlicher Negativtest: ohne abgeschlossene Sicherheitsprüfung zeigt das Formular „Bitte zuerst die Sicherheitsprüfung abschliessen“. Keine CAPTCHA-Herausforderung automatisch gelöst.
 - Noch offen: vollständiger öffentlicher 429-Grenztest. Nur der eigene technische Clientzähler wurde hierfür versuchsweise vorbereitet (Fensterende 2026-11-02T08:00:00Z); die Browserverbindung stockte danach. Das zeitlich begrenzte Testfenster ist inzwischen abgelaufen. Kein allgemeines Tages-/Monatskontingent zurückgesetzt oder künstlich ausgeschöpft. Die Dauerhaftigkeit und Grenzen sind durch Quelltext, 34 Tests, erfolgreiche D1-Reservierungen und produktive Datenankunft belegt; dieser zusätzliche Live-Sperrnachweis wird nicht als erledigt ausgegeben.
 - Nächster Sicherheitsschritt: Pages-zu-Worker-Weiterleitung zusätzlich authentifizieren. Origin allein verhindert keine direkten Fremdaufrufe; die bereits aktiven harten Make-Kontingente begrenzen deren Weiterleitung.
+
+## Fortsetzung: Live-Grenztest abgeschlossen; Weiterleitungsprüfung vorbereitet
+
+Am 2. November wurde der tatsächliche öffentliche Grenzfall nach erfolgreicher normaler Analyse bestätigt: nur der eigene Clientzähler im aktiven Testfenster wurde vorübergehend auf 3 gesetzt. Eine neue, nicht zwischengespeicherte Ziel-URL wurde mit „Das Anfragelimit ist erreicht“ abgewiesen. Danach wurde ausschliesslich dieser Testzähler per bedingtem UPDATE auf den ursprünglichen Wert 1 zurückgesetzt; Cloudflare bestätigte beide Schreibvorgänge. Allgemeine Tages- und Monatszähler blieben erhalten. Der vorher als offen dokumentierte Live-Grenztest ist damit erledigt.
+
+Zusätzliche Absicherung ist auf feature/abuse-cost-limits-20261102 vorbereitet, NICHT produktiv: Pages hinterlegt nach Prüfung des signierten Messnachweises eine fünf Minuten gültige, an Anfrage-ID und exakten Nutzdatenhash gebundene Bestätigung in der vorhandenen D1-Datenbank. Worker prüft diese vor neuen Make-Aufrufen. Gefälschte Origin allein genügt dann nicht mehr. Keine weiteren Konten oder Geheimnisse nötig. 35 lokale Tests bestanden, einschliesslich Ablehnung direkter unbestätigter Anfragen.
+
+Aktivierungsfolge: Existenz der additiven Tabelle intake_authorizations prüfen (Erstellungsversuch im Cloudflare-Dialog wurde wegen erneutem Verbindungsstillstand nicht bestätigt); danach zuerst Pages mit bestätigter Datenbankbindung veröffentlichen, dann den bestehenden Worker ersetzen, anschliessend normalen synthetischen Eingang und direkten unbestätigten Zugriff prüfen. Quelltext de2e54082121ce7e14dee946988949f97ac7d339. Alte Produktionsversion bleibt bis dahin aktiv. Neue Hash-Bestätigungen enthalten keine Klartext-Kontaktdaten und werden nach Ablauf plus 48 Stunden bei neuen Übermittlungen begrenzt aufgeräumt.
+
+## Aktualisierung der Weiterleitungsprüfung
+
+Am 2. November wurde intake_authorizations in der bestehenden D1-Datenbank erfolgreich angelegt (Cloudflare-Erfolgsmeldung). Pages-Produktionsbranch wurde kontrolliert von 88da1e21580b2b5e5caf3b9835af314361cae11c auf de2e54082121ce7e14dee946988949f97ac7d339 vorgerückt; Cloudflare Pages und alle CI-Prüfungen erfolgreich. PR18 wurde dadurch übernommen. Zuerst Pages, danach Worker umgestellt.
+
+Worker-Editor mit dem geprüften 8019-Zeichen-Quelltext ersetzt, vollständig per Kopieren mit Git-Quelle verglichen (identisch), anschliessend Deploy ausgelöst. Die Erfolgsmeldung und neue aktive Worker-Version wurden wegen erneutem Stillstand der Browser-Verbindung noch nicht abgelesen. Eine Veröffentlichung wurde damit angestossen, ist aber noch nicht abschliessend bestätigt. Ein direkter CLI-Aufruf wurde durch Cloudflares vorgeschaltete Zugriffskontrolle mit 403/error1010 blockiert; dies ist KEIN Nachweis der neuen Nutzdatenprüfung. Kein weiterer Versuch zur Umgehung dieses Filters.
+
+37 lokale Tests bestanden: zusätzlich vollständiger Durchlauf des Pages-Handlers über die echte SQL-Bestätigung zum Worker, erneutem Versuch ohne doppelte Weiterleitung, sowie Ablehnung manipulierter und abgelaufener Bestätigungen. Testcode in 9887ccaf3f6f9de87986a4ad7ccd3f8dbc08f421 gesichert.
+
+Noch abzuschliessen: neue aktive Worker-Version im bestehenden Dashboard bestätigen, genau eine normale öffentliche Testanfrage mit Tabellenankunft prüfen und einen direkten unbestätigten Test im Cloudflare-HTTP-Tester abweisen lassen. Erst danach die zusätzliche Absicherung als vollständig live-verifiziert ausgeben. Bestehende Turnstile- und Kontingentfunktionen sowie deren vorheriger Live-Grenznachweis bleiben davon getrennt bestätigt.
+
+## Abschlusskontrolle: aktive Worker-Version bestätigt
+
+Am 2. November wurde im Cloudflare-Editor Version 87b8aa4d als Active/Latest abgelesen. Der Editor enthält 8019 Zeichen und meldet keine Probleme. Damit ist die zuvor offene Worker-Veröffentlichung bestätigt; main/automation/visibility-check-worker.js wurde mit der produktiven Quelle abgeglichen.
+
+Die öffentliche Analyse von aimpact.ch wurde nach der Umstellung erneut abgeschlossen. Die letzte Formularprüfung wurde vor Eingabe der Testkontaktdaten automatisch gesperrt: Der dafür geöffnete Browser-Tab war inzwischen auf YouTube navigiert. Diese Seite gehört nicht zum autorisierten Auftrag und wurde nicht weiter bedient. Die Browser-Sicherheitsprüfung hat den Zugriff ausdrücklich automatisch abgelehnt. Kein neuer Formularerfolg und keine Tabellenankunft werden für diesen letzten Versuch behauptet.
+
+Offen bleiben ausschliesslich der normale Formularversand nach Aktivierung der Nutzdatenbestätigung sowie ein aussagekräftiger direkter Negativtest im Cloudflare-HTTP-Tester. Dessen bisherige 403-Ausgabe ohne korrekt getrennte Header/Body ist kein Nachweis von Unauthorized intake. Die 37 automatisierten Tests einschliesslich des echten Handler-Durchlaufs und die vorherigen Live-Kontingenttests bleiben gültig. Für die nächsten UI-Schritte den Aimpact-Test-Tab reserviert lassen und nicht für andere Webseiten verwenden.
+
+## Abgeschlossen am 2. November 2026: beide letzten Live-Prüfungen bestanden
+
+- Normaler öffentlicher Versand nach Aktivierung der Nutzdatenbestätigung erfolgreich. Genau eine Zeile 12 in Tabellenblatt1: Aimpact Abschlusstest Autorisierung 02.11.2026, https://aimpact.ch/, Kategorien 99/95/100/100, Messzeit 2026-11-02T12:10:55.342Z, TBT140ms. H=Neu, I leer; keine automatische Gamma-Erstellung. Erfolgsmeldung im Browser bestätigt.
+- Direkter Negativtest im Cloudflare-HTTP-Tester mit POST, getrennt verifizierten Headern Origin=https://aimpact.ch und Content-Type=application/json sowie gültigem synthetischem Lead, aber ohne D1-Bestätigung: Status403 und JSON {"error":"Unauthorized intake"}. Antwort vom aktiven Worker87b8aa4d, keine vorgeschaltete 1010-Sperre. Syntaxprüfung im Editor ohne Probleme.
+- Danach A12:K15 erneut gelesen: ausschliesslich der reguläre Abschlusstest vorhanden, kein zusätzlicher Direkter-Sperrtest-Eintrag.
+- Damit sind die früher ausdrücklich als offen dokumentierten Formular-/Sperrtests abgeschlossen. Gemeinsam mit dem vorher bestandenen echten Kontingenttest und 37 automatisierten Tests sind die beauftragten Schutzänderungen live verifiziert. Historische Zwischenstände bleiben als Verlauf erhalten; diese Abschlussbestätigung ist massgeblich.
+- Limits bleiben vorsichtige feste UTC-Kontingente (Google50/Tag,4/Minute,3/Client je10Minuten; Make20/Monat,10/Tag,3/Minute). Reservierungen können bei späterer Ablehnung verbraucht werden. Kein Versprechen vollständiger Unangreifbarkeit oder kostenloser Gesamtnutzung. Nächste Projektaufgaben: Fehlerüberwachung, Funnel-Tracking und vorhandene KV-Unterlagen ergänzen.

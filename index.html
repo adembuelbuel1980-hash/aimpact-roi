@@ -307,6 +307,7 @@
     .maps-consent{display:flex;gap:10px;align-items:flex-start;margin:20px 0;color:#d1cec6}
     .maps-consent input{flex:none;width:20px;height:20px;margin-top:4px}
     #maps-request-status{min-height:1.7em;margin-top:16px;color:#e3d7ae}
+    #maps-request-button:disabled{opacity:.7;cursor:not-allowed}
     @media(max-width:600px){.maps-form-grid{grid-template-columns:minmax(0,1fr)}#maps-request-form .btn{width:100%;white-space:normal}}
 
   </style>
@@ -316,7 +317,7 @@
   <header>
     <div class="wrap nav">
       <a class="brand" href="#top">A<span>i</span>mpact</a>
-      <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="navLinks">Menü</button>
+      <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="navLinks" aria-label="Hauptmenü öffnen oder schliessen">Menü</button>
       <nav class="nav-links" id="navLinks" aria-label="Hauptnavigation">
         <a href="#leistungen">Leistungen</a>
         <a href="#ablauf">Ablauf</a>
@@ -630,6 +631,11 @@
       navLinks?.classList.remove('open');
       menuBtn?.setAttribute('aria-expanded', 'false');
     };
+    document.addEventListener('click', event => {
+      if (navLinks?.classList.contains('open') && !event.target.closest('header')) {
+        closeMobileMenu();
+      }
+    });
     navLinks?.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', closeMobileMenu);
     });
@@ -677,6 +683,11 @@
         const data = await response.json().catch(() => ({}));
         if (!response.ok || data.ok !== true) throw new Error('not-confirmed');
         submitted = true;
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'generate_lead', {
+            lead_source: 'personal_maps_check'
+          });
+        }
         status.textContent = 'Danke! Deine Maps-Check-Anfrage ist angekommen. Ich melde mich persönlich bei dir.';
       } catch {
         status.textContent = 'Der Versand konnte nicht bestätigt werden. Deine Angaben bleiben erhalten. Bitte versuche es später erneut.';

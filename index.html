@@ -527,7 +527,7 @@
           <div class="maps-form-grid">
             <div><label for="maps-name">Name *</label><input id="maps-name" name="name" autocomplete="name" required maxlength="120"></div>
             <div><label for="maps-restaurant">Restaurant / Betrieb *</label><input id="maps-restaurant" name="unternehmen" autocomplete="organization" required maxlength="160"></div>
-            <div><label for="maps-email">E-Mail</label><input id="maps-email" name="email" type="email" autocomplete="email" maxlength="254" required aria-describedby="maps-contact-note"></div>
+            <div><label for="maps-email">E-Mail</label><input id="maps-email" name="email" type="email" autocomplete="email" maxlength="254" aria-describedby="maps-contact-note"></div>
             <div><label for="maps-phone">Telefon</label><input id="maps-phone" name="telefon" type="tel" autocomplete="tel" maxlength="40" aria-describedby="maps-contact-note"></div>
             <div><label for="maps-location">Ort / Adresse (optional)</label><input id="maps-location" name="standort" autocomplete="street-address" maxlength="240"></div>
             <div><label for="maps-website">Website oder Google-Profil (optional)</label><input id="maps-website" name="website_oder_google_profil" type="text" inputmode="url" maxlength="2048"></div>
@@ -536,7 +536,7 @@
           <label class="maps-consent"><input type="checkbox" name="datenschutz" value="Einverstanden" required><span>Ich bin damit einverstanden, dass Aimpact meine Angaben für diese Anfrage verwendet. <a href="datenschutz.html">Datenschutz</a></span></label>
           <button class="btn btn-primary" id="maps-request-button" type="submit">Gratis Maps-Check anfragen</button>
           <p id="maps-request-status" role="status" aria-live="polite"></p>
-          <noscript><p>Ohne JavaScript benötige ich deine E-Mail-Adresse. Nach dem Absenden öffnet sich die Bestätigungsseite des Formulardiensts.</p></noscript>
+          <noscript><p>Auch ohne JavaScript kannst du dieses Formular absenden. Gib bitte eine gültige E-Mail-Adresse oder Telefonnummer an. Anschliessend öffnet sich die Bestätigungsseite des Formulardiensts.</p></noscript>
         </form>
       </div>
     </section>
@@ -651,7 +651,6 @@
     const button = document.getElementById('maps-request-button');
     const status = document.getElementById('maps-request-status');
     let pending = false, submitted = false;
-    email.required = false;
     const validContact = () => {
       const telephone = phone.value.trim();
       if (!email.value.trim() && !/^[+()\d\s.-]{6,40}$/.test(telephone)) {
@@ -666,7 +665,8 @@
     form.addEventListener('submit', async event => {
       event.preventDefault();
       if (pending || submitted) return;
-      if (!validContact() || !form.reportValidity()) { email.reportValidity(); return; }
+      if (!validContact()) { email.reportValidity(); email.focus(); return; }
+      if (!form.reportValidity()) return;
       pending = true; button.disabled = true;
       status.textContent = 'Deine Anfrage wird gesendet …';
       try {

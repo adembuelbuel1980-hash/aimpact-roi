@@ -389,26 +389,22 @@
 </div></section>
 
     <section id="nachvollziehbar" style="padding:65px 0">
-<div class="wrap" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:32px;align-items:center">
-  <div>
-    <p class="eyebrow">Pilotprojekt · Zürich-Nord</p>
-    <h2>Ich suche 3 Pilot-Restaurants.</h2>
-    <p class="lead" style="margin-top:16px">Du möchtest auf Google Maps besser sichtbar werden? Ich suche drei Restaurantbetriebe für die erste dokumentierte Umsetzung des Maps-Sprints – zu besonderen Pilotkonditionen.</p>
-    <p style="margin-top:16px">Im Gegenzug vereinbaren wir vorab, welche Ausgangswerte und späteren Ergebnisse ich mit deiner Freigabe als Praxisbeispiel zeigen darf.</p>
-    <p class="muted" style="font-size:.9rem;margin-top:12px">Pilotkonditionen und Umfang erhältst du persönlich in einer schriftlichen Offerte. Keine Veröffentlichung ohne Zustimmung.</p>
-    <a href="#maps-anfrage" style="display:inline-block;margin-top:20px;color:var(--gold);font-weight:700;text-underline-offset:5px">Für einen Pilotplatz anfragen →</a>
-  </div>
-  <aside class="card" aria-label="Pilot-Restaurant Voraussetzungen" style="border-color:var(--gold);padding:28px">
-    <p class="eyebrow" style="margin:0 0 12px">3 Pilotplätze</p>
-    <h3 style="font-size:clamp(1.45rem,2.4vw,2rem)">Was du mitbringst</h3>
-    <ul style="margin-top:16px">
-      <li>Ein Restaurant in Zürich-Nord</li>
-      <li>Ein vorhandenes Google-Unternehmensprofil und eine Website</li>
-      <li>Bereitschaft, die Entwicklung gemeinsam auszuwerten</li>
-    </ul>
-    <p class="muted" style="margin-top:18px;font-size:.92rem">Die Teilnahme ist erst nach einer individuellen Vereinbarung verbindlich.</p>
-  </aside>
-</div></section>
+<div class="wrap" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:32px;align-items:center">
+<div>
+<p class="eyebrow">Pilotphase · Zürich-Nord</p>
+<h2>3 Pilot-Restaurants gesucht.</h2>
+<p class="lead" style="margin-top:16px">Ich baue meine ersten Fallstudien auf. Dafür suche ich drei Restaurants in Schwamendingen, Oerlikon und Umgebung, die den Maps-Sprint zum Vorzugspreis durchlaufen.</p>
+<p style="color:var(--gold);font-weight:750;margin-top:22px">3 Pilotplätze vorgesehen</p>
+<a class="btn btn-primary" href="#maps-anfrage" style="margin-top:16px">Pilotplatz anfragen</a>
+</div>
+<aside class="card" aria-label="Leistungen und Konditionen der Pilotphase" style="border-color:var(--gold);padding:28px">
+<p class="eyebrow" style="margin:0 0 12px">Du bekommst</p>
+<h3 style="font-size:clamp(1.7rem,3vw,2.2rem)"><strong>CHF 990</strong> <span style="font-size:.95rem;color:#c4b8a1">statt CHF 2’490</span></h3>
+<ul style="margin-top:14px"><li>Den kompletten 90-Tage Maps-Sprint</li><li>Persönliche Betreuung durch mich, jede Woche</li></ul>
+<p class="eyebrow" style="margin:20px 0 10px">Im Gegenzug</p>
+<ul><li>Die Nutzung vereinbarter Vorher-Nachher-Kennzahlen als Fallstudie</li><li>Ein ehrliches Feedback mit Foto nach Abschluss</li></ul>
+<p class="muted" style="margin-top:16px;font-size:.88rem">Welche Zahlen, Fotos und Aussagen veröffentlicht werden dürfen, vereinbaren wir vorab schriftlich. Ohne Freigabe keine Veröffentlichung.</p>
+</aside></div></section>
 
     <section id="angebot" aria-labelledby="angebot-titel">
 <div class="wrap">
@@ -455,7 +451,7 @@
             <div><label for="maps-location">Ort / Adresse (optional)</label><input id="maps-location" name="standort" autocomplete="street-address" maxlength="240"></div>
             <div><label for="maps-website">Website oder Google-Profil (optional)</label><input id="maps-website" name="website_oder_google_profil" type="text" inputmode="url" maxlength="2048"></div>
           </div>
-          <label class="maps-consent"><input type="checkbox" name="antwort_per_whatsapp" value="Ja, wenn Telefonnummer angegeben"><span>Wenn möglich, bitte per WhatsApp auf meine angegebene Nummer antworten (optional).</span></label>
+          <label class="maps-consent"><input type="checkbox" id="pilot-interest" name="interesse_pilotplatz" value="Ja"><span>Ich interessiere mich für einen Pilotplatz zum Vorzugspreis.</span></label>
           <p id="maps-contact-note" class="muted">Bitte gib mindestens eine Kontaktmöglichkeit an: E-Mail oder Telefon.</p>
           <label class="maps-consent"><input type="checkbox" name="datenschutz" value="Einverstanden" required><span>Ich bin damit einverstanden, dass Aimpact meine Angaben für diese Anfrage verwendet. <a href="datenschutz.html">Datenschutz</a></span></label>
           <button class="btn btn-primary" id="maps-request-button" type="submit">Gratis Maps-Check anfragen</button>
@@ -594,5 +590,7 @@
   })();
   </script>
 
-</body>
+<script>
+(() => {const link=document.querySelector('#nachvollziehbar a[href="#maps-anfrage"]');const pilot=document.getElementById('pilot-interest');link?.addEventListener('click',()=>{if(pilot)pilot.checked=true;});})();
+</script></body>
 </html>

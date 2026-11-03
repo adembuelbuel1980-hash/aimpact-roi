@@ -1,0 +1,50 @@
+name: Impeccable design detector
+
+on:
+  pull_request:
+    paths:
+      - 'index.html'
+      - '.github/workflows/impeccable-detect.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run Impeccable source detector
+        id: impeccable
+        shell: bash
+        run: |
+          set +e
+          npx --yes impeccable detect index.html --json > impeccable-report.json 2> impeccable-error.log
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          if [ "$code" -eq 1 ]; then
+            echo "Impeccable could not scan the page."
+            cat impeccable-error.log
+            exit 1
+          fi
+          if [ "$code" -eq 2 ]; then
+            echo "Impeccable reported design findings. Review the attached report."
+          elif [ "$code" -ne 0 ]; then
+            echo "Unexpected Impeccable exit code: $code"
+            cat impeccable-error.log
+            exit "$code"
+          fi
+      - name: Upload Impeccable report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: impeccable-source-report
+          path: |
+            impeccable-report.json
+            impeccable-error.log
+          if-no-files-found: warn

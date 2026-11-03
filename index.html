@@ -292,6 +292,15 @@
     @media(max-width:899px){.hero-inner{grid-template-columns:minmax(0,1fr);gap:28px}.hero{padding:40px 0 48px}.founder-card{display:flex;text-align:left;align-items:center;gap:16px;padding:16px}.founder-card img{width:72px;height:72px;margin:0;flex:none}.hero-actions{align-items:center}.hero h1{overflow-wrap:normal}}
 
   
+    .about-compact{padding-block:64px;border-top:1px solid var(--line);background:#101010}
+    .about-compact-inner{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,5vw,72px);align-items:start}
+    .about-compact-inner h2{font-size:clamp(1.8rem,3vw,2.75rem)}
+    .about-compact-inner p:not(.eyebrow){color:#d1cec6;max-width:58ch}
+    .about-compact-inner .about-note{margin-top:16px;color:#bdb8ad;font-size:.92rem}
+    .about-link{display:inline-flex;align-items:center;min-height:44px;margin-top:18px;color:var(--gold);font-weight:750;text-underline-offset:5px}
+    .about-link:hover{color:#dfbd5e}
+    @media(max-width:720px){.about-compact-inner{grid-template-columns:1fr}}
+
     .maps-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:24px 0}
     .maps-form-grid label{display:block;font-weight:700;margin-bottom:6px}
     .maps-form-grid input{width:100%;min-width:0;padding:13px;border:1px solid #777;border-radius:9px;background:#202020;color:var(--white)}
@@ -313,7 +322,7 @@
         <a href="#ablauf">Ablauf</a>
         <a href="#angebot">Angebot</a>
         <a href="#faq">FAQ</a>
-        <a class="btn btn-primary" href="https://check.aimpact.ch/website-check">Website-Check</a>
+        <a class="btn btn-primary" href="#maps-anfrage">Gratis Maps-Check</a>
       </nav>
     </div>
   </header>
@@ -439,30 +448,17 @@
       </div>
     </section>
 
-    <section aria-labelledby="transparenz-titel">
+    <section class="about-compact" aria-labelledby="transparenz-titel">
       <div class="wrap">
-        <div class="section-head">
+        <div class="about-compact-inner">
           <div>
             <p class="eyebrow">Persönlich & transparent</p>
-            <h2 id="transparenz-titel">Dein Ansprechpartner: Adem Bülbül.</h2>
+            <h2 id="transparenz-titel">Direkt mit dem Gründer sprechen.</h2>
           </div>
-          <p class="lead">Ich bin Adem, der Gründer von Aimpact in Zürich. Du besprichst deine Ziele direkt mit mir. Ich erkläre dir die Befunde und welche Schritte für deinen Betrieb sinnvoll sind.</p>
-        </div>
-        <div class="steps">
-          <div class="step">
-            <div class="step-num">01</div>
-            <h3>Konkreter Ausgangspunkt</h3>
-            <p>Ich beginne mit deiner Website, deinem Google-Profil und den Wegen, über die Interessenten Kontakt aufnehmen.</p>
-          </div>
-          <div class="step">
-            <div class="step-num">02</div>
-            <h3>Klare Empfehlungen</h3>
-            <p>Du erfährst, welche Schritte sich zuerst lohnen – und welche Messwerte oder Zugänge für eine fundierte Prüfung fehlen.</p>
-          </div>
-          <div class="step">
-            <div class="step-num">03</div>
-            <h3>Keine erfundenen Ergebnisse</h3>
-            <p>Ich unterscheide technische Verbesserungen von tatsächlich gemessenen Anfragen. Sichtbarkeit und Empfehlungen durch KI sind nicht garantiert.</p>
+          <div>
+            <p>Ich bin Adem Bülbül, Gründer von Aimpact in Zürich. Ich prüfe, erkläre und priorisiere die Verbesserungen für deinen Betrieb persönlich – ohne Agentur-Umwege.</p>
+            <p class="about-note">Du erhältst klare Empfehlungen und nachvollziehbare Messwerte. Bestimmte Google-Platzierungen oder KI-Empfehlungen kann niemand seriös garantieren.</p>
+            <a class="about-link" href="#maps-anfrage">Gratis Maps-Check anfragen <span aria-hidden="true">→</span></a>
           </div>
         </div>
       </div>
@@ -630,11 +626,18 @@
       const open = navLinks.classList.toggle('open');
       menuBtn.setAttribute('aria-expanded', String(open));
     });
+    const closeMobileMenu = () => {
+      navLinks?.classList.remove('open');
+      menuBtn?.setAttribute('aria-expanded', 'false');
+    };
     navLinks?.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        navLinks.classList.remove('open');
-        menuBtn?.setAttribute('aria-expanded', 'false');
-      });
+      link.addEventListener('click', closeMobileMenu);
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && navLinks?.classList.contains('open')) {
+        closeMobileMenu();
+        menuBtn?.focus();
+      }
     });
     document.getElementById('year').textContent = new Date().getFullYear();
   </script>

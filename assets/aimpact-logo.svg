@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" role="img" aria-labelledby="title desc">
+<title id="title">Aimpact</title>
+<desc id="desc">Schwarzes rundes Aimpact-Logo mit goldenem A, Wortmarke und Digital Social AI.</desc>
+<defs><linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe3a0"/><stop offset=".55" stop-color="#d8ac59"/><stop offset="1" stop-color="#b58a42"/></linearGradient></defs>
+<circle cx="500" cy="500" r="499" fill="#050505"/>
+<circle cx="500" cy="500" r="466" fill="none" stroke="url(#gold)" stroke-width="12"/>
+<path fill="url(#gold)" d="M323 506 450 288 578 506h-62l-66-114-65 114z M459 275 500 204l174 302h-64L480 282c-7-12-13-12-21-7z"/>
+<g font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="91" letter-spacing="8" text-anchor="middle"><text x="500" y="659" fill="#fff">AIMPACT</text><text x="324" y="659" fill="url(#gold)">AI</text></g>
+<path d="M443 704h114" stroke="url(#gold)" stroke-width="5"/>
+<text x="500" y="765" fill="url(#gold)" font-family="Arial,Helvetica,sans-serif" font-size="27" letter-spacing="9" text-anchor="middle">DIGITAL. SOCIAL. AI.</text>
+</svg>

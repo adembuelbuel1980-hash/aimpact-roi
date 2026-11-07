@@ -60,7 +60,7 @@ def main():
         ("Confirmed success precedes lead event", 0 <= html.find("if (!response.ok || data.ok !== true)") < html.find("window.gtag('event', 'generate_lead'")),
         ("No personal data in event payload", bool(re.search(r"gtag\('event', 'generate_lead',\s*\{\s*lead_source: 'personal_maps_check'\s*\}\)", html))),
         ("Assistant script preserved", any(t == "script" and a.get("src", "").startswith("aimpact-assistant.js") for t, a in elements)),
-        ("Services and offer remain", "leistungen" in anchor_targets and "angebot" in anchor_targets and "CHF 2’490" in html),
+        ("Core sections and offer remain", "problem" in anchor_targets and "angebot" in anchor_targets and "CHF 2’490" in html),
         ("Mobile menu Escape support", "event.key === 'Escape'" in html),
     ]
     result = [check(name, status) for name, status in checks]

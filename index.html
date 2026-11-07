@@ -136,9 +136,10 @@
       min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px;
     }
     .brand{
-      font-size:1.28rem;font-weight:900;letter-spacing:.045em;text-transform:uppercase;text-decoration:none;
+      display:inline-flex;align-items:center;gap:10px;font-size:1.28rem;font-weight:900;letter-spacing:.045em;text-transform:uppercase;text-decoration:none;white-space:nowrap;
     }
     .brand span{color:var(--gold)}
+    .brand-logo{width:54px;height:54px;object-fit:contain;flex:none}
     .nav-links{display:flex;align-items:center;gap:28px}
     .nav-links>a:not(.btn){font-size:.86rem;text-decoration:none;color:#d9d6ce}
     .nav-links>a:not(.btn):hover{color:var(--gold)}
@@ -358,7 +359,7 @@
   <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
   <header>
     <div class="wrap nav">
-      <a class="brand" href="#main-content">A<span>i</span>mpact</a>
+      <a class="brand" href="#main-content" aria-label="Aimpact - zur Startseite"><img class="brand-logo" src="/assets/aimpact-logo.svg" width="54" height="54" alt="" decoding="async"><span class="brand-name">Aimpact</span></a>
       <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="navLinks" aria-label="Hauptmenü öffnen oder schliessen">Menü</button>
       <nav class="nav-links" id="navLinks" aria-label="Hauptnavigation">
 <a href="#problem">Warum Maps?</a><a href="#angebot">Maps-Sprint</a><a href="/local-seo-gastronomie-zuerich.html">Local SEO</a><a href="#ablauf">Ablauf</a><a href="#faq">FAQ</a><a class="btn btn-primary" href="#maps-anfrage">Gratis Maps-Check</a>
@@ -479,7 +480,7 @@
   <footer>
     <div class="wrap footer-grid">
       <div>
-        <a class="brand" href="#main-content">A<span>i</span>mpact</a>
+        <a class="brand" href="#main-content" aria-label="Aimpact - zur Startseite"><img class="brand-logo" src="/assets/aimpact-logo.svg" width="54" height="54" alt="" decoding="async"><span class="brand-name">Aimpact</span></a>
         <p class="copyright">Mehr Sichtbarkeit. Mehr qualifizierte Anfragen. Mehr Kunden.</p>
         <p class="copyright">© <span id="year"></span> Aimpact · Zürich</p>
       </div>

@@ -29,6 +29,23 @@
     #lead-section[hidden]{display:none}
     .maps-cta{display:inline-flex;align-items:center;min-height:48px;padding:12px 18px;border-radius:9px;background:var(--gold);color:#18130a;font-weight:800;text-decoration:none}
     @media(max-width:600px){main{padding-top:32px}.panel{padding:18px}.form-row button{width:100%}}
+
+    /* Aimpact Premium: Darstellung der bestehenden, unveränderten Messwerte */
+    :root{--panel:#141414;--tile:#1d1d1d;--line:#4b402b;--gold:#c9a84c}
+    html{scroll-behavior:smooth}body{background:radial-gradient(ellipse at 85% 0,rgba(201,168,76,.095),transparent 28%),var(--bg)}
+    main{max-width:1120px}h1,h2{font-family:Georgia,"Times New Roman",serif;font-weight:600;letter-spacing:-.025em}h1{font-size:clamp(2.6rem,6vw,4.8rem);max-width:840px;margin:22px 0 18px}h2{font-size:clamp(1.65rem,3vw,2.3rem)}main>.muted{max-width:700px;font-size:1.08rem;line-height:1.7}
+    .panel{padding:clamp(20px,3vw,36px);border-color:rgba(201,168,76,.28);border-radius:22px;box-shadow:0 18px 55px rgba(0,0,0,.12)}
+    .panel:has(#scores){background:linear-gradient(145deg,#191713,#111 70%)}
+    .grid{gap:14px}.tile{position:relative;padding:22px;border:1px solid rgba(201,168,76,.20);border-radius:16px;overflow:hidden;min-height:145px;display:flex;flex-direction:column;justify-content:center;gap:9px}
+    .tile small{font-size:.94rem;line-height:1.35}.tile strong{font-size:clamp(2.1rem,4.7vw,3.15rem);line-height:1.1;font-variant-numeric:tabular-nums}
+    .tile:not(.metric)::after{content:"";display:block;height:5px;background:linear-gradient(90deg,var(--score-color,#8bd8aa) var(--score-pct,0%),#3d3a33 var(--score-pct,0%));border-radius:20px;margin-top:7px}
+    .tile.metric{min-height:112px;background:#1a1a1a}.tile.metric strong{font-size:clamp(1.25rem,2.6vw,1.85rem)}
+    .priority-item{padding:22px 0}.priority-rank{display:inline-block;margin-bottom:8px;color:var(--gold)}.priority-item h3{font-size:1.18rem;line-height:1.45}
+    .maps-cta,button{border-radius:999px;min-height:49px;transition:background .2s,transform .2s}.maps-cta:hover,button:not(:disabled):hover{background:#e3c167;transform:translateY(-1px)}
+    .notice{margin-top:24px;line-height:1.65;padding:8px 0 8px 16px}
+    @media(max-width:600px){main{padding:36px 14px 70px}.panel{padding:20px 18px}.grid{grid-template-columns:1fr}.tile{min-height:108px}.tile strong{font-size:2.45rem}.tile.metric{min-height:95px}.form-row input{min-width:0;width:100%}h1{font-size:clamp(2.4rem,11vw,3.5rem)}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
+
   </style>
 </head>
 <body>
@@ -177,7 +194,8 @@ function tone(score) {return score === null ? 'unknown' : score >= 90 ? 'good' :
 function tile(label, value, metric = false) {
   const number = metric ? null : scoreNumber(value);
   const shown = metric ? (value ?? 'Nicht verfügbar') : (number === null ? 'Nicht verfügbar' : number + '/100');
-  return `<div class="tile${metric?' metric':''}"><small>${escapeHtml(label)}</small><strong class="${metric?'unknown':tone(number)}">${escapeHtml(shown)}</strong></div>`;
+  const barStyle = metric || number === null ? '' : ` style="--score-pct:${Math.max(0,Math.min(100,number))}%;--score-color:${number>=90?'#8bd8aa':number>=50?'#f1c56b':'#ff918e'}"`;
+  return `<div class="tile${metric?' metric':''}"${barStyle}><small>${escapeHtml(label)}</small><strong class="${metric?'unknown':tone(number)}">${escapeHtml(shown)}</strong></div>`;
 }
 function item(title, description, state = 'unknown') {
   return `<article class="item"><h3 class="${state}">${escapeHtml(title)}</h3><p>${escapeHtml(description)}</p></article>`;

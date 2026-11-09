@@ -352,6 +352,35 @@
         summary:hover { color:#876b20 }
       }
     }
+    /* Aimpact Premium: ruhige, fokussierte Gestaltung ohne Austausch des Originalfotos */
+    body{background:#090909}
+    .hero-premium{position:relative;isolation:isolate;min-height:min(740px,calc(100svh - 72px));display:flex;align-items:center;padding:clamp(80px,10vw,142px) 0;background:radial-gradient(ellipse at 78% 54%,rgba(201,168,76,.09),transparent 45%),linear-gradient(125deg,#090909,#10100e 75%,#0b0a09)}
+    .hero-premium::before{content:"";position:absolute;z-index:-1;pointer-events:none;width:min(100vw,1050px);height:390px;right:-240px;bottom:-220px;border-top:2px solid rgba(229,188,83,.75);border-radius:50%;transform:rotate(-13deg);filter:drop-shadow(0 0 16px rgba(201,168,76,.32))}
+    .hero-premium::after{content:"";position:absolute;z-index:-1;pointer-events:none;width:650px;height:240px;right:-220px;top:-165px;border-bottom:1px solid rgba(201,168,76,.45);border-radius:50%;transform:rotate(-20deg)}
+    .hero-premium .hero-inner{grid-template-columns:minmax(0,1fr) minmax(175px,.34fr);gap:clamp(32px,6vw,90px);align-items:center}
+    .hero-premium .hero-copy{max-width:790px}
+    .hero-premium h1{max-width:900px;font-size:clamp(3.2rem,6.4vw,6.2rem);line-height:1.04;letter-spacing:-.025em}
+    .hero-premium .lead{max-width:600px;margin-top:25px;font-size:clamp(1.05rem,1.7vw,1.3rem);line-height:1.55}
+    .hero-premium .hero-actions{gap:14px;margin-top:34px}
+    .hero-premium .btn-primary{box-shadow:0 6px 25px rgba(201,168,76,.12)}
+    .hero-fineprint{font-size:.84rem;color:#c5bfb3;margin-top:16px}
+    .founder-minimal{display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;background:none;border:none;padding:0;box-shadow:none}
+    .founder-minimal img{width:clamp(115px,13vw,158px);height:clamp(115px,13vw,158px);object-fit:cover;object-position:center 20%;margin:0;border:2px solid rgba(201,168,76,.7);border-radius:50%}
+    .founder-minimal .founder-name{color:#f6f4ee;font-size:1.08rem;font-weight:750;margin:0}
+    .founder-minimal p{font-size:.83rem;color:#b9b4a9;margin:3px 0 0}
+    .light{background:#121212;color:var(--white)}
+    .light .lead,.light .muted{color:#c6c2ba}
+    .light .eyebrow{color:var(--gold)}
+    .light .card{background:#191919;border-color:rgba(201,168,76,.23)}
+    .light .card p,.light .card li{color:#c1bcb3}
+    .light details{border-color:var(--line)}
+    .light details p{color:#c1bcb3}
+    .light summary::after{color:var(--gold)}
+    .light a:not(.btn){color:#e5c570}
+    @media(max-width:900px){.hero-premium .hero-inner{grid-template-columns:minmax(0,1fr) 160px}.hero-premium{min-height:0}}
+    @media(max-width:720px){.hero-premium{padding:78px 0 64px}.hero-premium .hero-inner{grid-template-columns:minmax(0,1fr);gap:30px}.hero-premium h1{font-size:clamp(3.1rem,13vw,4.7rem)}.hero-premium .hero-actions{flex-direction:column;align-items:stretch}.hero-premium .hero-actions .btn{width:100%}.founder-minimal{flex-direction:row;text-align:left;gap:15px;align-items:center;justify-content:flex-start}.founder-minimal img{width:70px;height:70px}.hero-premium::before{right:-390px;bottom:-185px}.hero-premium::after{display:none}}
+    @media(prefers-reduced-motion:reduce){.hero-premium *, .hero-premium *::before, .hero-premium *::after{animation:none!important;transition:none!important}}
+
   </style>
 </head>
 
@@ -368,21 +397,21 @@
   </header>
 
   <main id="main-content">
-    <section class="hero">
+    <section class="hero hero-premium" aria-labelledby="hero-heading">
       <div class="wrap hero-inner">
-        <div>
-          <p class="eyebrow">Für Restaurants und Cafés in Zürich</p>
-          <h1>Mehr Gäste über <span>Google Maps.</span></h1>
-          <p class="lead">Ich prüfe gratis dein Google Business Profil, drei lokale Suchbegriffe und drei Mitbewerber. Persönlich, mit Rückmeldung innert 24 Stunden.</p>
+        <div class="hero-copy">
+          <p class="eyebrow">Digital Marketing für Restaurants &amp; Cafés in Zürich</p>
+          <h1 id="hero-heading">Mehr Gäste über <span>Google Maps.</span></h1>
+          <p class="lead">Mehr Sichtbarkeit für dein Restaurant. Ich prüfe dein Google-Profil persönlich und zeige dir, wo du Gäste gewinnen kannst.</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#maps-anfrage">Gratis Maps-Check anfragen</a>
-            <a class="btn btn-ghost" href="/sichtbarkeits-check.html">Website selbst prüfen</a>
+            <a class="btn btn-ghost" href="https://check.aimpact.ch/website-check">Website selbst prüfen</a>
           </div>
-          <p class="muted" style="margin-top:16px;font-size:.88rem">Kostenlos · Unverbindlich · Direkt von Adem</p>
+          <p class="hero-fineprint">Kostenlos · Unverbindlich · Persönlich aus Zürich</p>
         </div>
-        <aside class="founder-card" aria-label="Dein Ansprechpartner">
-          <img src="/assets/adem-buelbuel-founder.jpg" alt="Adem Bülbül, Gründer von Aimpact" width="180" height="180" decoding="async" fetchpriority="high">
-          <div><h2 style="font-size:1.35rem;letter-spacing:normal">Adem Bülbül</h2><p>Gründer von Aimpact in Zürich. Dein direkter Ansprechpartner für Google-Profil, Website und KI-Sichtbarkeit.</p><p><a href="https://maps.app.goo.gl/1RRbuTja7Wb4h2Lr5?g_st=ic" target="_blank" rel="noopener noreferrer" style="color:var(--gold);text-underline-offset:4px">Mein Google-Profil ansehen</a></p></div>
+        <aside class="founder-card founder-minimal" aria-label="Dein Ansprechpartner">
+          <img src="/assets/adem-buelbuel-founder.jpg" alt="Adem Bülbül, Gründer von Aimpact" width="138" height="138" decoding="async" fetchpriority="high">
+          <div><p class="founder-name">Adem Bülbül</p><p>Gründer von Aimpact · Zürich</p></div>
         </aside>
       </div>
     </section>

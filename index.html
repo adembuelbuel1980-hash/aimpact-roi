@@ -188,6 +188,12 @@
     .service-grid.service-grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}
     .leistungen .lead{margin-top:18px}
     .leistungen .service-grid{margin-top:32px}
+    .leistungen .service-cta{display:inline-flex;align-items:center;min-height:44px;margin-top:16px;color:var(--gold);font-weight:750;text-underline-offset:5px}
+    .leistungen .service-cta:hover{color:#dfbd5e}
+    .pilot-price{font-size:1.7rem;margin-top:20px}
+    .pilot-price del{color:var(--muted);font-size:.92rem;font-weight:400;margin-left:10px}
+    .pilot-example{margin-top:20px}
+    .pilot-example small{display:block;color:#bdb9b0;font-size:.89rem;margin-top:8px}
     .card{
       border:1px solid var(--line);border-radius:var(--radius);padding:28px;background:var(--black-2);
     }
@@ -384,7 +390,7 @@
         </div>
         <aside class="founder-card" aria-label="Dein Ansprechpartner">
           <img src="/assets/adem-buelbuel-founder.jpg" alt="Adem Bülbül, Gründer von Aimpact" width="180" height="180" decoding="async" fetchpriority="high">
-          <div><h2 style="font-size:1.35rem;letter-spacing:normal">Adem Bülbül</h2><p>Gründer von Aimpact in Zürich. Dein direkter Ansprechpartner für Google-Profil, Website und KI-Sichtbarkeit.</p><p><a href="https://maps.app.goo.gl/1RRbuTja7Wb4h2Lr5?g_st=ic" target="_blank" rel="noopener noreferrer" style="color:var(--gold);text-underline-offset:4px">Mein Google-Profil ansehen</a></p></div>
+          <div><h2 style="font-size:1.35rem;letter-spacing:normal">Adem Bülbül</h2><p>Gründer von Aimpact in Zürich. Ich kenne den Gastronomiealltag aus eigener praktischer Arbeit und unterstütze Unternehmen bei Google-Präsenz, Websites und KI-Lösungen.</p><p><a href="https://maps.app.goo.gl/1RRbuTja7Wb4h2Lr5?g_st=ic" target="_blank" rel="noopener noreferrer" style="color:var(--gold);text-underline-offset:4px">Mein Google-Profil ansehen</a></p></div>
         </aside>
       </div>
     </section>
@@ -395,10 +401,10 @@
         <h2 id="leistungen-title">Digitalmarketing und KI für Unternehmen.</h2>
         <p class="lead">Ich verbinde Marketingstrategie mit praktischer Umsetzung. Der Einstieg sind ausgewählte Pilotprojekte in Zürich.</p>
         <div class="service-grid service-grid-4">
-          <article class="card"><p class="card-number">01</p><h3>Digitalmarketing</h3><p>SEO, SEA, Social Media und Content Marketing.</p></article>
-          <article class="card"><p class="card-number">02</p><h3>KI &amp; Automatisierung</h3><p>KI-Assistenten und automatisierte Abläufe für wiederkehrende Anfragen und Prozesse.</p></article>
-          <article class="card"><p class="card-number">03</p><h3>Webdesign &amp; Sichtbarkeit</h3><p>Websites, Google-Präsenz und Sichtbarkeit in KI-Suchsystemen.</p></article>
-          <article class="card"><p class="card-number">04</p><h3>Strategie &amp; Beratung</h3><p>Marketingkonzepte, Zielgruppenanalysen, messbare Ziele und verständliche Auswertungen.</p></article>
+          <article class="card"><p class="card-number">01</p><h3>Digitalmarketing</h3><p>SEO, SEA, Social Media und Content Marketing.</p><a class="service-cta" href="mailto:info@aimpact.ch?subject=Aimpact%20Projektanfrage%3A%20Digitalmarketing">Projekt anfragen →</a></article>
+          <article class="card"><p class="card-number">02</p><h3>KI &amp; Automatisierung</h3><p>KI-Assistenten und automatisierte Abläufe für wiederkehrende Anfragen und Prozesse.</p><a class="service-cta" href="mailto:info@aimpact.ch?subject=Aimpact%20Projektanfrage%3A%20KI%20und%20Automatisierung">Projekt anfragen →</a></article>
+          <article class="card"><p class="card-number">03</p><h3>Webdesign &amp; Sichtbarkeit</h3><p>Websites, Google-Präsenz und Sichtbarkeit in KI-Suchsystemen.</p><a class="service-cta" href="mailto:info@aimpact.ch?subject=Aimpact%20Projektanfrage%3A%20Webdesign%20und%20Sichtbarkeit">Projekt anfragen →</a></article>
+          <article class="card"><p class="card-number">04</p><h3>Strategie &amp; Beratung</h3><p>Marketingkonzepte, Zielgruppenanalysen, messbare Ziele und verständliche Auswertungen.</p><a class="service-cta" href="mailto:info@aimpact.ch?subject=Aimpact%20Projektanfrage%3A%20Strategie%20und%20Beratung">Projekt anfragen →</a></article>
         </div>
       </div>
     </section>
@@ -420,7 +426,7 @@
 </div>
 <aside class="card" aria-label="Leistungen und Konditionen der Pilotphase" style="border-color:var(--gold);padding:28px">
 <p class="eyebrow" style="margin:0 0 12px">Du bekommst</p>
-<h3 style="font-size:clamp(1.7rem,3vw,2.2rem)"><strong>CHF 990</strong> <span style="font-size:.95rem;color:#c4b8a1">statt CHF 2’490</span></h3>
+<h3 style="font-size:clamp(1.7rem,3vw,2.2rem)"><strong>CHF 990</strong> <del style="font-size:.95rem;color:#c4b8a1">CHF 2’490</del></h3>
 <ul style="margin-top:14px"><li>Den kompletten 90-Tage Maps-Sprint</li><li>Persönliche Betreuung durch mich, jede Woche</li></ul>
 <p class="eyebrow" style="margin:20px 0 10px">Im Gegenzug</p>
 <ul><li>Die Nutzung vereinbarter Vorher-Nachher-Kennzahlen als Fallstudie</li><li>Ein ehrliches Feedback mit Foto nach Abschluss</li></ul>
@@ -441,8 +447,8 @@
 <li>Reservation: Kontakt- und Reservationswege verbessern.</li>
 <li>Aktualität und Messung: acht Beiträge in 90 Tagen, monatliche KPI-Besprechung.</li>
 </ul>
-<p style="margin-top:20px"><strong>Beispielrechnung:</strong> 11 zusätzliche Tische mit je 4 Gästen à CHF 60 entsprechen CHF 2’640 Umsatz in 90 Tagen. Der Sprint kostet CHF 2’490 – rechnerisch etwas weniger als ein solcher Tisch pro Woche. <span style="color:#bdb9b0;font-size:.89rem">Beispielrechnung, keine Prognose.</span></p>
-<p style="font-size:1.7rem;margin-top:20px"><strong>CHF 2’490</strong> <span style="font-size:.9rem">einmalig oder 3 × CHF 830</span></p>
+<p class="pilot-example"><strong>Beispielrechnung:</strong> 11 zusätzliche Tische mit je 4 Gästen à CHF 60 ergeben CHF 2’640 zusätzlichen Umsatz in 90 Tagen. Bei einem <em>angenommenen</em> Deckungsbeitrag von 50&nbsp;% wären das CHF 1’320 Deckungsbeitrag vor den Kosten des Maps-Sprints. Nach dem Pilotpreis von CHF 990 blieben rechnerisch CHF 330.<small>Illustratives Szenario, keine Prognose oder Erfolgsgarantie. Die tatsächlichen Margen und Ergebnisse können abweichen.</small></p>
+<p class="pilot-price"><strong>CHF 990 Pilotpreis</strong> <del>CHF 2’490 regulär</del></p><p class="muted" style="margin-top:8px">Für die ausgeschriebenen Pilotbetriebe. Voraussetzungen und verbindliche Konditionen stehen in der Offerte.</p>
 <p style="margin-top:15px"><strong>Meine Umsetzungszusage:</strong> Die vereinbarten Schritte für Profil, Bewertungsablauf und Tracking sind bis Tag 30 umgesetzt. Verzögere ich einen Schritt, erhältst du einen zusätzlichen Betreuungsmonat ohne Zusatzkosten. Voraussetzungen klären wir schriftlich.</p>
 </article>
 </div></section>
@@ -486,7 +492,7 @@
     <section class="light" id="faq"><div class="wrap faq">
 <p class="eyebrow">FAQ</p><h2 style="margin-bottom:28px">Häufige Fragen.</h2>
 <details><summary>Was kostet der Gratis Maps-Check?</summary><p>Nichts. Ich prüfe dein Profil persönlich und gebe dir drei Prioritäten. Eine Umsetzung beauftragst du nur, wenn du das möchtest.</p></details>
-<details><summary>Was kostet der 90-Tage Maps-Sprint?</summary><p>CHF 2’490 einmalig oder drei Raten à CHF 830. Die verbindlichen Leistungen und die MWST-Behandlung stehen in der schriftlichen Offerte.</p></details>
+<details><summary>Was kostet der 90-Tage Maps-Sprint?</summary><p>In der aktuellen Pilotphase CHF 990 statt regulär CHF 2’490 für teilnehmende Pilotbetriebe. Voraussetzungen, Leistungsumfang und MWST-Behandlung stehen in der schriftlichen Offerte.</p></details>
 <details><summary>Wann sehe ich Ergebnisse?</summary><p>Ich halte die Ausgangswerte fest und prüfe monatlich verfügbare Kennzahlen. Ich verbessere das Google Business Profil und relevante Local-SEO-Grundlagen, kann aber kein bestimmtes Google Maps Ranking, Gästezahlen oder Umsatz garantieren. <a href="/local-seo-gastronomie-zuerich.html">Mehr über Local SEO erfahren</a>.</p></details>
 <details><summary>Was muss ich bereitstellen?</summary><p>Für den Gratis-Check deinen Betriebsnamen und eine Kontaktmöglichkeit. Für die Umsetzung benötige ich Zugänge, aktuelle Angaben und Freigaben.</p></details>
 <details><summary>Was umfasst deine Umsetzungszusage?</summary><p>Die vereinbarten Schritte bis Tag 30 und die Regelung für einen zusätzlichen Betreuungsmonat dokumentieren wir in der Offerte. Verzögerungen durch fehlende Zugänge oder Freigaben werden dort berücksichtigt.</p></details>
@@ -497,7 +503,7 @@
     <div class="wrap footer-grid">
       <div>
         <a class="brand" href="#main-content" aria-label="Aimpact - zur Startseite"><img class="brand-logo" src="/assets/aimpact-logo.svg" width="54" height="54" alt="" decoding="async"><span class="brand-name">Aimpact</span></a>
-        <p class="copyright">Mehr Sichtbarkeit. Mehr qualifizierte Anfragen. Mehr Kunden.</p>
+        <p class="copyright">Mehr Kunden. Weniger Handarbeit.</p>
         <p class="copyright">© <span id="year"></span> Aimpact · Zürich</p>
       </div>
       <div class="footer-links">

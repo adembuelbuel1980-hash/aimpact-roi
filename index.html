@@ -185,6 +185,9 @@
     .service-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
     .why-grid{grid-template-columns:repeat(3,1fr)}
     .audience-grid{grid-template-columns:minmax(0,1fr)}
+    .service-grid.service-grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .leistungen .lead{margin-top:18px}
+    .leistungen .service-grid{margin-top:32px}
     .card{
       border:1px solid var(--line);border-radius:var(--radius);padding:28px;background:var(--black-2);
     }
@@ -267,7 +270,7 @@
       .section-head,.check-inner{grid-template-columns:1fr;gap:28px}
       .section-head .lead{justify-self:start}
       .search-grid{grid-template-columns:repeat(2,1fr)}
-      .service-grid{grid-template-columns:1fr}
+      .service-grid,.service-grid.service-grid-4{grid-template-columns:1fr}
       .why-grid,.audience-grid{grid-template-columns:1fr}
       .step{grid-template-columns:60px 1fr}
       .step p{grid-column:2}
@@ -372,8 +375,8 @@
       <div class="wrap hero-inner">
         <div>
           <p class="eyebrow">Digital Marketing &amp; AI Agency · Zürich</p>
-          <h1>Mehr Sichtbarkeit. <span>Mehr Möglichkeiten mit KI.</span></h1>
-          <p class="lead">Aimpact unterstützt Unternehmen mit Digitalmarketing, Webdesign, KI-Automatisierung und persönlicher Beratung. Für Restaurants und Cafés in Zürich starten wir mit einem kostenlosen Google Maps-Check.</p>
+          <h1>Mehr Kunden. <span>Weniger Handarbeit.</span></h1>
+          <p class="lead">Ich bringe Zürcher Unternehmen mehr Anfragen über Google, Website und Social Media. Wiederkehrende Abläufe automatisiere ich mit KI. Für Restaurants und Cafés starte ich mit einem kostenlosen Google Maps-Check.</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#maps-anfrage">Gratis Maps-Check anfragen</a>
           </div>
@@ -386,12 +389,12 @@
       </div>
     </section>
 
-    <section id="leistungen" aria-labelledby="leistungen-title" style="padding:72px 0">
+    <section class="leistungen" id="leistungen" aria-labelledby="leistungen-title">
       <div class="wrap">
-        <p class="eyebrow">Unsere Leistungen</p>
+        <p class="eyebrow">Leistungen</p>
         <h2 id="leistungen-title">Digitalmarketing und KI für Unternehmen.</h2>
-        <p class="lead" style="margin-top:18px">Wir verbinden Marketingstrategie mit praktischer Umsetzung. Den Einstieg bilden ausgewählte Pilotprojekte in Zürich.</p>
-        <div class="service-grid" style="margin-top:32px">
+        <p class="lead">Ich verbinde Marketingstrategie mit praktischer Umsetzung. Der Einstieg sind ausgewählte Pilotprojekte in Zürich.</p>
+        <div class="service-grid service-grid-4">
           <article class="card"><p class="card-number">01</p><h3>Digitalmarketing</h3><p>SEO, SEA, Social Media und Content Marketing.</p></article>
           <article class="card"><p class="card-number">02</p><h3>KI &amp; Automatisierung</h3><p>KI-Assistenten und automatisierte Abläufe für wiederkehrende Anfragen und Prozesse.</p></article>
           <article class="card"><p class="card-number">03</p><h3>Webdesign &amp; Sichtbarkeit</h3><p>Websites, Google-Präsenz und Sichtbarkeit in KI-Suchsystemen.</p></article>
@@ -445,11 +448,11 @@
 </div></section>
 
     <section id="ablauf"><div class="wrap">
-<p class="eyebrow">So arbeiten wir</p><h2>Prüfen. Verbessern. Messen.</h2>
+<p class="eyebrow">So arbeite ich</p><h2>Prüfen. Verbessern. Messen.</h2>
 <div class="service-grid" style="margin-top:28px">
 <article class="card"><p class="card-number">01</p><h3>Prüfen</h3><p>Ich analysiere Ausgangslage, lokale Suche und Kontaktwege, inklusive Google Business Profil.</p></article>
-<article class="card"><p class="card-number">02</p><h3>Verbessern</h3><p>Wir setzen priorisierte Local-SEO-Massnahmen in deinem Google-Auftritt um.</p></article>
-<article class="card"><p class="card-number">03</p><h3>Messen</h3><p>Wir vergleichen verfügbare Profilaufrufe, Anrufe, Routenaufrufe und Reservationsanfragen mit dem Start.</p></article>
+<article class="card"><p class="card-number">02</p><h3>Verbessern</h3><p>Ich setze priorisierte Local-SEO-Massnahmen in deinem Google-Auftritt um.</p></article>
+<article class="card"><p class="card-number">03</p><h3>Messen</h3><p>Ich vergleiche verfügbare Profilaufrufe, Anrufe, Routenaufrufe und Reservationsanfragen mit dem Start.</p></article>
 </div></div></section>
 
     <section id="maps-anfrage" aria-labelledby="maps-request-heading">
@@ -484,8 +487,8 @@
 <p class="eyebrow">FAQ</p><h2 style="margin-bottom:28px">Häufige Fragen.</h2>
 <details><summary>Was kostet der Gratis Maps-Check?</summary><p>Nichts. Ich prüfe dein Profil persönlich und gebe dir drei Prioritäten. Eine Umsetzung beauftragst du nur, wenn du das möchtest.</p></details>
 <details><summary>Was kostet der 90-Tage Maps-Sprint?</summary><p>CHF 2’490 einmalig oder drei Raten à CHF 830. Die verbindlichen Leistungen und die MWST-Behandlung stehen in der schriftlichen Offerte.</p></details>
-<details><summary>Wann sehe ich Ergebnisse?</summary><p>Wir halten die Ausgangswerte fest und prüfen monatlich verfügbare Kennzahlen. Wir verbessern das Google Business Profil und relevante Local-SEO-Grundlagen, können aber kein bestimmtes Google Maps Ranking, Gästezahlen oder Umsatz garantieren. <a href="/local-seo-gastronomie-zuerich.html">Mehr über Local SEO erfahren</a>.</p></details>
-<details><summary>Was muss ich bereitstellen?</summary><p>Für den Gratis-Check deinen Betriebsnamen und eine Kontaktmöglichkeit. Für die Umsetzung benötigen wir Zugänge, aktuelle Angaben und Freigaben.</p></details>
+<details><summary>Wann sehe ich Ergebnisse?</summary><p>Ich halte die Ausgangswerte fest und prüfe monatlich verfügbare Kennzahlen. Ich verbessere das Google Business Profil und relevante Local-SEO-Grundlagen, kann aber kein bestimmtes Google Maps Ranking, Gästezahlen oder Umsatz garantieren. <a href="/local-seo-gastronomie-zuerich.html">Mehr über Local SEO erfahren</a>.</p></details>
+<details><summary>Was muss ich bereitstellen?</summary><p>Für den Gratis-Check deinen Betriebsnamen und eine Kontaktmöglichkeit. Für die Umsetzung benötige ich Zugänge, aktuelle Angaben und Freigaben.</p></details>
 <details><summary>Was umfasst deine Umsetzungszusage?</summary><p>Die vereinbarten Schritte bis Tag 30 und die Regelung für einen zusätzlichen Betreuungsmonat dokumentieren wir in der Offerte. Verzögerungen durch fehlende Zugänge oder Freigaben werden dort berücksichtigt.</p></details>
 </div></section>
   </main>
